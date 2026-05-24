@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Collection — Australian Linen & Towels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<style>
+  :root{
+    /* Brand tokens inherit from assets/styles.css; only page-local overrides here */
+    --navy2:#252a5c;
+    --gold2:#c9a84c;
+    --cream:#faf8f3;
+    --border:#e5e0d2;
+    --sidebar:280px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--f-sans),sans-serif;background:var(--cream);color:var(--navy);min-height:100vh}
+  a{text-decoration:none;color:inherit}
+
+  /* ── LAYOUT ── */
+  .collection-wrap{
+    max-width:1400px;margin:0 auto;padding:32px 24px 80px;
+    display:grid;grid-template-columns:var(--sidebar) 1fr;gap:40px;
+    align-items:start;
+  }
+  @media(max-width:900px){
+    .collection-wrap{grid-template-columns:1fr;gap:0;padding:16px 16px 60px}
+  }
+
+  /* ── PAGE TITLE ── */
+  .page-hero{
+    background:var(--navy);color:#fff;
+    padding:48px 24px 36px;text-align:center;
+  }
+  .page-hero .label{
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:10px;display:block;
+  }
+  .page-hero h1{
+    font-family:var(--f-serif);font-size:clamp(28px,5vw,48px);
+    font-weight:400;line-height:1.1;
+  }
+  .page-hero h1 em{font-style:italic;color:var(--gold)}
+
+  /* ── SIDEBAR ── */
+  .sidebar{
+    position:sticky;top:20px;
+    background:#fff;border:1px solid var(--border);
+    border-radius:4px;overflow:hidden;
+  }
+  .sidebar-header{
+    background:var(--navy);color:#fff;
+    padding:16px 20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  }
+  .cat-group{border-bottom:1px solid var(--border)}
+  .cat-group:last-child{border-bottom:none}
+
+  /* parent category */
+  .cat-parent{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 20px;cursor:pointer;
+    font-size:13px;font-weight:500;letter-spacing:.04em;
+    background:#fff;border:none;width:100%;text-align:left;
+    transition:background .15s;
+  }
+  .cat-parent:hover{background:#f5f4f0}
+  .cat-parent.active{color:var(--gold2);font-weight:600}
+  .cat-parent .chevron{
+    width:14px;height:14px;transition:transform .25s;flex-shrink:0;
+    color:var(--muted);
+  }
+  .cat-parent.open .chevron{transform:rotate(180deg)}
+
+  /* subcategories */
+  .sub-list{
+    display:none;padding:4px 0 10px 0;background:#faf9f6;
+  }
+  .sub-list.open{display:block}
+  .sub-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 20px 9px 32px;cursor:pointer;
+    font-size:12.5px;color:var(--muted);transition:color .15s,background .15s;
+    border:none;background:none;width:100%;text-align:left;
+  }
+  .sub-item:hover{color:var(--navy);background:#f0ede6}
+  .sub-item.active{color:var(--navy);font-weight:500}
+  .sub-item .count{
+    background:var(--navy);color:#fff;
+    font-size:10px;padding:2px 7px;border-radius:20px;min-width:22px;text-align:center;
+  }
+  .sub-item.coming .count{
+    background:#ccc;color:#666;
+  }
+  .sub-item .cs-badge{
+    font-size:9px;color:#aaa;letter-spacing:.06em;text-transform:uppercase;
+  }
+
+  /* mobile sidebar toggle */
+  .sidebar-toggle{
+    display:none;width:100%;padding:14px 20px;
+    background:var(--navy);color:#fff;border:none;cursor:pointer;
+    font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:.06em;
+    text-transform:uppercase;text-align:left;
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:0;
+  }
+  @media(max-width:900px){
+    .sidebar{position:static;border-radius:0;margin-bottom:24px}
+    .sidebar-toggle{display:flex}
+    .sidebar-content{display:none}
+    .sidebar-content.open{display:block}
+  }
+  @media(min-width:901px){
+    .sidebar-toggle{display:none}
+    .sidebar-content{display:block}
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-content{}
+
+  /* active filter breadcrumb */
+  .filter-bar{
+    display:flex;align-items:center;gap:10px;margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+  .filter-bar .showing{font-size:13px;color:var(--muted)}
+  .filter-bar .active-filter{
+    display:flex;align-items:center;gap:6px;
+    background:var(--navy);color:#fff;
+    padding:5px 12px;border-radius:20px;font-size:12px;
+  }
+  .filter-bar .clear{
+    background:none;border:none;color:#fff;cursor:pointer;font-size:14px;line-height:1;
+    padding:0 0 0 4px;
+  }
+
+  /* COMING SOON panel */
+  .coming-soon-panel{
+    display:none;
+    background:#fff;border:1px solid var(--border);border-radius:4px;
+    padding:80px 40px;text-align:center;
+  }
+  .coming-soon-panel.visible{display:block}
+  .cs-icon{font-size:48px;margin-bottom:16px}
+  .cs-title{
+    font-family:var(--f-serif);font-size:32px;font-weight:400;
+    margin-bottom:8px;
+  }
+  .cs-title em{font-style:italic;color:var(--gold)}
+  .cs-sub{color:var(--muted);font-size:14px;line-height:1.6;max-width:340px;margin:0 auto 28px}
+  .cs-cta{
+    display:inline-block;background:var(--navy);color:#fff;
+    padding:13px 32px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+    border-radius:2px;transition:background .2s;
+  }
+  .cs-cta:hover{background:var(--gold2)}
+
+  /* PRODUCT GRID */
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:20px;
+  }
+  @media(max-width:600px){
+    .product-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  }
+
+  .product-card{
+    background:#fff;border:1px solid var(--border);border-radius:3px;
+    overflow:hidden;cursor:pointer;
+    transition:box-shadow .2s,transform .2s;
+  }
+  .product-card:hover{box-shadow:0 8px 32px rgba(15,21,53,.1);transform:translateY(-2px)}
+
+  .product-img{
+    aspect-ratio:1;overflow:hidden;background:#f0ede8;position:relative;
+  }
+  .product-img img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform .4s;
+  }
+  .product-card:hover .product-img img{transform:scale(1.04)}
+
+  .product-info{padding:14px 16px 18px}
+  .product-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-bottom:4px}
+  .product-name{font-family:var(--f-serif);font-size:17px;font-weight:600;line-height:1.25;margin-bottom:6px}
+  .product-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+  .product-sizes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+  .sz{
+    font-size:10px;padding:3px 8px;border:1px solid var(--border);
+    border-radius:2px;color:var(--muted);
+  }
+  .product-cta{
+    display:block;width:100%;padding:10px;text-align:center;
+    background:var(--navy);color:#fff;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    border:none;cursor:pointer;border-radius:2px;transition:background .2s;
+    font-family:'DM Sans',sans-serif;
+  }
+  .product-cta:hover{background:var(--gold2)}
+
+  /* "Photo on request" badge for products without dedicated imagery */
+  .product-img-placeholder img{ opacity:.92; }
+  .photo-pending{
+    position:absolute; bottom:10px; right:10px;
+    background:rgba(26,31,78,.85); color:#fff;
+    font-family:'JetBrains Mono', ui-monospace, monospace;
+    font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+    padding:4px 8px; border-radius:2px; z-index:2; pointer-events:none;
+  }
+  .product-tag{
+    position:absolute; top:10px; right:10px;
+    background:var(--accent-red); color:#fff;
+    font-family:'JetBrains Mono', ui-monospace, monospace;
+    font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+    padding:4px 9px; border-radius:2px; z-index:2;
+  }
+
+  /* toast */
+  .toast{
+    position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--navy);color:#fff;padding:12px 24px;border-radius:4px;
+    font-size:13px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;
+    white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* Swatch dot colours */
+  .dot.white { background: #ffffff; border-color: #d6d1c4; }
+  .dot.charcoal { background: #3a3a45; }
+  .dot.camel { background: #c9b086; }
+  .dot.black { background: #000000; }
+  .dot.navy { background: #1C2B7E; }
+  .dot.aqua { background: #57cc99; }
+  .dot.cherry { background: #ba0404; }
+  .dot.coffee { background: #582f0e; }
+  .dot.fuchsia { background: #f72585; }
+  .dot.garnet { background: #6f1d1b; }
+  .dot.lime { background: #9ef01a; }
+  .dot.mirage { background: #83c5be; }
+  .dot.pink { background: #ffb5a7; }
+  .dot.purple { background: #7209b7; }
+  .dot.royal { background: #1B2A7A; }
+</style>
+</head>
+<body data-page="collection">
+
+<div data-header></div>
+
+<div class="page-hero">
+  <span class="label">Our Range</span>
+  <h1>The <em>Full Collection</em></h1>
+</div>
+
+<div class="collection-wrap">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+      <span>Browse Categories</span>
+      <svg id="sidebarChevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="sidebar-content" id="sidebarContent">
+      <div class="sidebar-header">All Categories</div>
+      <div id="catTree"></div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main-content">
+    <div class="filter-bar" id="filterBar">
+      <span class="showing" id="showingText">Showing all products</span>
+    </div>
+
+    <!-- Enquiry Panel for unavailable categories -->
+    <div class="coming-soon-panel" id="comingSoonPanel">
+      <div class="cs-icon">📋</div>
+      <div class="cs-title">Request a <em>Quote</em></div>
+      <p class="cs-sub">We stock this range — contact us for pricing, availability, and lead times. Most orders ship within 1–2 business days.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="contact.html" class="cs-cta" id="enquireCatBtn">Request Quote →</a>
+        <a href="tel:0414533449" class="cs-cta" style="background:#25a244;">Call 0414 533 449</a>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<div data-footer></div>
+
+<script src="assets/products-data.js"></script>
+<script>
+// ══════════════════════════════════════════════
+// DATA — sourced from assets/products-data.js (single source of truth)
+// ══════════════════════════════════════════════
+const PRODUCTS = (function() {
+  const rawProducts = window.ALT_PRODUCTS || [];
+  const renderedParentSkus = new Set();
+  const list = [];
+
+  rawProducts.forEach(p => {
+    if (p.parentSku) {
+      if (renderedParentSkus.has(p.parentSku)) return;
+      renderedParentSkus.add(p.parentSku);
+
+      const siblings = rawProducts.filter(s => s.parentSku === p.parentSku);
+      let primaryProduct = siblings[0];
+
+      // Read from ALT_PARENTS centralized dictionary
+      const parentInfo = window.ALT_PARENTS && window.ALT_PARENTS[p.parentSku];
+      const name = parentInfo ? parentInfo.name : (p.name + " Range");
+      const desc = parentInfo ? parentInfo.desc : p.description;
+      const tag = parentInfo ? parentInfo.tag : (p.tag || "");
+
+      // Available Colours
+      const uniqueColours = [];
+      const seenColours = new Set();
+      siblings.forEach(s => {
+        const c = s.colour.split('/')[0].trim();
+        if (!seenColours.has(c)) {
+          seenColours.add(c);
+          uniqueColours.push({
+            name: s.colour,
+            displayName: c,
+            sku: s.sku
+          });
+        }
+      });
+
+      // Sizes / Types from s.variantName
+      const types = [];
+      siblings.forEach(s => {
+        const typeName = s.variantName || s.name;
+        if (typeName && !types.includes(typeName)) {
+          types.push(typeName);
+        }
+      });
+
+      const cat = (window.ALT_CATEGORIES || []).find(c => c.id === p.categoryId);
+      const sub = cat ? cat.parent : '';
+      const parentGroup = p.categoryId.indexOf('towels-') === 0 ? 'towels'
+                        : p.categoryId.indexOf('sheets-') === 0 ? 'sheets'
+                        : p.categoryId;
+
+      list.push({
+        id: primaryProduct.sku,
+        sku: primaryProduct.sku,
+        cat: parentGroup,
+        subcat: p.categoryId,
+        name: name,
+        desc: desc,
+        sub: sub,
+        img: primaryProduct.image,
+        tag: tag,
+        isRange: true,
+        parentSku: p.parentSku,
+        colours: uniqueColours,
+        sizes: types
+      });
+    } else {
+      const cat = (window.ALT_CATEGORIES || []).find(c => c.id === p.categoryId);
+      const sub = cat ? cat.parent : '';
+      const sizes = [];
+      if (p.size) sizes.push(p.size);
+      if (p.weight) sizes.push(p.weight + ' gsm');
+      const parentGroup = p.categoryId.indexOf('towels-') === 0 ? 'towels'
+                        : p.categoryId.indexOf('sheets-') === 0 ? 'sheets'
+                        : p.categoryId;
+
+      list.push({
+        id: p.sku,
+        sku: p.sku,
+        cat: parentGroup,
+        subcat: p.categoryId,
+        name: p.name,
+        colour: p.colour,
+        sub: sub,
+        desc: p.description,
+        sizes: sizes,
+        img: p.image,
+        tag: p.tag,
+        isRange: false
+      });
+    }
+  });
+
+  return list;
+})();
+
+// ══════════════════════════════════════════════
+// CATEGORY TREE — supplier categories. Subcats with zero matching products auto-render as "Enquire".
+// ══════════════════════════════════════════════
+const CATEGORIES = [
+  {
+    id:'towels', label:'Towels',
+    subs:[
+      {id:'towels-commercial',    label:'Commercial Towels (Standard)'},
+      {id:'towels-coloured',      label:'Elegant Coloured Towels'},
+      {id:'towels-speciality',    label:'Speciality, Gym & Pool Towels'},
+    ]
+  },
+  {
+    id:'sheets', label:'Bed Linen',
+    subs:[
+      {id:'sheets-white',    label:'White Sheets'},
+      {id:'sheets-stripe',   label:'Stripe Top Sheet'},
+      {id:'sheets-coloured', label:'Coloured Sheets'},
+    ]
+  },
+  {
+    id:'quilt-covers', label:'Quilt Covers',
+    subs:[
+      {id:'quilt-covers-white',  label:'White Quilt Cover'},
+      {id:'quilt-covers-stripe', label:'Stripe Quilt Cover'},
+    ]
+  },
+  {
+    id:'quilts', label:'Quilts',
+    subs:[
+      {id:'quilts-microfibre', label:'Microfibre Quilt'},
+      {id:'quilts-navy-cover', label:'Navy Cover Quilt'},
+    ]
+  },
+  {
+    id:'blankets', label:'Blankets',
+    subs:[
+      {id:'blankets-cellular', label:'Cellular Cotton Blanket'},
+      {id:'blankets-fauxwool', label:'Faux Wool Blanket'},
+    ]
+  },
+  {
+    id:'mattress', label:'Mattress Protectors',
+    subs:[
+      {id:'mattress-protectors', label:'Waterproof Mattress Protector'},
+      {id:'mattress-topper',     label:'Mattress Topper'},
+      {id:'pillow-protector',    label:'Pillow Protector'},
+    ]
+  },
+  {
+    id:'pillows', label:'Luxury Pillows',
+    subs:[
+      {id:'pillows-microfibre', label:'Microfibre Pillow'},
+      {id:'pillows-memory',     label:'Memory Foam Pillow'},
+    ]
+  },
+];
+
+// ──────────────────────────────────────────────
+// Count products per subcat
+// ──────────────────────────────────────────────
+function countForSubcat(subcatId){
+  return PRODUCTS.filter(p => p.subcat === subcatId).length;
+}
+
+// ──────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────
+let activeSubcat = null; // null = show all
+
+// ──────────────────────────────────────────────
+// Build sidebar
+// ──────────────────────────────────────────────
+function buildSidebar(){
+  const tree = document.getElementById('catTree');
+  tree.innerHTML = '';
+
+  // "All Products" button
+  const allBtn = document.createElement('div');
+  allBtn.className = 'cat-group';
+  allBtn.innerHTML = `<button class="cat-parent" id="btn-all" onclick="selectAll()">All Products</button>`;
+  tree.appendChild(allBtn);
+
+  CATEGORIES.forEach(cat => {
+    const group = document.createElement('div');
+    group.className = 'cat-group';
+
+    const hasSubs = cat.subs.length > 0;
+    const anyProducts = cat.subs.some(s => countForSubcat(s.id) > 0);
+    const activeCount = cat.subs.reduce((sum, s) => sum + countForSubcat(s.id), 0);
+
+    group.innerHTML = `
+      <button class="cat-parent" id="parent-${cat.id}" onclick="toggleCat('${cat.id}')">
+        <span>${cat.label}</span>
+        <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          ${activeCount > 0 ? `<span class="count">${activeCount}</span>` : ''}
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="sub-list" id="subs-${cat.id}">
+        ${cat.subs.map(s => {
+          const count = countForSubcat(s.id);
+          const isComing = count === 0;
+          return `<button class="sub-item${isComing?' coming':''}" id="sub-${s.id}" onclick="selectSubcat('${s.id}','${s.label}',${isComing})">
+            ${s.label}
+            ${isComing
+              ? `<span class="cs-badge" style="font-size:9px;color:#c9a84c;letter-spacing:.06em;text-transform:uppercase;">Enquire</span>`
+              : `<span class="count">${count}</span>`
+            }
+          </button>`;
+        }).join('')}
+      </div>
+    `;
+    tree.appendChild(group);
+  });
+
+  // Auto-open first cat that has products
+  toggleCat('towels');
+}
+
+function toggleCat(catId){
+  const subList = document.getElementById(`subs-${catId}`);
+  const parentBtn = document.getElementById(`parent-${catId}`);
+  if(!subList) return;
+  const isOpen = subList.classList.contains('open');
+  // close all
+  document.querySelectorAll('.sub-list').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.cat-parent').forEach(el => el.classList.remove('open'));
+  if(!isOpen){
+    subList.classList.add('open');
+    parentBtn?.classList.add('open');
+  }
+}
+
+// ──────────────────────────────────────────────
+// Select / filter
+// ──────────────────────────────────────────────
+function selectAll(){
+  activeSubcat = null;
+  document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
+  document.getElementById('btn-all')?.classList.add('active');
+  renderProducts();
+  updateFilterBar('All Products', false);
+  hideSidebarMobile();
+}
+
+function selectSubcat(subcatId, label, isComing){
+  activeSubcat = subcatId;
+  // highlight
+  document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
+  document.getElementById(`sub-${subcatId}`)?.classList.add('active');
+
+  if(isComing){
+    document.getElementById('comingSoonPanel').classList.add('visible');
+    document.getElementById('productGrid').style.display='none';
+    updateFilterBar(label, true);
+    // Set enquiry link with category pre-filled
+    var btn = document.getElementById('enquireCatBtn');
+    if(btn) btn.href = 'contact.html?cat=' + encodeURIComponent(label);
+  } else {
+    document.getElementById('comingSoonPanel').classList.remove('visible');
+    document.getElementById('productGrid').style.display='';
+    renderProducts();
+    updateFilterBar(label, false);
+  }
+  hideSidebarMobile();
+}
+
+function updateFilterBar(label, isComing){
+  const bar = document.getElementById('filterBar');
+  if(label==='All Products'){
+    bar.innerHTML = `<span class="showing" id="showingText">Showing all ${PRODUCTS.length} products</span>`;
+  } else if(isComing){
+    bar.innerHTML = `<span class="showing">Category: </span>
+      <span class="active-filter">${label} <button class="clear" onclick="selectAll()">×</button></span>
+      <a href="contact.html" style="font-size:12px;color:#c9a84c;border-bottom:1px solid #d4b568;text-decoration:none;cursor:pointer;">· Enquire for pricing →</a>`;
+  } else {
+    const count = PRODUCTS.filter(p => p.subcat===activeSubcat).length;
+    bar.innerHTML = `<span class="showing">Category: </span>
+      <span class="active-filter">${label} <button class="clear" onclick="selectAll()">×</button></span>
+      <span class="showing">${count} product${count!==1?'s':''}</span>`;
+  }
+}
+
+// ──────────────────────────────────────────────
+// Render products
+// ──────────────────────────────────────────────
+function renderProducts(){
+  const grid = document.getElementById('productGrid');
+  let list = activeSubcat
+    ? PRODUCTS.filter(p => p.subcat === activeSubcat)
+    : PRODUCTS;
+
+  if(list.length===0){
+    grid.innerHTML = '<p style="color:var(--muted);font-size:14px;">No products found.</p>';
+    return;
+  }
+
+  grid.innerHTML = list.map(p => {
+    const isPh = window.ALT_HELPERS && window.ALT_HELPERS.isPlaceholderImage(p.img);
+    if (p.isRange) {
+      const swatchHtml = p.colours.map(col => {
+        let dotColor = col.displayName.toLowerCase().replace('charcoal / grey', 'charcoal').replace('royal blue', 'royal').replace('navy blue', 'navy').split('/')[0].trim().replace(' ', '-');
+        return `<span class="sw-dot-circle dot ${dotColor}" title="${col.displayName}" style="display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);margin-right:4px;"></span>`;
+      }).join('');
+
+      return `
+      <div class="product-card" onclick="window.location.href='product.html?sku=${p.sku}'" style="cursor:pointer;">
+        <div class="product-img${isPh ? ' product-img-placeholder' : ''}">
+          <img src="${p.img}" alt="${p.name}" loading="lazy"
+            onerror="this.onerror=null;this.src='images/placeholder-product.svg'"/>
+          <div class="delivery-badge">Free Delivery $100+</div>
+          ${p.tag ? `<div class="product-tag">${p.tag}</div>` : ''}
+          ${isPh ? '<div class="photo-pending">Photo on request</div>' : ''}
+        </div>
+        <div class="product-info">
+          <div class="product-sub">${p.sub}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-desc">${p.desc}</div>
+          
+          <!-- Available Colours -->
+          <div style="margin-bottom:12px; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+            <span style="font-size:10px; color:var(--muted); text-transform:uppercase; margin-right:4px;">Colours:</span>
+            ${swatchHtml}
+          </div>
+
+          ${p.sizes.length ? `<div class="product-sizes" style="gap:4px;">${p.sizes.map(s=>`<span class="sz" style="font-size:9.5px; padding:2px 6px;">${s}</span>`).join('')}</div>` : ''}
+          <button class="product-cta" onclick="event.stopPropagation();enquireRange('${p.sku}', '${p.name}')">Request Quote</button>
+        </div>
+      </div>
+      `;
+    } else {
+      return `
+      <div class="product-card" onclick="window.location.href='product.html?sku=${p.sku}'" style="cursor:pointer;">
+        <div class="product-img${isPh ? ' product-img-placeholder' : ''}">
+          <img src="${p.img}" alt="${p.name}" loading="lazy"
+            onerror="this.onerror=null;this.src='images/placeholder-product.svg'"/>
+          <div class="delivery-badge">Free Delivery $100+</div>
+          ${p.tag ? `<div class="product-tag">${p.tag}</div>` : ''}
+          ${isPh ? '<div class="photo-pending">Photo on request</div>' : ''}
+        </div>
+        <div class="product-info">
+          <div class="product-sub">${p.sub}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-desc">${p.desc}</div>
+          ${p.sizes.length ? `<div class="product-sizes">${p.sizes.map(s=>`<span class="sz">${s}</span>`).join('')}</div>` : ''}
+          <button class="product-cta" onclick="event.stopPropagation();enquire('${p.sku}')">Request Quote</button>
+        </div>
+      </div>
+      `;
+    }
+  }).join('');
+}
+
+// ──────────────────────────────────────────────
+// Enquire toast
+// ──────────────────────────────────────────────
+function enquire(id){
+  const p = PRODUCTS.find(x => String(x.id) === String(id));
+  if(!p) return;
+  const t = document.getElementById('toast');
+  t.textContent = `Enquiry for "${p.name}" — redirecting…`;
+  t.classList.add('show');
+  const lines = [`Product: ${p.name}${p.colour ? ' — ' + p.colour : ''}`, `Spec: ${p.sizes.join(' · ')}`];
+  const msg = `Hi, I'd like to enquire about the following product:\n\n${lines.join('\n')}\n\nPlease provide pricing and availability for my requirements.`;
+  setTimeout(()=>{
+    t.classList.remove('show');
+    sessionStorage.setItem('alt_enquiry', msg);
+    window.location.href = 'contact.html';
+  }, 1200);
+}
+
+function enquireRange(sku, rangeName){
+  const t = document.getElementById('toast');
+  t.textContent = `Enquiry for "${rangeName}" — redirecting…`;
+  t.classList.add('show');
+  const msg = `Hi, I'd like to enquire about the following range:\n\nRange: ${rangeName}\n\nPlease provide pricing and availability for different sizes and colours in this range.`;
+  setTimeout(()=>{
+    t.classList.remove('show');
+    sessionStorage.setItem('alt_enquiry', msg);
+    window.location.href = 'contact.html';
+  }, 1200);
+}
+
+// ──────────────────────────────────────────────
+// Mobile sidebar toggle
+// ──────────────────────────────────────────────
+function toggleSidebar(){
+  const content = document.getElementById('sidebarContent');
+  const chevron = document.getElementById('sidebarChevron');
+  const isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+function hideSidebarMobile(){
+  if(window.innerWidth <= 900){
+    document.getElementById('sidebarContent')?.classList.remove('open');
+    document.getElementById('sidebarChevron').style.transform = '';
+  }
+}
+
+// ──────────────────────────────────────────────
+// URL param support: ?cat=subcatId
+// ──────────────────────────────────────────────
+function checkUrlParam(){
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if(cat){
+    // find label
+    let label = cat, isComing = false;
+    for(const c of CATEGORIES){
+      const sub = c.subs.find(s => s.id === cat);
+      if(sub){
+        label = sub.label;
+        isComing = countForSubcat(cat) === 0;
+        // open parent
+        toggleCat(c.id);
+        break;
+      }
+    }
+    selectSubcat(cat, label, isComing);
+  } else {
+    selectAll();
+  }
+}
+
+// ──────────────────────────────────────────────
+// Init
+// ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildSidebar();
+  checkUrlParam();
+});
+</script>
+<script src="assets/partials.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+# Australian Linen & Towels — robots.txt
+# Allow all search engines and AI crawlers
+
+User-agent: *
+Allow: /
+
+# AI Crawlers — explicitly allowed
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Block admin pages from indexing
+Disallow: /admin.html
+Disallow: /mail.php
+
+# Sitemap location
+Sitemap: https://auslinenandtowels.com.au/sitemap.xml

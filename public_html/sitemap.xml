@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Core pages -->
+  <url><loc>https://auslinenandtowels.com.au/</loc><lastmod>2026-05-24</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/index.html</loc><lastmod>2026-05-24</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html</loc><lastmod>2026-05-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/about.html</loc><lastmod>2026-05-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/room-package.html</loc><lastmod>2026-05-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/trade-account.html</loc><lastmod>2026-05-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/case-studies.html</loc><lastmod>2026-05-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/contact.html</loc><lastmod>2026-05-24</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/faq.html</loc><lastmod>2026-05-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/blog.html</loc><lastmod>2026-05-24</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/blog-linen-guide.html</loc><lastmod>2026-05-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/blog-gsm-guide.html</loc><lastmod>2026-05-08</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/terms.html</loc><lastmod>2026-05-24</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/privacy.html</loc><lastmod>2026-05-24</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <!-- Category landing pages -->
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-white</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-charcoal</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-camel</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-black</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-navy</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-aqua</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-cherry</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-coffee</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-fuchsia</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-garnet</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-lime</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-mirage</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-pink</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-purple</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-royal</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=pool-stripe</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=gym-white</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=salon-white</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=teatowels-blue</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=bathrobe-terry</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=sheets-white</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=sheets-stripe</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=sheets-coloured</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilt-covers-white</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilt-covers-stripe</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilts-microfibre</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilts-navy-cover</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=blankets-cellular</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=blankets-fauxwool</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=mattress-protectors</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=mattress-topper</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=pillow-protector</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=pillows-microfibre</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+</urlset>
