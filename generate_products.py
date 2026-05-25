@@ -51,12 +51,12 @@ CATEGORIES = [
     {'id': 'towels-hand',        'name': 'Hand Towels',          'parent': 'Towels',              'slug': 'hand-towels',              'image': 'images/scraped/classic-white-hand-towels.jpg'},
     {'id': 'towels-face',        'name': 'Face Washers',         'parent': 'Towels',              'slug': 'face-washers',             'image': 'images/scraped/Classical-White-Face-Towel.jpg'},
     {'id': 'towels-mats',        'name': 'Bath Mats',            'parent': 'Towels',              'slug': 'bath-mats',                'image': 'images/scraped/Executive-White-Bath-Mat.jpg'},
-    {'id': 'towels-pool',        'name': 'Pool Towels',          'parent': 'Towels',              'slug': 'pool-towels',              'image': 'images/pool-stripe-towel.png'},
-    {'id': 'towels-gym',         'name': 'Gym & Fitness Towels', 'parent': 'Towels',              'slug': 'gym-towels',               'image': 'images/gym-salon-towels.png'},
-    {'id': 'towels-salon',       'name': 'Salon Towels',         'parent': 'Towels',              'slug': 'salon-towels',             'image': 'images/gym-salon-towels.png'},
-    {'id': 'towels-robes',       'name': 'Bath Robes',           'parent': 'Towels',              'slug': 'bath-robes',               'image': 'images/terry-bathrobe.png'},
+    {'id': 'towels-pool',        'name': 'Pool Towels',          'parent': 'Towels',              'slug': 'pool-towels',              'image': 'images/pool-stripe-towel.jpg'},
+    {'id': 'towels-gym',         'name': 'Gym & Fitness Towels', 'parent': 'Towels',              'slug': 'gym-towels',               'image': 'images/gym-salon-towels.jpg'},
+    {'id': 'towels-salon',       'name': 'Salon Towels',         'parent': 'Towels',              'slug': 'salon-towels',             'image': 'images/gym-salon-towels.jpg'},
+    {'id': 'towels-robes',       'name': 'Bath Robes',           'parent': 'Towels',              'slug': 'bath-robes',               'image': 'images/terry-bathrobe.jpg'},
     # Tea Towels
-    {'id': 'tea-towels',         'name': 'Tea Towels',           'parent': 'Tea Towels',          'slug': 'tea-towels',               'image': 'images/tea-towels.png'},
+    {'id': 'tea-towels',         'name': 'Tea Towels',           'parent': 'Tea Towels',          'slug': 'tea-towels',               'image': 'images/tea-towels.jpg'},
     # Sheets
     {'id': 'sheets-flat',        'name': 'Flat Sheets',          'parent': 'Sheets',              'slug': 'flat-sheets',              'image': 'images/white-towel-stack-3.webp'},
     {'id': 'sheets-fitted',      'name': 'Fitted Sheets',        'parent': 'Sheets',              'slug': 'fitted-sheets',            'image': 'images/white-towel-stack-5.webp'},
@@ -420,7 +420,7 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-PT-001', 'Commercial Pool Towel', 'Blue & White Stripe', '75×150 cm', '500 GSM', '100% Cotton',
-      'towels-pool', 'images/pool-stripe-towel.png',
+      'towels-pool', 'images/pool-stripe-towel.jpg',
       moq='50', carton_qty='50', price=0,
       desc='500 GSM commercial pool towel in a classic blue and white stripe. Suitable for hotels, aquatic centres and resorts.',
       color_group='ALU-PT-001', parent_sku='ALU-PT-001', variant_name='Blue & White Stripe', tag=''),
@@ -430,12 +430,12 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-GY-001-WHT', 'Commercial Gym Towel', 'White', '40×70 cm', '380 GSM', '100% Cotton',
-      'towels-gym', 'images/gym-salon-towels.png',
+      'towels-gym', 'images/gym-salon-towels.jpg',
       moq='100', carton_qty='100', price=0,
       desc='380 GSM compact gym towel in White. Suited for fitness centres and sporting facilities.',
       color_group='ALU-GY-001', parent_sku='ALU-GY-001', variant_name='White', tag=''),
     p('ALU-GY-001-BLK', 'Commercial Gym Towel', 'Black', '40×70 cm', '380 GSM', '100% Cotton',
-      'towels-gym', 'images/gym-salon-towels.png',
+      'towels-gym', 'images/gym-salon-towels.jpg',
       moq='100', carton_qty='100', price=0,
       desc='380 GSM compact gym towel in Black.',
       color_group='ALU-GY-001', parent_sku='ALU-GY-001', variant_name='Black', tag=''),
@@ -446,12 +446,12 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-SL-001-WHT', 'Professional Salon Towel', 'White', '40×70 cm', '400 GSM', '100% Cotton',
-      'towels-salon', 'images/gym-salon-towels.png',
+      'towels-salon', 'images/gym-salon-towels.jpg',
       moq='100', carton_qty='100', price=0,
       desc='400 GSM professional salon towel in White.',
       color_group='ALU-SL-001', parent_sku='ALU-SL-001', variant_name='White', tag=''),
     p('ALU-SL-001-BLK', 'Professional Salon Towel', 'Black', '40×70 cm', '400 GSM', '100% Cotton',
-      'towels-salon', 'images/gym-salon-towels.png',
+      'towels-salon', 'images/gym-salon-towels.jpg',
       moq='100', carton_qty='100', price=0,
       desc='400 GSM professional salon towel in Black.',
       color_group='ALU-SL-001', parent_sku='ALU-SL-001', variant_name='Black', tag=''),
@@ -462,13 +462,13 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-RB-001', 'Hotel Terry Shawl Bathrobe', 'White', 'One Size', '400 GSM', '100% Cotton Terry',
-      'towels-robes', 'images/terry-bathrobe.png',
+      'towels-robes', 'images/terry-bathrobe.jpg',
       moq='10', carton_qty='12', price=0,
       desc='400 GSM terry shawl bathrobe in White. Shawl collar, two front pockets, self-tie belt.',
       color_group='ALU-RB-001', parent_sku='ALU-RB-001', variant_name='White', tag=''),
 
     p('ALU-RB-002', 'Hotel Waffle Bathrobe', 'White', 'One Size', '', '100% Cotton Waffle',
-      'towels-robes', 'images/terry-bathrobe.png',
+      'towels-robes', 'images/terry-bathrobe.jpg',
       moq='10', carton_qty='12', price=29.95,
       desc='Lightweight waffle weave bathrobe in White. Kimono or shawl collar styles available.',
       color_group='ALU-RB-002', parent_sku='ALU-RB-002', variant_name='White', tag=''),
@@ -478,13 +478,13 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-TT-001', 'Classic Tea Towel — Blue Border', 'White/Blue', '45×70 cm', '160 GSM', '100% Cotton',
-      'tea-towels', 'images/tea-towels.png',
+      'tea-towels', 'images/tea-towels.jpg',
       moq='100', carton_qty='100', price=0,
       desc='160 GSM woven tea towel with classic blue border stripe.',
       color_group='ALU-TT-001', parent_sku='ALU-TT-001', variant_name='Blue Border', tag=''),
 
     p('ALU-TT-002', 'Classic Tea Towel — Black Border', 'White/Black', '45×70 cm', '160 GSM', '100% Cotton',
-      'tea-towels', 'images/tea-towels.png',
+      'tea-towels', 'images/tea-towels.jpg',
       moq='100', carton_qty='100', price=0,
       desc='160 GSM woven tea towel with classic black border stripe.',
       color_group='ALU-TT-002', parent_sku='ALU-TT-002', variant_name='Black Border', tag=''),
@@ -696,22 +696,22 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-QC-001-S', 'White Satin Stripe Quilt Cover', 'White/Stripe', 'Single', '175 GSM', 'Cotton/Polyester Blend',
-      'quilt-covers', PH,
+      'quilt-covers', 'images/satin-stripe-quilt-white-main.jpg',
       moq='5', carton_qty='', price=0,
       desc='Satin stripe quilt cover in White — Single size.',
       color_group='ALU-QC-001', parent_sku='ALU-QC-001', variant_name='Single', tag=''),
     p('ALU-QC-001-D', 'White Satin Stripe Quilt Cover', 'White/Stripe', 'Double', '175 GSM', 'Cotton/Polyester Blend',
-      'quilt-covers', PH,
+      'quilt-covers', 'images/satin-stripe-quilt-white-main.jpg',
       moq='5', carton_qty='', price=0,
       desc='Satin stripe quilt cover in White — Double size.',
       color_group='ALU-QC-001', parent_sku='ALU-QC-001', variant_name='Double', tag=''),
     p('ALU-QC-001-Q', 'White Satin Stripe Quilt Cover', 'White/Stripe', 'Queen', '175 GSM', 'Cotton/Polyester Blend',
-      'quilt-covers', PH,
+      'quilt-covers', 'images/satin-stripe-quilt-white-main.jpg',
       moq='5', carton_qty='', price=0,
       desc='Satin stripe quilt cover in White — Queen size.',
       color_group='ALU-QC-001', parent_sku='ALU-QC-001', variant_name='Queen', tag=''),
     p('ALU-QC-001-K', 'White Satin Stripe Quilt Cover', 'White/Stripe', 'King', '175 GSM', 'Cotton/Polyester Blend',
-      'quilt-covers', PH,
+      'quilt-covers', 'images/satin-stripe-quilt-white-main.jpg',
       moq='5', carton_qty='', price=0,
       desc='Satin stripe quilt cover in White — King size.',
       color_group='ALU-QC-001', parent_sku='ALU-QC-001', variant_name='King', tag=''),
