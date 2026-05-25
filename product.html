@@ -107,8 +107,8 @@
     flex-wrap: wrap;
     margin-bottom: 12px;
   }
-  .pd-colours .sw {
-    display: flex;
+  .sw {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 6px 12px 6px 6px;
@@ -119,48 +119,50 @@
     background: var(--paper);
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
   }
-  .pd-colours .sw:hover {
+  .sw:hover {
     border-color: var(--gold);
     background: var(--ivory-2);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(28, 43, 126, 0.08);
   }
-  .pd-colours .sw.active {
+  .sw.active {
     border-color: var(--navy);
     background: var(--ivory-2);
     color: var(--navy);
     font-weight: 500;
     box-shadow: inset 0 0 0 1px var(--navy);
   }
-  .pd-colours .sw .dot {
+  .sw .dot {
     width: 18px; height: 18px;
     border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
   }
-  .pd-colours .sw .dot.white        { background: #ffffff; border-color: #d6d1c4; }
-  .pd-colours .sw .dot.charcoal     { background: #3a3a45; }
-  .pd-colours .sw .dot.camel        { background: #c9b086; }
-  .pd-colours .sw .dot.black        { background: #1a1a1a; }
-  .pd-colours .sw .dot.navy         { background: #1C2B7E; }
-  .pd-colours .sw .dot.aqua         { background: #57cc99; }
-  .pd-colours .sw .dot.cherry       { background: #ba0404; }
-  .pd-colours .sw .dot.coffee       { background: #582f0e; }
-  .pd-colours .sw .dot.fuchsia      { background: #f72585; }
-  .pd-colours .sw .dot.garnet       { background: #6f1d1b; }
-  .pd-colours .sw .dot.lime         { background: #9ef01a; }
-  .pd-colours .sw .dot.mirage       { background: #83c5be; }
-  .pd-colours .sw .dot.pink         { background: #ffb5a7; }
-  .pd-colours .sw .dot.purple       { background: #7209b7; }
-  .pd-colours .sw .dot.royal        { background: #1B2A7A; }
+  .sw .dot.white        { background: #ffffff; border-color: #d6d1c4; }
+  .sw .dot.charcoal     { background: #3a3a45; }
+  .sw .dot.camel        { background: #c9b086; }
+  .sw .dot.black        { background: #1a1a1a; }
+  .sw .dot.navy         { background: #1C2B7E; }
+  .sw .dot.aqua         { background: #57cc99; }
+  .sw .dot.cherry       { background: #ba0404; }
+  .sw .dot.coffee       { background: #582f0e; }
+  .sw .dot.fuchsia      { background: #f72585; }
+  .sw .dot.garnet       { background: #6f1d1b; }
+  .sw .dot.lime         { background: #9ef01a; }
+  .sw .dot.mirage       { background: #83c5be; }
+  .sw .dot.pink         { background: #ffb5a7; }
+  .sw .dot.purple       { background: #7209b7; }
+  .sw .dot.royal        { background: #1B2A7A; }
   /* Additional colours */
-  .pd-colours .sw .dot.beige        { background: #d9c4a8; border-color: #c4ae91; }
-  .pd-colours .sw .dot.blue         { background: #4a90d9; }
-  .pd-colours .sw .dot.latte        { background: #c4a97a; border-color: #b09060; }
-  .pd-colours .sw .dot.mint         { background: #98d8c8; }
-  .pd-colours .sw .dot.blue-stripe  { background: linear-gradient(135deg, #fff 40%, #4a90d9 40%); border-color: #c0c8d8; }
-  .pd-colours .sw .dot.white-stripe { background: linear-gradient(135deg, #fff 40%, #c9b086 40%); border-color: #d6d1c4; }
-  .pd-colours .sw .dot.more {
+  .sw .dot.beige        { background: #d9c4a8; border-color: #c4ae91; }
+  .sw .dot.blue         { background: #4a90d9; }
+  .sw .dot.latte        { background: #c4a97a; border-color: #b09060; }
+  .sw .dot.mint         { background: #98d8c8; }
+  .sw .dot.blue-stripe  { background: linear-gradient(135deg, #fff 40%, #4a90d9 40%); border-color: #c0c8d8; }
+  .sw .dot.white-stripe { background: linear-gradient(135deg, #fff 40%, #c9b086 40%); border-color: #d6d1c4; }
+  .sw .dot.more {
     background: var(--ivory-2);
     color: var(--gold);
     font-size: 14px;
@@ -390,8 +392,13 @@
         `;
       }).join('');
 
-      // 2. Get colors available for this specific type name
-      const availableColours = siblings.filter(s => s.name === currentProduct.name);
+      // 2. Get colors available for this specific type name — deduplicate by colour
+      const _seenColours = new Set();
+      const availableColours = siblings.filter(s => s.name === currentProduct.name).filter(s => {
+        if (_seenColours.has(s.colour)) return false;
+        _seenColours.add(s.colour);
+        return true;
+      });
       const coloursHtml = availableColours.map(sib => {
         const activeClass = sib.sku === currentProduct.sku ? 'active' : '';
         let dotColor = sib.colour.toLowerCase()
