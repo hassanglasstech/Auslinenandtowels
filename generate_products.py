@@ -521,7 +521,7 @@ PRODUCTS = [
       color_group='ALU-FL-001', parent_sku='ALU-FL-001', variant_name='King', tag=''),
 
     p('ALU-FL-002-CAM-S',  'Coloured Flat Sheet', 'Camel', 'Single (180×300 cm)',      '165 GSM', '50% Cotton/50% Polyester',
-      'sheets-flat', PH, moq='10', carton_qty='', price=27.95,
+      'sheets-flat', 'images/camel-sheets.jpg', moq='10', carton_qty='', price=27.95,
       desc='165 GSM coloured flat sheet in Camel — Single size.',
       color_group='ALU-FL-002', parent_sku='ALU-FL-002', variant_name='Camel Single', tag=''),
     p('ALU-FL-002-CAM-KS', 'Coloured Flat Sheet', 'Camel', 'King Single (200×300 cm)', '165 GSM', '50% Cotton/50% Polyester',
