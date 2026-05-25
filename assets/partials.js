@@ -131,8 +131,7 @@
       <div class="wrap">
         <nav class="nav-main left">
           <a href="collection.html" class="${active==='collection'?'active':''}">Collection</a>
-          <a href="collection.html?cat=towels-bath">Towels</a>
-          <a href="collection.html?cat=sheets-flat">Bed Linen</a>
+          <a href="blog.html" class="${active==='blog'?'active':''}">Blog</a>
           <a href="about.html" class="${active==='about'?'active':''}">About</a>
         </nav>
         <button class="menu-toggle" aria-label="Open menu" onclick="window.ALT_OPEN_DRAWER()">${icon('menu')}</button>
@@ -165,6 +164,7 @@
       <a href="collection.html?cat=sheets-flat">Bed Linen</a>
       <a href="room-package.html">Bulk Quote Calculator</a>
       <a href="trade-account.html">Open Trade Account</a>
+      <a href="blog.html">Blog</a>
       <a href="case-studies.html">Case Studies</a>
       <a href="about.html">About</a>
       <a href="faq.html">FAQ</a>
@@ -197,6 +197,7 @@
             <li><a href="collection.html">Collection</a></li>
             <li><a href="room-package.html">Bulk Quote Calculator</a></li>
             <li><a href="trade-account.html">Open Trade Account</a></li>
+            <li><a href="blog.html">Blog</a></li>
             <li><a href="case-studies.html">Case Studies</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="faq.html">FAQ</a></li>
