@@ -1,0 +1,78 @@
+# ============================================================
+# Australian Linen & Towels — .htaccess
+# Hostinger / Apache / LiteSpeed
+# ============================================================
+
+# ── SECURITY HEADERS ────────────────────────────────────────
+<IfModule mod_headers.c>
+  # Prevent clickjacking (site can't be loaded in an iframe)
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Prevent MIME sniffing attacks
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Control referrer info sent to other sites
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Disable browser features we don't use
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+  # XSS protection for older browsers
+  Header always set X-XSS-Protection "1; mode=block"
+
+  # Force HTTPS for 1 year (only enable after SSL is confirmed working)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# ── FORCE HTTPS ─────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirect HTTP → HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Redirect www → non-www (canonical domain)
+  RewriteCond %{HTTP_HOST} ^www\.auslinenandtowels\.com\.au [NC]
+  RewriteRule ^(.*)$ https://auslinenandtowels.com.au/$1 [R=301,L]
+</IfModule>
+
+# ── CUSTOM 404 PAGE ─────────────────────────────────────────
+ErrorDocument 404 /404.html
+
+# ── GZIP COMPRESSION ────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ── BROWSER CACHING ─────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Images — cache 1 month
+  ExpiresByType image/jpeg         "access plus 1 month"
+  ExpiresByType image/png          "access plus 1 month"
+  ExpiresByType image/webp         "access plus 1 month"
+  ExpiresByType image/svg+xml      "access plus 1 month"
+  ExpiresByType image/x-icon       "access plus 1 year"
+
+  # CSS & JS — cache 1 week
+  ExpiresByType text/css           "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+
+  # HTML — no cache (always fresh)
+  ExpiresByType text/html          "access plus 0 seconds"
+</IfModule>
+
+# ── BLOCK DIRECT ACCESS TO SENSITIVE FILES ──────────────────
+<FilesMatch "(^\.htaccess|mail\.php)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
