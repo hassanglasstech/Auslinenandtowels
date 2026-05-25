@@ -138,21 +138,28 @@
     border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.08);
   }
-  .pd-colours .sw .dot.white { background: #ffffff; border-color: #d6d1c4; }
-  .pd-colours .sw .dot.charcoal { background: #3a3a45; }
-  .pd-colours .sw .dot.camel { background: #c9b086; }
-  .pd-colours .sw .dot.black { background: #000000; }
-  .pd-colours .sw .dot.navy { background: #1C2B7E; }
-  .pd-colours .sw .dot.aqua { background: #57cc99; }
-  .pd-colours .sw .dot.cherry { background: #ba0404; }
-  .pd-colours .sw .dot.coffee { background: #582f0e; }
-  .pd-colours .sw .dot.fuchsia { background: #f72585; }
-  .pd-colours .sw .dot.garnet { background: #6f1d1b; }
-  .pd-colours .sw .dot.lime { background: #9ef01a; }
-  .pd-colours .sw .dot.mirage { background: #83c5be; }
-  .pd-colours .sw .dot.pink { background: #ffb5a7; }
-  .pd-colours .sw .dot.purple { background: #7209b7; }
-  .pd-colours .sw .dot.royal { background: #1B2A7A; }
+  .pd-colours .sw .dot.white        { background: #ffffff; border-color: #d6d1c4; }
+  .pd-colours .sw .dot.charcoal     { background: #3a3a45; }
+  .pd-colours .sw .dot.camel        { background: #c9b086; }
+  .pd-colours .sw .dot.black        { background: #1a1a1a; }
+  .pd-colours .sw .dot.navy         { background: #1C2B7E; }
+  .pd-colours .sw .dot.aqua         { background: #57cc99; }
+  .pd-colours .sw .dot.cherry       { background: #ba0404; }
+  .pd-colours .sw .dot.coffee       { background: #582f0e; }
+  .pd-colours .sw .dot.fuchsia      { background: #f72585; }
+  .pd-colours .sw .dot.garnet       { background: #6f1d1b; }
+  .pd-colours .sw .dot.lime         { background: #9ef01a; }
+  .pd-colours .sw .dot.mirage       { background: #83c5be; }
+  .pd-colours .sw .dot.pink         { background: #ffb5a7; }
+  .pd-colours .sw .dot.purple       { background: #7209b7; }
+  .pd-colours .sw .dot.royal        { background: #1B2A7A; }
+  /* Additional colours */
+  .pd-colours .sw .dot.beige        { background: #d9c4a8; border-color: #c4ae91; }
+  .pd-colours .sw .dot.blue         { background: #4a90d9; }
+  .pd-colours .sw .dot.latte        { background: #c4a97a; border-color: #b09060; }
+  .pd-colours .sw .dot.mint         { background: #98d8c8; }
+  .pd-colours .sw .dot.blue-stripe  { background: linear-gradient(135deg, #fff 40%, #4a90d9 40%); border-color: #c0c8d8; }
+  .pd-colours .sw .dot.white-stripe { background: linear-gradient(135deg, #fff 40%, #c9b086 40%); border-color: #d6d1c4; }
   .pd-colours .sw .dot.more {
     background: var(--ivory-2);
     color: var(--gold);
@@ -387,10 +394,16 @@
       const availableColours = siblings.filter(s => s.name === currentProduct.name);
       const coloursHtml = availableColours.map(sib => {
         const activeClass = sib.sku === currentProduct.sku ? 'active' : '';
-        let dotColor = sib.colour.toLowerCase().replace('charcoal / grey', 'charcoal').replace('royal blue', 'royal').replace('navy blue', 'navy').split('/')[0].trim().replace(' ', '-');
+        let dotColor = sib.colour.toLowerCase()
+          .replace('charcoal / grey','charcoal').replace('charcoal/grey','charcoal')
+          .replace('royal blue','royal').replace('navy blue','navy')
+          .replace('blue & white stripe','blue-stripe')
+          .replace('white/stripe','white-stripe').replace('white / stripe','white-stripe')
+          .replace('white/black','white').replace('white/blue','white')
+          .split('/')[0].trim().replace(/\s+/g,'-');
         return `
           <span class="sw ${activeClass}" onclick="switchColor('${sib.sku}')" style="cursor:pointer;">
-            <span class="dot ${dotColor}"></span>${sib.colour.split('/')[0].trim()}
+            <span class="dot ${dotColor}"></span>${sib.colour.replace('Blue & White Stripe','Blue Stripe').replace('White/Black','Black Border').replace('White/Blue','Blue Border').replace('White/Stripe','Stripe').split('/')[0].trim()}
           </span>
         `;
       }).join('');
@@ -419,10 +432,16 @@
       if (siblings && siblings.length > 0) {
         const coloursHtml = siblings.map(sib => {
           const activeClass = sib.sku === currentProduct.sku ? 'active' : '';
-          let dotColor = sib.colour.toLowerCase().replace('charcoal / grey', 'charcoal').replace('royal blue', 'royal').replace('navy blue', 'navy').split('/')[0].trim().replace(' ', '-');
+          let dotColor = sib.colour.toLowerCase()
+          .replace('charcoal / grey','charcoal').replace('charcoal/grey','charcoal')
+          .replace('royal blue','royal').replace('navy blue','navy')
+          .replace('blue & white stripe','blue-stripe')
+          .replace('white/stripe','white-stripe').replace('white / stripe','white-stripe')
+          .replace('white/black','white').replace('white/blue','white')
+          .split('/')[0].trim().replace(/\s+/g,'-');
           return `
             <span class="sw ${activeClass}" onclick="window.location.href='product.html?sku=${sib.sku}'" style="cursor:pointer;">
-              <span class="dot ${dotColor}"></span>${sib.colour.split('/')[0].trim()}
+              <span class="dot ${dotColor}"></span>${sib.colour.replace('Blue & White Stripe','Blue Stripe').replace('White/Black','Black Border').replace('White/Blue','Blue Border').replace('White/Stripe','Stripe').split('/')[0].trim()}
             </span>
           `;
         }).join('');
