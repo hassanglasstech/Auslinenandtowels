@@ -440,16 +440,6 @@ PRODUCTS = [
       desc='380 GSM compact gym towel in Black.',
       color_group='ALU-GY-001', parent_sku='ALU-GY-001', variant_name='Black', tag=''),
 
-    p('ALU-GY-002-WHT', 'Commercial Gym Towel XL Bulk Pack 100', 'White', '40×80 cm', '500 GSM', '100% Cotton',
-      'towels-gym', 'images/gym-salon-towels.png',
-      moq='100', carton_qty='100', price=995,
-      desc='500 GSM oversized gym towel. Sold as a bulk pack of 100 in White.',
-      color_group='ALU-GY-002', parent_sku='ALU-GY-002', variant_name='White', tag='Bulk Pack'),
-    p('ALU-GY-002-BLK', 'Commercial Gym Towel XL Bulk Pack 100', 'Black', '40×80 cm', '500 GSM', '100% Cotton',
-      'towels-gym', 'images/gym-salon-towels.png',
-      moq='100', carton_qty='100', price=995,
-      desc='500 GSM oversized gym towel. Sold as a bulk pack of 100 in Black.',
-      color_group='ALU-GY-002', parent_sku='ALU-GY-002', variant_name='Black', tag='Bulk Pack'),
 
     # ════════════════════════════════════════════════════════════
     # TOWELS — SALON TOWELS
@@ -466,28 +456,6 @@ PRODUCTS = [
       desc='400 GSM professional salon towel in Black.',
       color_group='ALU-SL-001', parent_sku='ALU-SL-001', variant_name='Black', tag=''),
 
-    p('ALU-SL-002', 'Salon Towel Bulk Pack 50', 'White', '40×70 cm', '160 GSM', '100% Cotton',
-      'towels-salon', 'images/gym-salon-towels.png',
-      moq='50', carton_qty='50', price=200,
-      desc='Economy salon towel. Sold as a bulk pack of 50 in White.',
-      color_group='ALU-SL-002', parent_sku='ALU-SL-002', variant_name='White', tag='Bulk Pack'),
-
-    p('ALU-SL-003-WHT', 'Salon Towel Bulk Pack 100', 'White', '40×70 cm', '160 GSM', '100% Cotton',
-      'towels-salon', 'images/gym-salon-towels.png',
-      moq='100', carton_qty='100', price=350,
-      desc='Economy salon towel. Sold as a bulk pack of 100 in White.',
-      color_group='ALU-SL-003', parent_sku='ALU-SL-003', variant_name='White', tag='Bulk Pack'),
-    p('ALU-SL-003-BLK', 'Salon Towel Bulk Pack 100', 'Black', '40×70 cm', '400 GSM', '100% Cotton',
-      'towels-salon', 'images/gym-salon-towels.png',
-      moq='100', carton_qty='100', price=495,
-      desc='Professional salon towel. Sold as a bulk pack of 100 in Black.',
-      color_group='ALU-SL-003', parent_sku='ALU-SL-003', variant_name='Black', tag='Bulk Pack'),
-
-    p('ALU-SL-004', 'Embroidered Salon Towel Bulk Pack 100', 'White', '40×70 cm', '160 GSM', '100% Cotton',
-      'towels-salon', 'images/gym-salon-towels.png',
-      moq='100', carton_qty='100', price=750,
-      desc='Economy salon towel with custom embroidery option. Sold as a bulk pack of 100 in White.',
-      color_group='ALU-SL-004', parent_sku='ALU-SL-004', variant_name='White', tag='Embroidered'),
 
     # ════════════════════════════════════════════════════════════
     # TOWELS — BATH ROBES
