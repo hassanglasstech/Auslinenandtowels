@@ -227,6 +227,13 @@ PRODUCTS = [
       desc='900 GSM executive bath sheet in White. Designed for premium spa and resort use.',
       color_group='ALU-BS-001', parent_sku='ALU-BS-001', variant_name='White', tag=''),
 
+    # ALU-BS-003 Executive Bath Sheet Large White — Supplier code 009
+    p('ALU-BS-003', 'Executive Bath Sheet Large', 'White', '90×180 cm', '900 GSM', '100% Combed Cotton',
+      'towels-bath-sheets', 'images/scraped/Classical-White-Bath-Towel.jpg',
+      moq='10', carton_qty='24', price=17.95,
+      desc='900 GSM executive bath sheet in White. 100% combed cotton with double stitched hemming. Perfect for 4-star and 5-star accommodation, hotels, motels and nursing homes.',
+      color_group='ALU-BS-003', parent_sku='ALU-BS-003', variant_name='White', tag='Sale'),
+
     # ALU-BS-002 Bath Sheet — 4 colours
     p('ALU-BS-002-BLK', 'Bath Sheet', 'Black', '90×180 cm', '900 GSM', '100% Cotton',
       'towels-bath-sheets', 'images/scraped/black-bath-sheet.jpg',
