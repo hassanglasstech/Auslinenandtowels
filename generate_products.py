@@ -978,7 +978,7 @@ PRODUCTS = [
     # ════════════════════════════════════════════════════════════
 
     p('ALU-PP-001', 'Pillow Protector', 'White', 'Standard (48×73 cm)', '', 'Cotton/Polyester',
-      'mp-pillow', PH,
+      'mp-pillow', 'images/PP-STD-white-main.jpg',
       moq='20', carton_qty='', price=0,
       desc='Zippered pillow protector in White — Standard size.',
       color_group='ALU-PP-001', parent_sku='ALU-PP-001', variant_name='Standard', tag=''),
