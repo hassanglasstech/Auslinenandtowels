@@ -489,17 +489,6 @@ PRODUCTS = [
       desc='160 GSM woven tea towel with classic black border stripe.',
       color_group='ALU-TT-002', parent_sku='ALU-TT-002', variant_name='Black Border', tag=''),
 
-    p('ALU-TT-003', 'Tea Towel Blue Border — Bulk', 'White/Blue', '50×70 cm', '160 GSM', '100% Cotton',
-      'tea-towels', 'images/tea-towels.png',
-      moq='1', carton_qty='', price=1.70,
-      desc='160 GSM tea towel with blue border. Available individually or in bulk packs of 50, 100 or 200.',
-      color_group='ALU-TT-003', parent_sku='ALU-TT-003', variant_name='Blue Border Bulk', tag='Bulk'),
-
-    p('ALU-TT-004', 'Tea Towel Red/Blue/White Multi-colour — Bulk', 'Multi', '50×70 cm', '160 GSM', '100% Cotton',
-      'tea-towels', 'images/tea-towels.png',
-      moq='1', carton_qty='', price=1.95,
-      desc='160 GSM tea towel in a red, blue and white multi-colour design. Available individually or in bulk packs of 50, 100 or 200.',
-      color_group='ALU-TT-004', parent_sku='ALU-TT-004', variant_name='Multi-colour Bulk', tag='Bulk'),
 
     # ════════════════════════════════════════════════════════════
     # SHEETS — FLAT SHEETS
