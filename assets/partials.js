@@ -162,6 +162,13 @@
       <a href="collection.html?cat=towels-gym">Gym &amp; Fitness Towels</a>
       <a href="collection.html?cat=tea-towels">Tea Towels</a>
       <a href="collection.html?cat=sheets-flat">Bed Linen</a>
+      <div style="margin:14px 0 6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9b9dae;">For Your Business</div>
+      <a href="hotels.html">Hotels &amp; Resorts</a>
+      <a href="motels.html">Motels &amp; Serviced Apartments</a>
+      <a href="spas.html">Day Spas &amp; Salons</a>
+      <a href="gyms.html">Gyms &amp; Fitness Centres</a>
+      <a href="airbnb.html">Airbnb &amp; Short-Stay</a>
+      <div style="margin:14px 0 6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9b9dae;">Account</div>
       <a href="room-package.html">Bulk Quote Calculator</a>
       <a href="trade-account.html">Open Trade Account</a>
       <a href="blog.html">Blog</a>
@@ -213,6 +220,16 @@
             <li><a href="collection.html?cat=quilts-micro">Quilts &amp; Blankets</a></li>
             <li><a href="collection.html?cat=pillows">Pillows</a></li>
             <li><a href="collection.html">View All</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>For Your Business</h5>
+          <ul>
+            <li><a href="hotels.html">Hotels &amp; Resorts</a></li>
+            <li><a href="motels.html">Motels &amp; Serviced Apts</a></li>
+            <li><a href="spas.html">Day Spas &amp; Salons</a></li>
+            <li><a href="gyms.html">Gyms &amp; Fitness</a></li>
+            <li><a href="airbnb.html">Airbnb &amp; Short-Stay</a></li>
           </ul>
         </div>
         <div>
