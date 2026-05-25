@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>About Us — Australian Linen & Towels — Wholesale Hospitality Linen from the Riverina</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+<meta name="theme-color" content="#1a1f4e"/>
+<meta name="description" content="Australian Linen & Towels supplies premium commercial linens to hotels, motels, spas, and hospitality businesses across Australia. Based in Griffith, NSW, in the heart of the Riverina region."/>
+<meta name="keywords" content="about Australian Linen Towels, hospitality linen supplier Riverina, Griffith NSW wholesale linen, commercial bedding Australia"/>
+
+<!-- Open Graph -->
+<meta property="og:title" content="About Us — Australian Linen & Towels"/>
+<meta property="og:description" content="Premium hospitality linen from the heart of the Riverina."/>
+<meta property="og:type" content="website"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css"/>
+
+<style>
+  .about-hero{
+    background: linear-gradient(135deg, #0f1535 0%, #1a2148 100%);
+    color: #fff;
+    padding: 80px 24px 64px;
+    text-align: center;
+  }
+  .about-hero .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #d4b568;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .about-hero h1{
+    font-family: var(--f-serif);
+    font-size: clamp(40px, 6vw, 64px);
+    font-weight: 400;
+    line-height: 1.05;
+    max-width: 820px;
+    margin: 0 auto 22px;
+  }
+  .about-hero h1 em{ font-style: italic; color: #d4b568; }
+  .about-hero p.lede{
+    font-size: 17px;
+    color: rgba(255,255,255,0.78);
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .about-section{
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 70px 24px 50px;
+  }
+  .about-section h2{
+    font-family: var(--f-serif);
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 500;
+    color: #0f1535;
+    margin-bottom: 22px;
+    line-height: 1.2;
+  }
+  .about-section h2 em{ font-style: italic; color: #c9a84c; }
+  .about-section p{
+    font-size: 16px;
+    line-height: 1.75;
+    color: #2a2d40;
+    margin-bottom: 22px;
+  }
+
+  .values-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 28px;
+    margin: 40px 0;
+  }
+  .value-card{
+    background: #f8f6f1;
+    padding: 28px 26px;
+    border-radius: 4px;
+    border-top: 3px solid #d4b568;
+  }
+  .value-card .num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #c9a84c;
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+  }
+  .value-card h3{
+    font-family: var(--f-serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: #0f1535;
+    margin-bottom: 10px;
+  }
+  .value-card p{
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b6e85;
+    margin-bottom: 0;
+  }
+
+  .stats-band{
+    background: #f8f6f1;
+    padding: 60px 24px;
+    margin: 0;
+  }
+  .stats-band .wrap{
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+  @media(max-width: 700px){
+    .stats-band .wrap{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-block .num{
+    font-family: var(--f-serif);
+    font-size: 48px;
+    color: #0f1535;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-block .num em{ color: #c9a84c; font-style: italic; }
+  .stat-block .lbl{
+    font-size: 13px;
+    color: #6b6e85;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .cta-band{
+    background: linear-gradient(135deg, #0f1535 0%, #1a2148 100%);
+    padding: 70px 24px;
+    text-align: center;
+    color: #fff;
+  }
+  .cta-band h2{
+    font-family: var(--f-serif);
+    font-size: clamp(30px, 4.5vw, 42px);
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+  .cta-band h2 em{ color: #d4b568; font-style: italic; }
+  .cta-band p{
+    color: rgba(255,255,255,0.75);
+    max-width: 520px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+  }
+  .cta-band .btns{ display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta-band .btn{
+    display: inline-block;
+    padding: 14px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .cta-band .btn-primary{ background: #d4b568; color: #0f1535; }
+  .cta-band .btn-primary:hover{ background: #fff; }
+  .cta-band .btn-secondary{ border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+  .cta-band .btn-secondary:hover{ border-color: #d4b568; color: #d4b568; }
+</style>
+</head>
+<body data-page="about">
+<div data-header></div>
+
+<section class="about-hero">
+  <span class="eyebrow">About Us · Riverina, NSW</span>
+  <h1>Premium hospitality linen, <em>built for Australian operators.</em></h1>
+  <p class="lede">We supply the towels, sheets, and bedding that hotels, motels, and hospitality businesses across Australia rely on every day.</p>
+</section>
+
+<section class="about-section">
+  <h2>Our <em>story</em></h2>
+  <p>Australian Linen &amp; Towels was founded with a clear purpose: to make commercial-grade hospitality linen accessible to operators who care about quality but don't want to deal with bloated minimums, slow imports, or rigid wholesale terms.</p>
+  <p>We're based in <strong>Griffith</strong>, in the heart of the Riverina region of NSW — a part of Australia best known for its wineries, food culture, and thriving tourism economy. From here, we serve hotels, motels, day spas, gyms, beauty salons, and serviced accommodation across every state and territory.</p>
+  <p>The hospitality industry runs on small details. A guest's first impression of a room is rarely the artwork or the lighting — it's the sheets they touch when they sit on the bed, and the towels they reach for after a shower. That's our entire focus.</p>
+</section>
+
+<section class="stats-band">
+  <div class="wrap">
+    <div class="stat-block">
+      <div class="num">No <em>MOQ</em></div>
+      <div class="lbl">Buy what you need</div>
+    </div>
+    <div class="stat-block">
+      <div class="num">100<em>%</em></div>
+      <div class="lbl">Australian served</div>
+    </div>
+    <div class="stat-block">
+      <div class="num">1–2 <em>days</em></div>
+      <div class="lbl">Stock dispatch</div>
+    </div>
+    <div class="stat-block">
+      <div class="num">AU<em>$</em>100</div>
+      <div class="lbl">Free shipping over</div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section">
+  <h2>What we <em>stand for</em></h2>
+  <p>We don't try to be everything to everyone. We focus on supplying durable, hospitality-grade linen with the kind of service hotel operators actually want — direct answers, honest pricing, and reliable supply.</p>
+
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="num">01</div>
+      <h3>Quality first</h3>
+      <p>Commercial-grade cotton and blends that survive industrial laundering. We test what we sell.</p>
+    </div>
+    <div class="value-card">
+      <div class="num">02</div>
+      <h3>Honest pricing</h3>
+      <p>Trade rates without hoops. Volume discounts where they make sense, no inflated retail markup.</p>
+    </div>
+    <div class="value-card">
+      <div class="num">03</div>
+      <h3>No minimum order</h3>
+      <p>Order one box or one pallet. Small motels and large hotel groups get the same wholesale access.</p>
+    </div>
+    <div class="value-card">
+      <div class="num">04</div>
+      <h3>Direct service</h3>
+      <p>Talk to people who know the product. No call centres, no scripts.</p>
+    </div>
+  </div>
+</section>
+
+<section class="about-section">
+  <h2>Who we <em>supply</em></h2>
+  <p>Our customers are operators across the Australian hospitality industry:</p>
+  <ul style="font-size: 16px; line-height: 1.9; color: #2a2d40; padding-left: 20px;">
+    <li><strong>Hotels and motels</strong> — from boutique 12-room properties to 200-key business hotels</li>
+    <li><strong>Day spas and beauty salons</strong> — where towel softness and colour-fastness matter daily</li>
+    <li><strong>Gyms and fitness centres</strong> — high-turnover, durable hand and bath towels</li>
+    <li><strong>Serviced apartments and Airbnb operators</strong> — consistent, hotel-grade bedding</li>
+    <li><strong>Resorts and wellness retreats</strong> — premium linen for guest-facing spaces</li>
+    <li><strong>Aged care and healthcare facilities</strong> — durable bed linen for institutional use</li>
+  </ul>
+  <p>Whether you're managing a single-property motel in regional NSW or coordinating linen across a chain, we'll work with you the same way: directly, transparently, and with no pressure to over-order.</p>
+</section>
+
+<section class="about-section">
+  <h2>Why <em>Griffith?</em></h2>
+  <p>The Riverina is a working region. It has real businesses, real seasons, and a tourism economy built on motels, wineries, and family-run accommodation. Operating from here, rather than a distant capital city, keeps us close to the kind of customers we serve — and grounded in the practical realities of running hospitality in Australia.</p>
+  <p>From Griffith, freight reaches every major Australian city. We dispatch quickly, ship Australia-wide, and offer free freight on orders over AU$100.</p>
+</section>
+
+<section class="cta-band">
+  <h2>Let's talk about your <em>linen needs.</em></h2>
+  <p>Whether you're after a sample, a bulk quote, or just want to compare specifications — we're a phone call away.</p>
+  <div class="btns">
+    <a href="contact.html" class="btn btn-primary">Request a Quote →</a>
+    <a href="collection.html" class="btn btn-secondary">Browse Collection</a>
+  </div>
+</section>
+
+<div data-footer></div>
+<script src="assets/partials.js"></script>
+<script src="assets/chat-widget.js" defer></script>
+</body>
+</html>

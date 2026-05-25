@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Blog — Hospitality Linen Insights — Australian Linen & Towels</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+<meta name="theme-color" content="#1a1f4e"/>
+<meta name="description" content="Practical insights for Australian hotel, motel, and hospitality operators — linen replacement guides, GSM specifications, lifecycle costing, and operator advice from the Riverina."/>
+<meta name="keywords" content="hotel linen blog Australia, hospitality towels guide, motel sheets advice, commercial laundry, Riverina hospitality"/>
+
+<!-- Open Graph -->
+<meta property="og:title" content="Blog — Australian Linen & Towels"/>
+<meta property="og:description" content="Practical guides for hotel and motel operators across Australia."/>
+<meta property="og:type" content="website"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css"/>
+
+<!-- Schema for AI/Google -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Australian Linen & Towels — Hospitality Linen Insights",
+  "url": "https://auslinenandtowels.com.au/blog.html",
+  "description": "Practical guides and insights for Australian hospitality operators on linen, towels, and laundering.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Australian Linen & Towels",
+    "url": "https://auslinenandtowels.com.au"
+  }
+}
+</script>
+
+<style>
+  .blog-hero{
+    background: linear-gradient(135deg, #0f1535 0%, #1a2148 100%);
+    color: #fff;
+    padding: 64px 24px 48px;
+    text-align: center;
+  }
+  .blog-hero .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #d4b568;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .blog-hero h1{
+    font-family: var(--f-serif);
+    font-size: clamp(34px, 5.5vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .blog-hero h1 em{
+    font-style: italic;
+    color: #d4b568;
+  }
+  .blog-hero p.lede{
+    font-size: 15px;
+    color: rgba(255,255,255,0.78);
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .blog-list{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+  .blog-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+  }
+  .blog-card{
+    background: #fff;
+    border: 1px solid #e2e0d8;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: box-shadow .25s, transform .25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .blog-card:hover{
+    box-shadow: 0 12px 36px rgba(15,21,53,0.10);
+    transform: translateY(-3px);
+  }
+  .blog-card .card-img{
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #d4b568 0%, #c9a84c 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .blog-card .card-img.img2{
+    background: linear-gradient(135deg, #1a2148 0%, #0f1535 100%);
+  }
+  .blog-card .card-img.img3{
+    background: linear-gradient(135deg, #6b6e85 0%, #4a4d63 100%);
+  }
+  .blog-card .card-img::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.12), transparent 60%);
+  }
+  .blog-card .card-img .topic{
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    color: #fff;
+    font-family: var(--f-serif);
+    font-size: 26px;
+    font-style: italic;
+    line-height: 1.1;
+    z-index: 1;
+  }
+  .blog-card .card-body{
+    padding: 22px 24px 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .blog-card .meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #d4b568;
+    margin-bottom: 10px;
+  }
+  .blog-card h3{
+    font-family: var(--f-serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: #0f1535;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  .blog-card h3 em{
+    font-style: italic;
+    color: #c9a84c;
+  }
+  .blog-card p.excerpt{
+    font-size: 14px;
+    color: #6b6e85;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .blog-card .read-more{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #0f1535;
+    border-bottom: 1px solid #d4b568;
+    padding-bottom: 3px;
+    align-self: flex-start;
+  }
+  .blog-card.coming{
+    opacity: 0.7;
+  }
+  .blog-card.coming .card-img{
+    background: linear-gradient(135deg, #c9c7bf 0%, #a8a69e 100%);
+  }
+  .blog-card.coming .read-more{
+    color: #6b6e85;
+    border-bottom-color: #c9c7bf;
+  }
+  .blog-card.coming .meta{
+    color: #6b6e85;
+  }
+</style>
+</head>
+<body data-page="blog">
+<div data-header></div>
+
+<section class="blog-hero">
+  <span class="eyebrow">Insights · Operator Guides</span>
+  <h1>The <em>Linen Journal</em></h1>
+  <p class="lede">Honest, practical guides for hotel, motel, and hospitality operators across Australia. Written from the Riverina, grounded in industry research, and free of fluff.</p>
+</section>
+
+<section class="blog-list">
+  <div class="blog-grid">
+
+    <a href="blog-linen-guide.html" class="blog-card">
+      <div class="card-img">
+        <div class="topic">Replacement<br>Frequency</div>
+      </div>
+      <div class="card-body">
+        <div class="meta">Operator Guide · 6 min read</div>
+        <h3>How Often Should Australian Motels Replace Towels and <em>Sheets?</em></h3>
+        <p class="excerpt">Industry benchmarks for wash cycles, the warning signs that signal it's time to replace, and how Riverina operators can plan ahead through tourism peaks.</p>
+        <span class="read-more">Read Article →</span>
+      </div>
+    </a>
+
+    <a href="blog-gsm-guide.html" class="blog-card">
+      <div class="card-img img2">
+        <div class="topic">GSM<br>Decoded</div>
+      </div>
+      <div class="card-body">
+        <div class="meta">Specifications · 7 min read</div>
+        <h3>The Australian Operator's <em>GSM Guide</em>: Choosing the Right Towel Weight</h3>
+        <p class="excerpt">Why 450 GSM suits high-turnover motels, when to step up to 600 GSM, and how laundry costs change with weight. A practical decision framework backed by industry research.</p>
+        <span class="read-more">Read Article →</span>
+      </div>
+    </a>
+
+    <div class="blog-card coming">
+      <div class="card-img img3">
+        <div class="topic">Lifecycle<br>Cost</div>
+      </div>
+      <div class="card-body">
+        <div class="meta">Coming Soon · Procurement</div>
+        <h3>The Real Cost of <em>Cheap Linen</em>: Why Lifecycle Beats Sticker Price</h3>
+        <p class="excerpt">A 250 GSM bargain towel and a 500 GSM commercial towel may cost the same per year. We break down the maths on wash cycles, replacement, and laundry impact.</p>
+        <span class="read-more">Coming Soon</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div data-footer></div>
+<script src="assets/partials.js"></script>
+<script src="assets/chat-widget.js" defer></script>
+</body>
+</html>

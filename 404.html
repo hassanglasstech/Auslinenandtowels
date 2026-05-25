@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Page Not Found — Australian Linen &amp; Towels</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="robots" content="noindex,follow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css"/>
+<style>
+  .notfound-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ivory, #faf8f3);
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .notfound-inner { max-width: 560px; }
+  .notfound-code {
+    font-family: var(--f-mono, 'JetBrains Mono', monospace);
+    font-size: 100px;
+    font-weight: 400;
+    color: var(--navy, #1a3a6b);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+    opacity: 0.12;
+  }
+  .notfound-eyebrow {
+    font-family: var(--f-mono, 'JetBrains Mono', monospace);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold, #b8893a);
+    margin-bottom: 18px;
+  }
+  .notfound-inner h1 {
+    font-family: var(--f-serif, Georgia, serif);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    color: var(--navy, #1a3a6b);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .notfound-inner h1 em { font-style: italic; color: var(--gold, #b8893a); }
+  .notfound-inner p {
+    font-size: 15px;
+    color: var(--muted, #5a5e78);
+    line-height: 1.65;
+    margin-bottom: 36px;
+  }
+  .notfound-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .notfound-actions a {
+    padding: 13px 28px;
+    font-family: var(--f-mono, 'JetBrains Mono', monospace);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-nf-primary {
+    background: var(--navy, #1a3a6b);
+    color: #fff;
+  }
+  .btn-nf-primary:hover { background: #162f58; }
+  .btn-nf-ghost {
+    background: transparent;
+    color: var(--navy, #1a3a6b);
+    border: 1px solid var(--navy, #1a3a6b);
+  }
+  .btn-nf-ghost:hover { background: var(--navy, #1a3a6b); color: #fff; }
+</style>
+</head>
+<body data-page="404">
+<div data-header></div>
+
+<div class="notfound-wrap">
+  <div class="notfound-inner">
+    <div class="notfound-code">404</div>
+    <div class="notfound-eyebrow">Page Not Found</div>
+    <h1>This page has been <em>laundered away.</em></h1>
+    <p>The page you're looking for doesn't exist or may have moved. Head back to the collection or get in touch — we're happy to help you find what you need.</p>
+    <div class="notfound-actions">
+      <a href="collection.html" class="btn-nf-primary">View Collection →</a>
+      <a href="contact.html" class="btn-nf-ghost">Contact Us</a>
+    </div>
+  </div>
+</div>
+
+<div data-footer></div>
+<script src="assets/products-data.js"></script>
+<script src="assets/partials.js"></script>
+</body>
+</html>
