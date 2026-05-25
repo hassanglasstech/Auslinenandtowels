@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Quote Request Received — Australian Linen & Towels</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="robots" content="noindex,follow"/>
+<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+<meta name="theme-color" content="#1a1f4e"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css"/>
+<style>
+  .ty-wrap {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ivory, #faf8f3);
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .ty-inner { max-width: 560px; }
+  .ty-check {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--navy, #1a3a6b);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+  }
+  .ty-check svg { width: 34px; height: 34px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ty-eyebrow {
+    font-family: var(--f-mono, 'JetBrains Mono', monospace);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold, #b8893a);
+    margin-bottom: 16px;
+  }
+  .ty-inner h1 {
+    font-family: var(--f-serif, Georgia, serif);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    color: var(--navy, #1a3a6b);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .ty-inner h1 em { font-style: italic; color: var(--gold, #b8893a); }
+  .ty-inner p {
+    font-size: 15px;
+    color: var(--muted, #5a5e78);
+    line-height: 1.65;
+    margin-bottom: 36px;
+  }
+  .ty-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .ty-actions a {
+    padding: 13px 28px;
+    font-family: var(--f-mono, 'JetBrains Mono', monospace);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-ty-primary { background: var(--navy, #1a3a6b); color: #fff; }
+  .btn-ty-primary:hover { background: #162f58; }
+  .btn-ty-ghost {
+    background: transparent;
+    color: var(--navy, #1a3a6b);
+    border: 1px solid var(--navy, #1a3a6b);
+  }
+  .btn-ty-ghost:hover { background: var(--navy, #1a3a6b); color: #fff; }
+  .ty-detail {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line, #e8e4dc);
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .ty-detail-item {
+    text-align: center;
+  }
+  .ty-detail-item .label {
+    font-family: var(--f-mono, 'JetBrains Mono', monospace);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold, #b8893a);
+    margin-bottom: 6px;
+  }
+  .ty-detail-item .value {
+    font-size: 14px;
+    color: var(--navy, #1a3a6b);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body data-page="thank-you">
+<div data-header></div>
+
+<div class="ty-wrap">
+  <div class="ty-inner">
+    <div class="ty-check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="ty-eyebrow">Quote Request Received</div>
+    <h1>Thank you — we'll be in <em>touch shortly.</em></h1>
+    <p>Your enquiry has been received by our wholesale team. We respond to all quote requests within one business day, Monday to Friday.</p>
+    <div class="ty-actions">
+      <a href="collection.html" class="btn-ty-primary">Browse Collection →</a>
+      <a href="index.html" class="btn-ty-ghost">Back to Home</a>
+    </div>
+    <div class="ty-detail">
+      <div class="ty-detail-item">
+        <div class="label">Response Time</div>
+        <div class="value">Within 1 business day</div>
+      </div>
+      <div class="ty-detail-item">
+        <div class="label">Hours</div>
+        <div class="value">Mon–Fri · 9am–5pm AEDT</div>
+      </div>
+      <div class="ty-detail-item">
+        <div class="label">Direct Line</div>
+        <div class="value"><a href="tel:0414533449" style="color:var(--navy,#1a3a6b);text-decoration:none;">0414 533 449</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-footer></div>
+<script src="assets/products-data.js"></script>
+<script src="assets/partials.js"></script>
+</body>
+</html>
