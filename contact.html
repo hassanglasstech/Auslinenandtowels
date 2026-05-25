@@ -146,6 +146,9 @@
           <textarea name="message" placeholder="Tell us about your project requirements..." required></textarea>
         </div>
 
+        <!-- Honeypot — hidden from humans, filled by bots -->
+        <input type="text" name="website" id="hp_website" value="" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;" />
+
         <button type="submit" class="form-submit">Send Message →</button>
       </form>
     </div>

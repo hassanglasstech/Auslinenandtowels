@@ -98,8 +98,6 @@ def p(sku, name, colour, size, weight, material, cat,
         'image': image,
         'gallery': [],
         'zoomImage': image,
-        'moq': moq,
-        'cartonQty': carton_qty,
         'price': price,
         'description': desc,
         'colorGroup': color_group,
@@ -924,11 +922,6 @@ PRODUCTS = [
     # MATTRESS PROTECTION — TOPPERS
     # ════════════════════════════════════════════════════════════
 
-    p('ALU-MT-001', 'Microfibre Mattress Topper', 'White', 'Queen', '1100 GSM fill', 'Microfibre',
-      'mp-toppers', PH,
-      moq='5', carton_qty='', price=0,
-      desc='1100 GSM fill microfibre mattress topper — Queen size.',
-      color_group='ALU-MT-001', parent_sku='ALU-MT-001', variant_name='Queen', tag=''),
 
     # ════════════════════════════════════════════════════════════
     # MATTRESS PROTECTION — PILLOW PROTECTORS
@@ -1039,8 +1032,6 @@ def product_to_js(prod):
         ('image',       js_str(prod['image'])),
         ('gallery',     '[]'),
         ('zoomImage',   js_str(prod['image'])),
-        ('moq',         js_str(prod['moq'])),
-        ('cartonQty',   js_str(prod['cartonQty'])),
         ('price',       js_str(prod['price'])),
         ('description', js_str(prod['description'])),
         ('colorGroup',  js_str(prod['colorGroup'])),

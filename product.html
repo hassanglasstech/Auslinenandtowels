@@ -465,8 +465,6 @@
           <div class="k">Weight</div><div class="v">${currentProduct.weight || 'Enquire with supplier'}</div>
           <div class="k">Material</div><div class="v">${currentProduct.material}</div>
           <div class="k">Colour</div><div class="v">${currentProduct.colour}</div>
-          ${currentProduct.moq ? `<div class="k">Min Order</div><div class="v">${currentProduct.moq}</div>` : ''}
-          ${currentProduct.cartonQty ? `<div class="k">Carton Qty</div><div class="v">${currentProduct.cartonQty}</div>` : ''}
           <div class="k">SKU</div><div class="v" style="font-family: var(--f-mono); font-size: 13px;">${currentProduct.sku}</div>
           <div class="k">Lead Time</div><div class="v">1–3 business days (stock items)</div>
           <div class="k">Shipping</div><div class="v">Free Australia-wide over AU$100</div>
@@ -556,7 +554,7 @@
 
     window.triggerQuoteRequest = function(isBulk) {
       const typeLabel = isBulk ? "bulk/wholesale order" : "wholesale quote";
-      const msg = `Hi,\n\nI would like to request a ${typeLabel} for the following product:\n\nProduct: ${currentProduct.name}\nColour: ${currentProduct.colour}\nSize: ${currentProduct.size}${currentProduct.weight ? '\nWeight: '+currentProduct.weight : ''}\nSKU: ${currentProduct.sku}\n\nCould you please provide pricing, minimum order quantities, and availability?\n\nThank you.`;
+      const msg = `Hi,\n\nI would like to request a ${typeLabel} for the following product:\n\nProduct: ${currentProduct.name}\nColour: ${currentProduct.colour}\nSize: ${currentProduct.size}${currentProduct.weight ? '\nWeight: '+currentProduct.weight : ''}\nSKU: ${currentProduct.sku}\n\nCould you please provide pricing and availability?\n\nThank you.`;
       sessionStorage.setItem('alt_enquiry', msg);
     };
   }

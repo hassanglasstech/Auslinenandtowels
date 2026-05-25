@@ -361,7 +361,7 @@
     const p = (window.ALT_PRODUCTS||[]).find(x => x.sku === sku);
     if (!p) return;
     window.ALT_SEARCH_CLOSE();
-    const msg = `Hi, I'd like to enquire about the following product:\n\nProduct: ${p.name}${p.colour ? ' — ' + p.colour : ''}\nSKU: ${p.sku}\nSize: ${p.size||''}${p.weight ? '\nWeight: '+p.weight : ''}\nMaterial: ${p.material||''}\n\nPlease provide pricing, minimum order quantities, and availability.`;
+    const msg = `Hi, I'd like to enquire about the following product:\n\nProduct: ${p.name}${p.colour ? ' — ' + p.colour : ''}\nSKU: ${p.sku}\nSize: ${p.size||''}${p.weight ? '\nWeight: '+p.weight : ''}\nMaterial: ${p.material||''}\n\nPlease provide pricing and availability.`;
     sessionStorage.setItem('alt_enquiry', msg);
     window.location.href = 'contact.html';
   };
