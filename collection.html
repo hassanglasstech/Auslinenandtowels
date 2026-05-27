@@ -183,10 +183,14 @@
 
   .product-card{
     background:#fff;border:1px solid var(--border);border-radius:3px;
-    overflow:hidden;cursor:pointer;
+    overflow:hidden;cursor:pointer;position:relative;
     transition:box-shadow .2s,transform .2s;
   }
   .product-card:hover{box-shadow:0 8px 32px rgba(15,21,53,.1);transform:translateY(-2px)}
+  /* Overlay link — makes entire card right-clickable / middle-clickable */
+  .pc-link{position:absolute;inset:0;z-index:0;display:block;}
+  .product-info,.product-img{position:relative;z-index:1;}
+  .product-card .product-cta{position:relative;z-index:2;}
 
   .product-img{
     aspect-ratio:1;overflow:hidden;background:#f0ede8;position:relative;
@@ -635,7 +639,8 @@ function renderProducts(){
       }).join('');
 
       return `
-      <div class="product-card" onclick="window.location.href='product.html?sku=${p.sku}'" style="cursor:pointer;">
+      <div class="product-card">
+        <a class="pc-link" href="product.html?sku=${p.sku}" aria-label="View ${p.name}"></a>
         <div class="product-img${isPh ? ' product-img-placeholder' : ''}">
           <img src="${p.img}" alt="${p.name}" loading="lazy"
             onerror="this.onerror=null;this.src='images/placeholder-product.svg'"/>
@@ -647,7 +652,7 @@ function renderProducts(){
           <div class="product-sub">${p.sub}</div>
           <div class="product-name">${p.name}</div>
           <div class="product-desc">${p.desc}</div>
-          
+
           <!-- Available Colours -->
           <div style="margin-bottom:12px; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
             <span style="font-size:10px; color:var(--muted); text-transform:uppercase; margin-right:4px;">Colours:</span>
@@ -661,7 +666,8 @@ function renderProducts(){
       `;
     } else {
       return `
-      <div class="product-card" onclick="window.location.href='product.html?sku=${p.sku}'" style="cursor:pointer;">
+      <div class="product-card">
+        <a class="pc-link" href="product.html?sku=${p.sku}" aria-label="View ${p.name}"></a>
         <div class="product-img${isPh ? ' product-img-placeholder' : ''}">
           <img src="${p.img}" alt="${p.name}" loading="lazy"
             onerror="this.onerror=null;this.src='images/placeholder-product.svg'"/>

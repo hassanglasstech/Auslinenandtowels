@@ -585,6 +585,8 @@
 
     window.switchColor = function(newSku) {
       renderProductPage(newSku);
+      const p2 = window.ALT_PRODUCTS && window.ALT_PRODUCTS.find(p => p.sku === newSku);
+      if (p2 && window.ALT_SAVE_RECENT) window.ALT_SAVE_RECENT(p2);
     };
 
     window.triggerQuoteRequest = function(isBulk) {
@@ -597,6 +599,9 @@
   document.addEventListener('DOMContentLoaded', () => {
     const initialSku = new URLSearchParams(window.location.search).get('sku');
     renderProductPage(initialSku);
+    // Track recently viewed (used by upgrades.js banner on home/collection)
+    const prod = initialSku && window.ALT_PRODUCTS && window.ALT_PRODUCTS.find(p => p.sku === initialSku);
+    if (prod && window.ALT_SAVE_RECENT) window.ALT_SAVE_RECENT(prod);
   });
 
   window.addEventListener('popstate', (event) => {

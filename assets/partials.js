@@ -452,7 +452,32 @@
     document.head.appendChild(s);
   }
 
-  function bootExtras() { addSkipLink(); loadWishlist(); }
+  // Auto-load upgrades.js (multi-channel widget, recently viewed, share buttons)
+  function loadUpgrades() {
+    if (document.querySelector('script[data-alt-upgrades]')) return;
+    var s = document.createElement('script');
+    s.src = 'assets/upgrades.js';
+    s.defer = true;
+    s.setAttribute('data-alt-upgrades', '1');
+    document.head.appendChild(s);
+  }
+
+  // Auto-load lead-capture.js (smart exit-intent modal)
+  function loadLeadCapture() {
+    if (document.querySelector('script[data-alt-lead]')) return;
+    var s = document.createElement('script');
+    s.src = 'assets/lead-capture.js';
+    s.defer = true;
+    s.setAttribute('data-alt-lead', '1');
+    document.head.appendChild(s);
+  }
+
+  function bootExtras() {
+    addSkipLink();
+    loadWishlist();
+    loadUpgrades();
+    loadLeadCapture();
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function(){ autoMount(); bootExtras(); });
