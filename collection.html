@@ -211,9 +211,8 @@
     transition:box-shadow .2s,transform .2s;
   }
   .product-card:hover{box-shadow:0 8px 32px rgba(15,21,53,.1);transform:translateY(-2px)}
-  /* Overlay link — makes entire card right-clickable / middle-clickable */
-  .pc-link{position:absolute;inset:0;z-index:0;display:block;}
-  .product-info,.product-img{position:relative;z-index:1;}
+  /* Overlay link — makes entire card right-clickable / middle-clickable / Ctrl+click */
+  .pc-link{position:absolute;inset:0;z-index:1;display:block;}
   .product-card .product-cta{position:relative;z-index:2;}
 
   .product-img{
@@ -317,8 +316,6 @@
         <label for="sortSelect">Sort:</label>
         <select id="sortSelect" onchange="renderProducts()">
           <option value="default">Default</option>
-          <option value="gsm-high">GSM: High → Low</option>
-          <option value="gsm-low">GSM: Low → High</option>
           <option value="name-az">Name: A → Z</option>
         </select>
       </div>
@@ -677,19 +674,7 @@ function renderProducts(){
 
   // ── Sort ──────────────────────────────────────
   const sortVal = document.getElementById('sortSelect')?.value || 'default';
-  if (sortVal === 'gsm-high') {
-    list = [...list].sort((a, b) => {
-      const ga = parseInt(a.sizes && a.sizes[0]) || 0;
-      const gb = parseInt(b.sizes && b.sizes[0]) || 0;
-      return gb - ga;
-    });
-  } else if (sortVal === 'gsm-low') {
-    list = [...list].sort((a, b) => {
-      const ga = parseInt(a.sizes && a.sizes[0]) || 999;
-      const gb = parseInt(b.sizes && b.sizes[0]) || 999;
-      return ga - gb;
-    });
-  } else if (sortVal === 'name-az') {
+  if (sortVal === 'name-az') {
     list = [...list].sort((a, b) => a.name.localeCompare(b.name));
   }
 
