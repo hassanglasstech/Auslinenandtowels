@@ -807,11 +807,11 @@ function updateQuickFilters(baseList){
 
   // ── Clear button ──
   const btn = document.getElementById('qfClearAll');
-  if(btn) btn.style.display = (activeColour || activeGSM || activeMaterial) ? '' : 'none';
+  if(btn) btn.style.display = (activeColour || activeGSM || activeMaterial) ? 'inline' : 'none';
 
   // ── Show/hide the filter section ──
   const anyRow = [colourRow, gsmRow, matRow].some(r => r.style.display !== 'none');
-  panel.style.display = anyRow ? '' : 'none';
+  panel.style.display = anyRow ? 'block' : 'none';
 }
 
 function setQFColour(col){
