@@ -969,6 +969,7 @@ function renderProducts(){
   if(q){
     baseList = baseList.filter(p =>
       (p.name && p.name.toLowerCase().includes(q))
+      || (p.subcat && p.subcat.toLowerCase().includes(q))
       || (p.colours && p.colours.some(c => c.displayName.toLowerCase().includes(q)))
       || (p.colour && p.colour.toLowerCase().includes(q))
       || (p.material && p.material.toLowerCase().includes(q))

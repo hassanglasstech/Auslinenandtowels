@@ -142,13 +142,7 @@
           <a href="room-package.html" class="${active==='room-package'?'active':''}">Bulk Quote</a>
           <a href="trade-account.html" class="${active==='trade-account'?'active':''}">Trade Account</a>
           <a href="contact.html" class="${active==='contact'?'active':''}">Contact</a>
-          <div class="header-icons">
-            <button class="icon-btn alt-search-btn" onclick="window.ALT_SEARCH_OPEN()" aria-label="Search products">${icon('search')}</button>
-          </div>
         </nav>
-        <div class="header-icons mobile-only-search">
-          <button class="icon-btn alt-search-btn" onclick="window.ALT_SEARCH_OPEN()" aria-label="Search products">${icon('search')}</button>
-        </div>
       </div>
     </header>
 
