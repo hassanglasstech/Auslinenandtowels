@@ -246,6 +246,7 @@
   }
 
   window.rpEnquire = function(){
+    if (typeof gtag !== "undefined") gtag("event", "ads_conversion_Request_quote_1", {event_category:"Quote",event_label:"Room Package"});
     var r = compute();
     if (r.rooms === 0) return alert('Please enter at least one bed first.');
     var msg = "Hi,\n\nI'd like a bulk wholesale quote for the following package:\n\n";
@@ -290,6 +291,6 @@
   render();
 })();
 </script>
-<script src="assets/chat-widget.js" defer></script>
+
 </body>
 </html>

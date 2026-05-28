@@ -470,32 +470,14 @@
     }
 
     // Surface specs buried in the description prose as scannable spec rows
-    const _desc = ((currentProduct.description || '') + ' ' + (currentProduct.material || '')).toLowerCase();
-    const _mat = (currentProduct.material || '').toLowerCase();
+    // (shared extraction so product page + collection filters stay in sync)
+    const _derived = window.ALT_HELPERS.getDerivedSpecs(currentProduct);
     const _specHits = [];
     const _addSpec = (label, value) => _specHits.push(`<div class="k">${label}</div><div class="v">${value}</div>`);
-
-    // Cotton grade — skip if the Material field already states it (avoids duplicate rows)
-    if (_desc.includes('combed cotton') && !_mat.includes('combed'))               _addSpec('Cotton Grade', 'Combed cotton');
-    else if ((_desc.includes('zero-twist') || _desc.includes('zero twist')) && !_mat.includes('zero')) _addSpec('Cotton Grade', 'Zero-twist cotton');
-    else if ((_desc.includes('ring-spun') || _desc.includes('ring spun')) && !_mat.includes('ring'))   _addSpec('Cotton Grade', 'Ring-spun cotton');
-
-    if (_desc.includes('cellular weave'))    _addSpec('Weave', 'Cellular weave');
-    else if (_desc.includes('satin stripe')) _addSpec('Weave', 'Satin stripe woven');
-    else if (_desc.includes('dobby'))        _addSpec('Weave', 'Dobby border');
-    else if (_desc.includes('percale'))      _addSpec('Weave', 'Percale');
-    else if (_desc.includes('sateen'))       _addSpec('Weave', 'Sateen');
-    else if (_desc.includes('waffle'))       _addSpec('Weave', 'Waffle weave');
-
-    if (_desc.includes('double stitch') || _desc.includes('double-stitch')) _addSpec('Hem', 'Double-stitched');
-    else if (_desc.includes('twin overlock'))                              _addSpec('Hem', 'Twin overlocked');
-    else if (_desc.includes('overlock'))                                   _addSpec('Hem', 'Overlocked');
-
-    const _treat = [];
-    if (_desc.includes('fire retardant') || _desc.includes('flame retardant') || _desc.includes('fire-retardant')) _treat.push('Fire retardant treated');
-    if (_desc.includes('waterproof')) _treat.push('Waterproof');
-    if (_treat.length) _addSpec('Treatment', _treat.join(' · '));
-
+    if (_derived.cottonGrade) _addSpec('Cotton Grade', _derived.cottonGrade);
+    if (_derived.weave)       _addSpec('Weave', _derived.weave);
+    if (_derived.hem)         _addSpec('Hem', _derived.hem);
+    if (_derived.treatment)   _addSpec('Treatment', _derived.treatment.join(' · '));
     const extraSpecRows = _specHits.join('');
 
     // Tag badge (Sale / Waterproof / Out of Stock)
@@ -637,6 +619,7 @@
     };
 
     window.triggerQuoteRequest = function(isBulk) {
+      if (typeof gtag !== "undefined") gtag("event", "ads_conversion_Request_quote_1", {event_category:"Quote",event_label: isBulk ? "Bulk Quote" : "Product Quote"});
       const typeLabel = isBulk ? "bulk/wholesale order" : "wholesale quote";
       const msg = `Hi,\n\nI would like to request a ${typeLabel} for the following product:\n\nProduct: ${currentProduct.name}\nColour: ${currentProduct.colour}\nSize: ${currentProduct.size}${currentProduct.weight ? '\nWeight: '+currentProduct.weight : ''}\nSKU: ${currentProduct.sku}\n\nCould you please provide pricing and availability?\n\nThank you.`;
       sessionStorage.setItem('alt_enquiry', msg);
@@ -657,6 +640,6 @@
     renderProductPage(currentSku);
   });
 </script>
-<script src="assets/chat-widget.js" defer></script>
+
 </body>
 </html>
