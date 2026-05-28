@@ -25,13 +25,15 @@
     } catch (e) {}
   }
 
-  // Don't show on pages where a popup would be disruptive
+  // Don't show the popup on pages where it would be disruptive, or once done.
+  // NOTE: we do NOT early-return here — the apply functions below must always
+  // be defined so the collection page can personalise even after completion.
   var page = (document.body && document.body.dataset.page) || '';
   var skip = ['contact', 'thank-you', 'trade-account', 'room-package'];
-  if (skip.indexOf(page) !== -1 || isDone()) return;
+  var shouldShow = skip.indexOf(page) === -1 && !isDone();
 
   // Delay so page content loads first (don't block LCP)
-  setTimeout(mount, 1800);
+  if (shouldShow) setTimeout(mount, 1800);
 
   // ─── Data ────────────────────────────────────────
   var PROPERTY_TYPES = [
@@ -43,12 +45,14 @@
     { id: 'hospital', label: 'Hospital / Healthcare',    icon: '🏥' },
   ];
 
+  // groups = collection parent-group ids; subcats = specific subcategory ids.
+  // The collection page filters products matching ANY listed group or subcat.
   var CATEGORIES = [
-    { id: 'towels',   label: 'Towels',              icon: '🛁', subcat: 'towels-bath' },
-    { id: 'sheets',   label: 'Bed Linen',           icon: '🛏️', subcat: 'sheets-flat' },
-    { id: 'quilts',   label: 'Blankets & Quilts',   icon: '🛌', subcat: 'blankets-fleece' },
-    { id: 'mattress', label: 'Mattress Protection', icon: '🛡️', subcat: 'mp-protectors' },
-    { id: 'robes',    label: 'Robes',               icon: '👘', subcat: 'towels-robes' },
+    { id: 'towels',   label: 'Towels',              icon: '🛁', groups: ['towels'] },
+    { id: 'sheets',   label: 'Bed Linen',           icon: '🛏️', groups: ['sheets'] },
+    { id: 'quilts',   label: 'Blankets & Quilts',   icon: '🛌', groups: ['quilts', 'blankets'] },
+    { id: 'mattress', label: 'Mattress Protection', icon: '🛡️', groups: ['mattress'] },
+    { id: 'robes',    label: 'Robes',               icon: '👘', subcats: ['towels-robes'] },
   ];
 
   var FREQUENCIES = [
@@ -328,16 +332,22 @@
     var main = document.querySelector('.main-content');
     if (main) main.insertBefore(banner, main.firstChild);
 
-    // Apply category filter: if one category, select it in sidebar; if multiple, show all matching
-    if (prefs.categories && prefs.categories.length === 1) {
-      var catId = prefs.categories[0];
-      var cat = CATEGORIES.find(function(c){ return c.id === catId; });
-      if (cat && window.selectSubcat) {
-        // Small delay so collection JS has finished init
-        setTimeout(function(){
-          window.selectSubcat(cat.subcat, cat.label, false);
-        }, 100);
-      }
+    // Build the combined filter from ALL selected categories and apply it,
+    // so the collection grid shows exactly what was chosen in onboarding.
+    var groups = [];
+    var subcats = [];
+    (prefs.categories || []).forEach(function(id){
+      var c = CATEGORIES.find(function(x){ return x.id === id; });
+      if (!c) return;
+      (c.groups  || []).forEach(function(g){ if (groups.indexOf(g)  === -1) groups.push(g); });
+      (c.subcats || []).forEach(function(s){ if (subcats.indexOf(s) === -1) subcats.push(s); });
+    });
+
+    if ((groups.length || subcats.length) && window.ALT_APPLY_CATEGORY_FILTER) {
+      // Small delay so collection JS has finished init
+      setTimeout(function(){
+        window.ALT_APPLY_CATEGORY_FILTER(groups, subcats);
+      }, 120);
     }
   }
 })();

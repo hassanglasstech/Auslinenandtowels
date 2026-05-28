@@ -474,7 +474,7 @@
   function loadOnboarding() {
     if (document.querySelector('script[data-alt-onboarding]')) return;
     var s = document.createElement('script');
-    s.src = 'assets/onboarding.js';
+    s.src = 'assets/onboarding.js?v=3';
     s.defer = true;
     s.setAttribute('data-alt-onboarding', '1');
     document.head.appendChild(s);

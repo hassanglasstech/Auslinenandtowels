@@ -754,6 +754,9 @@ let activeMaterial= null;
 let activeWeave   = null; // derived from description prose
 let activeTreatment = null; // 'Waterproof' | 'Fire retardant'
 let activeTag     = null; // 'Sale' | 'Waterproof' | 'Bestseller' | 'Bulk Pack'
+let obGroups      = null; // onboarding: parent-group filter (array) e.g. ['towels','sheets']
+let obSubcats     = null; // onboarding: subcat filter (array) e.g. ['towels-robes']
+function obActive(){ return !!((obGroups && obGroups.length) || (obSubcats && obSubcats.length)); }
 
 // ──────────────────────────────────────────────
 // Colour → CSS value map
@@ -1207,6 +1210,8 @@ function _clearSearch(){
 function selectAll(){
   _clearSearch();
   activeSubcat = null;
+  obGroups = null; obSubcats = null;
+  document.getElementById('altObBanner')?.remove();
   document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
   document.getElementById('btn-all')?.classList.add('active');
   renderProducts();
@@ -1217,6 +1222,8 @@ function selectAll(){
 function selectSubcat(subcatId, label, isComing){
   _clearSearch();
   activeSubcat = subcatId;
+  obGroups = null; obSubcats = null;
+  document.getElementById('altObBanner')?.remove();
   // highlight
   document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
   document.getElementById(`sub-${subcatId}`)?.classList.add('active');
@@ -1251,15 +1258,59 @@ function updateFilterBar(label, isComing){
 }
 
 // ──────────────────────────────────────────────
+// Onboarding → collection filter
+// Applies the exact categories selected during onboarding as a
+// multi-category filter (parent groups + specific subcats).
+// ──────────────────────────────────────────────
+window.ALT_APPLY_CATEGORY_FILTER = function(groups, subcats){
+  _clearSearch();
+  activeSubcat = null;
+  obGroups  = (groups  && groups.length)  ? groups.slice()  : null;
+  obSubcats = (subcats && subcats.length) ? subcats.slice() : null;
+
+  // Sidebar highlight: single group → highlight+open that parent;
+  // single subcat → highlight that subcat; otherwise leave on "All".
+  document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
+  if(obGroups && obGroups.length === 1 && !obSubcats){
+    const parentBtn = document.getElementById('parent-' + obGroups[0]);
+    if(parentBtn){ parentBtn.classList.add('active'); toggleCat(obGroups[0]); }
+    else document.getElementById('btn-all')?.classList.add('active');
+  } else if(!obGroups && obSubcats && obSubcats.length === 1){
+    document.getElementById('sub-' + obSubcats[0])?.classList.add('active');
+  } else {
+    document.getElementById('btn-all')?.classList.add('active');
+  }
+
+  document.getElementById('comingSoonPanel')?.classList.remove('visible');
+  document.getElementById('productGrid').style.display = '';
+  renderProducts();
+
+  // Update count in the filter bar
+  const matched = PRODUCTS.filter(p =>
+    (obGroups && obGroups.includes(p.cat)) ||
+    (obSubcats && obSubcats.includes(p.subcat))
+  );
+  const info = document.getElementById('filterInfo');
+  if(info) info.innerHTML = `<span class="showing" id="showingText">${matched.length} product${matched.length!==1?'s':''} matched</span>`;
+};
+
+// ──────────────────────────────────────────────
 // Render products
 // ──────────────────────────────────────────────
 function renderProducts(){
   const grid = document.getElementById('productGrid');
 
   // ── Step 1: Base list — category + search only ─
-  let baseList = activeSubcat
-    ? PRODUCTS.filter(p => p.subcat === activeSubcat)
-    : PRODUCTS;
+  let baseList = PRODUCTS;
+  if(activeSubcat){
+    baseList = PRODUCTS.filter(p => p.subcat === activeSubcat);
+  } else if(obActive()){
+    // Onboarding filter: match any selected parent group OR specific subcat
+    baseList = PRODUCTS.filter(p =>
+      (obGroups && obGroups.includes(p.cat)) ||
+      (obSubcats && obSubcats.includes(p.subcat))
+    );
+  }
 
   const q = (document.getElementById('collectionSearch')?.value || '').trim().toLowerCase();
   if(q){
@@ -1291,7 +1342,7 @@ function renderProducts(){
   // Update showing count
   const showEl = document.getElementById('showingText');
   if(showEl && !activeSubcat){
-    if(q || activeColour || activeGSM || activeMaterial || activeWeave || activeTreatment || activeTag){
+    if(q || activeColour || activeGSM || activeMaterial || activeWeave || activeTreatment || activeTag || obActive()){
       showEl.textContent = list.length + ' product' + (list.length!==1?'s':'') + ' found';
     }
   } else if(showEl && activeSubcat){
@@ -1515,9 +1566,11 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', () => {
       const hasVal = searchInput.value.length > 0;
       searchClear.classList.toggle('visible', hasVal);
-      // When user starts typing, deactivate sidebar category selection
-      if(hasVal && activeSubcat){
+      // When user starts typing, deactivate sidebar + onboarding category selection
+      if(hasVal && (activeSubcat || obActive())){
         activeSubcat = null;
+        obGroups = null; obSubcats = null;
+        document.getElementById('altObBanner')?.remove();
         document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
         document.getElementById('btn-all')?.classList.add('active');
         document.getElementById('filterInfo').innerHTML =
