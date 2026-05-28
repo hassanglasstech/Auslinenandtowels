@@ -1070,22 +1070,10 @@ function updateFilterBar(label, isComing){
   if(label==='All Products'){
     info.innerHTML = `<span class="showing" id="showingText">Showing all ${PRODUCTS.length} products</span>`;
   } else if(isComing){
-    info.innerHTML = `<span class="showing">Category: </span>
-      <span class="active-filter">${label} <button class="clear" onclick="selectAll()">×</button></span>
-      <a href="contact.html" style="font-size:12px;color:#c9a84c;border-bottom:1px solid #d4b568;text-decoration:none;cursor:pointer;">· Enquire for pricing →</a>`;
+    info.innerHTML = `<a href="contact.html" style="font-size:12px;color:#c9a84c;border-bottom:1px solid #d4b568;text-decoration:none;cursor:pointer;">Enquire for pricing →</a>`;
   } else {
-    const q = (document.getElementById('collectionSearch')?.value || '').trim();
-    const count = q
-      ? PRODUCTS.filter(p => p.subcat===activeSubcat && (
-          (p.name && p.name.toLowerCase().includes(q.toLowerCase()))
-          || (p.colours && p.colours.some(c => c.displayName.toLowerCase().includes(q.toLowerCase())))
-          || (p.colour && p.colour.toLowerCase().includes(q.toLowerCase()))
-          || (p.material && p.material.toLowerCase().includes(q.toLowerCase()))
-        )).length
-      : PRODUCTS.filter(p => p.subcat===activeSubcat).length;
-    info.innerHTML = `<span class="showing">Category: </span>
-      <span class="active-filter">${label} <button class="clear" onclick="selectAll()">×</button></span>
-      <span class="showing">${count} product${count!==1?'s':''}</span>`;
+    const count = PRODUCTS.filter(p => p.subcat===activeSubcat).length;
+    info.innerHTML = `<span class="showing" id="showingText">${count} product${count!==1?'s':''}</span>`;
   }
 }
 
