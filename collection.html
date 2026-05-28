@@ -164,6 +164,56 @@
   .search-clear.visible{display:block}
   .search-clear:hover{color:var(--navy)}
 
+  /* ── QUICK FILTERS ── */
+  .quick-filters{
+    background:#fff;border:1px solid var(--border);border-radius:2px;
+    padding:12px 16px;margin-bottom:14px;
+  }
+  .qf-row{
+    display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+    margin-bottom:10px;
+  }
+  .qf-row:last-child{margin-bottom:0}
+  .qf-label{
+    font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap;min-width:58px;flex-shrink:0;
+  }
+  .qf-pills{
+    display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+  }
+  .qf-pill{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:20px;cursor:pointer;
+    font-size:11.5px;font-family:var(--f-sans),sans-serif;
+    border:1px solid var(--border);background:#faf9f6;color:var(--navy);
+    transition:all .15s;white-space:nowrap;line-height:1.2;
+  }
+  .qf-pill:hover{border-color:var(--gold2);background:#fdf8ef}
+  .qf-pill.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .qf-pill.active:hover{background:#2a4a8b}
+  .qf-dot{
+    width:11px;height:11px;border-radius:50%;flex-shrink:0;
+    border:1px solid rgba(0,0,0,.18);
+  }
+  .qf-dot.stripe{
+    background:linear-gradient(135deg,#fff 50%,#3b82f6 50%);
+  }
+  .qf-dot.stripe-bk{
+    background:linear-gradient(135deg,#fff 50%,#1a1a1a 50%);
+  }
+  /* clear-all link */
+  .qf-clear-all{
+    font-size:11px;color:var(--gold2);border:none;background:none;
+    cursor:pointer;padding:0;letter-spacing:.02em;white-space:nowrap;
+    text-decoration:underline;margin-left:4px;flex-shrink:0;
+  }
+  .qf-clear-all:hover{color:var(--navy)}
+  .qf-active-count{
+    display:none;font-size:10px;background:var(--gold2);color:#fff;
+    border-radius:10px;padding:1px 6px;margin-left:2px;
+  }
+  .qf-active-count.visible{display:inline-block}
+
   /* active filter breadcrumb */
   .filter-bar{
     display:flex;align-items:center;gap:10px;margin-bottom:24px;
@@ -340,6 +390,23 @@
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="search" id="collectionSearch" placeholder="Search products, colours, categories…" autocomplete="off" aria-label="Search products"/>
       <button class="search-clear" id="searchClear" aria-label="Clear search">×</button>
+    </div>
+
+    <!-- Quick Filters: Colour / GSM / Material -->
+    <div class="quick-filters" id="quickFilters">
+      <div class="qf-row" id="qfColourRow">
+        <span class="qf-label">Colour</span>
+        <div class="qf-pills" id="qfColourPills"></div>
+      </div>
+      <div class="qf-row" id="qfGsmRow">
+        <span class="qf-label">GSM</span>
+        <div class="qf-pills" id="qfGsmPills"></div>
+      </div>
+      <div class="qf-row" id="qfMatRow">
+        <span class="qf-label">Material</span>
+        <div class="qf-pills" id="qfMatPills"></div>
+        <button class="qf-clear-all" id="qfClearAll" style="display:none;" onclick="clearAllQF()">Clear filters</button>
+      </div>
     </div>
 
     <div class="filter-bar" id="filterBar">
@@ -578,7 +645,141 @@ function countForSubcat(subcatId){
 // ──────────────────────────────────────────────
 // State
 // ──────────────────────────────────────────────
-let activeSubcat = null; // null = show all
+let activeSubcat  = null; // null = show all
+let activeColour  = null;
+let activeGSM     = null; // 'light' | '450-500' | '550-600' | 'heavy'
+let activeMaterial= null;
+
+// ──────────────────────────────────────────────
+// Colour → CSS value map
+// ──────────────────────────────────────────────
+const QF_COLOUR_CSS = {
+  'White':'#fff','Black':'#1a1a1a','Charcoal':'#606060','Camel':'#c19a6b',
+  'Navy':'#1a3060','Royal Blue':'#2563eb','Blue':'#3b82f6','Aqua':'#06b6d4',
+  'Beige':'#e8d5b0','Pink':'#f9a8d4','Purple':'#a855f7','Fuchsia':'#d946ef',
+  'Mint':'#6ee7b7','Lime':'#84cc16','Cherry':'#be123c','Garnet':'#881337',
+  'Latte':'#c4a882','Coffee':'#6f4e37'
+};
+
+// ──────────────────────────────────────────────
+// GSM groups
+// ──────────────────────────────────────────────
+const GSM_GROUPS = [
+  { key:'light',    label:'≤ 400 GSM', test: v => v <= 400 },
+  { key:'450-500',  label:'450–500 GSM', test: v => v >= 401 && v <= 500 },
+  { key:'550-600',  label:'550–600 GSM', test: v => v >= 501 && v <= 650 },
+  { key:'heavy',    label:'700+ GSM',  test: v => v >= 651 },
+];
+
+// ──────────────────────────────────────────────
+// Material → simplified label map
+// ──────────────────────────────────────────────
+const MAT_LABEL = {
+  '100% Cotton':'Cotton','100% Combed Cotton':'Combed Cotton',
+  '100% Cotton Terry':'Terry','100% Cotton Waffle':'Waffle',
+  '50% Cotton/50% Polyester':'Cotton/Poly',
+  'Cotton/Polyester':'Cotton/Poly','Cotton/Polyester Blend':'Cotton/Poly',
+  'Cotton/Polyester Waterproof':'Waterproof',
+  'Faux Wool/Polar Fleece':'Fleece','Microfibre':'Microfibre'
+};
+
+// ──────────────────────────────────────────────
+// Build quick filter pills
+// ──────────────────────────────────────────────
+function buildQuickFilters(){
+  // ── Colours ──
+  const allColours = new Set();
+  PRODUCTS.forEach(p => {
+    if(p.isRange){
+      p.colours.forEach(c => allColours.add(c.displayName));
+    } else if(p.colour){
+      allColours.add(p.colour);
+    }
+  });
+  const colourPills = document.getElementById('qfColourPills');
+  if(colourPills){
+    colourPills.innerHTML = [...allColours].sort().map(col => {
+      const css = QF_COLOUR_CSS[col];
+      const isStripe = col.includes('Stripe') || col.includes('White/');
+      let dotHtml = '';
+      if(isStripe){
+        const cls = col.includes('Black') ? 'qf-dot stripe-bk' : 'qf-dot stripe';
+        dotHtml = `<span class="${cls}"></span>`;
+      } else if(css){
+        const border = col==='White' ? 'border:1px solid #d0ccc4;' : '';
+        dotHtml = `<span class="qf-dot" style="background:${css};${border}"></span>`;
+      }
+      return `<button class="qf-pill" onclick="setQFColour('${col}')" data-colour="${col}">${dotHtml}${col}</button>`;
+    }).join('');
+  }
+
+  // ── GSM ──
+  const availableGSM = new Set();
+  PRODUCTS.forEach(p => {
+    const v = parseInt(p.weight);
+    if(!isNaN(v)) GSM_GROUPS.forEach(g => { if(g.test(v)) availableGSM.add(g.key); });
+  });
+  const gsmPills = document.getElementById('qfGsmPills');
+  if(gsmPills){
+    gsmPills.innerHTML = GSM_GROUPS
+      .filter(g => availableGSM.has(g.key))
+      .map(g => `<button class="qf-pill" onclick="setQFGsm('${g.key}')" data-gsm="${g.key}">${g.label}</button>`)
+      .join('');
+  }
+
+  // ── Material ──
+  const allMats = new Map(); // simplifiedLabel → original(s)
+  PRODUCTS.forEach(p => {
+    const raw = p.material || '';
+    const simple = MAT_LABEL[raw] || raw;
+    if(simple && !allMats.has(simple)) allMats.set(simple, raw);
+  });
+  const matPills = document.getElementById('qfMatPills');
+  if(matPills){
+    matPills.innerHTML = [...allMats.keys()].sort().map(label =>
+      `<button class="qf-pill" onclick="setQFMat('${label}')" data-mat="${label}">${label}</button>`
+    ).join('');
+  }
+}
+
+function setQFColour(col){
+  activeColour = activeColour === col ? null : col;
+  document.querySelectorAll('#qfColourPills .qf-pill').forEach(b =>
+    b.classList.toggle('active', b.dataset.colour === activeColour)
+  );
+  updateQFClearBtn();
+  renderProducts();
+}
+
+function setQFGsm(key){
+  activeGSM = activeGSM === key ? null : key;
+  document.querySelectorAll('#qfGsmPills .qf-pill').forEach(b =>
+    b.classList.toggle('active', b.dataset.gsm === activeGSM)
+  );
+  updateQFClearBtn();
+  renderProducts();
+}
+
+function setQFMat(label){
+  activeMaterial = activeMaterial === label ? null : label;
+  document.querySelectorAll('#qfMatPills .qf-pill').forEach(b =>
+    b.classList.toggle('active', b.dataset.mat === activeMaterial)
+  );
+  updateQFClearBtn();
+  renderProducts();
+}
+
+function clearAllQF(){
+  activeColour = null; activeGSM = null; activeMaterial = null;
+  document.querySelectorAll('.qf-pill').forEach(b => b.classList.remove('active'));
+  updateQFClearBtn();
+  renderProducts();
+}
+
+function updateQFClearBtn(){
+  const btn = document.getElementById('qfClearAll');
+  if(btn) btn.style.display = (activeColour || activeGSM || activeMaterial) ? '' : 'none';
+}
 
 // ──────────────────────────────────────────────
 // Build sidebar
@@ -721,6 +922,34 @@ function renderProducts(){
           || (p.colour && p.colour.toLowerCase().includes(q))
           || (p.material && p.material.toLowerCase().includes(q))
           || (p.weight && p.weight.toLowerCase().includes(q));
+    });
+  }
+
+  // ── Colour filter ──────────────────────────────
+  if(activeColour){
+    list = list.filter(p => {
+      if(p.isRange) return p.colours && p.colours.some(c => c.displayName === activeColour);
+      return p.colour === activeColour;
+    });
+  }
+
+  // ── GSM filter ─────────────────────────────────
+  if(activeGSM){
+    const group = GSM_GROUPS.find(g => g.key === activeGSM);
+    if(group){
+      list = list.filter(p => {
+        const v = parseInt(p.weight);
+        return !isNaN(v) && group.test(v);
+      });
+    }
+  }
+
+  // ── Material filter ────────────────────────────
+  if(activeMaterial){
+    list = list.filter(p => {
+      const raw = p.material || '';
+      const simple = MAT_LABEL[raw] || raw;
+      return simple === activeMaterial;
     });
   }
 
@@ -887,6 +1116,7 @@ function checkUrlParam(){
 // ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   buildSidebar();
+  buildQuickFilters();
   checkUrlParam();
 
   // ── Search input wiring ──────────────────────
