@@ -166,6 +166,7 @@
 
   /* ── QUICK FILTERS ── */
   .quick-filters{
+    display:none; /* shown dynamically once results have facets */
     background:#fff;border:1px solid var(--border);border-radius:2px;
     padding:12px 16px;margin-bottom:14px;
   }
@@ -684,101 +685,153 @@ const MAT_LABEL = {
 };
 
 // ──────────────────────────────────────────────
-// Build quick filter pills
+// Quick-filter helpers — operate on any list
 // ──────────────────────────────────────────────
-function buildQuickFilters(){
-  // ── Colours ──
-  const allColours = new Set();
-  PRODUCTS.forEach(p => {
-    if(p.isRange){
-      p.colours.forEach(c => allColours.add(c.displayName));
-    } else if(p.colour){
-      allColours.add(p.colour);
-    }
+function _qfColours(list){
+  const s = new Set();
+  list.forEach(p => {
+    if(p.isRange) p.colours?.forEach(c => s.add(c.displayName));
+    else if(p.colour) s.add(p.colour);
   });
-  const colourPills = document.getElementById('qfColourPills');
-  if(colourPills){
-    colourPills.innerHTML = [...allColours].sort().map(col => {
-      const css = QF_COLOUR_CSS[col];
-      const isStripe = col.includes('Stripe') || col.includes('White/');
-      let dotHtml = '';
-      if(isStripe){
-        const cls = col.includes('Black') ? 'qf-dot stripe-bk' : 'qf-dot stripe';
-        dotHtml = `<span class="${cls}"></span>`;
-      } else if(css){
-        const border = col==='White' ? 'border:1px solid #d0ccc4;' : '';
-        dotHtml = `<span class="qf-dot" style="background:${css};${border}"></span>`;
-      }
-      return `<button class="qf-pill" onclick="setQFColour('${col}')" data-colour="${col}">${dotHtml}${col}</button>`;
-    }).join('');
-  }
-
-  // ── GSM ──
-  const availableGSM = new Set();
-  PRODUCTS.forEach(p => {
+  return [...s].sort();
+}
+function _qfGsmGroups(list){
+  const s = new Set();
+  list.forEach(p => {
     const v = parseInt(p.weight);
-    if(!isNaN(v)) GSM_GROUPS.forEach(g => { if(g.test(v)) availableGSM.add(g.key); });
+    if(!isNaN(v)) GSM_GROUPS.forEach(g => { if(g.test(v)) s.add(g.key); });
   });
-  const gsmPills = document.getElementById('qfGsmPills');
-  if(gsmPills){
-    gsmPills.innerHTML = GSM_GROUPS
-      .filter(g => availableGSM.has(g.key))
-      .map(g => `<button class="qf-pill" onclick="setQFGsm('${g.key}')" data-gsm="${g.key}">${g.label}</button>`)
-      .join('');
+  return GSM_GROUPS.filter(g => s.has(g.key));
+}
+function _qfMaterials(list){
+  const m = new Map();
+  list.forEach(p => {
+    const simple = MAT_LABEL[p.material||''] || p.material || '';
+    if(simple) m.set(simple, 1);
+  });
+  return [...m.keys()].sort();
+}
+function _applyColour(list){
+  if(!activeColour) return list;
+  return list.filter(p => p.isRange
+    ? p.colours?.some(c => c.displayName === activeColour)
+    : p.colour === activeColour);
+}
+function _applyGSM(list){
+  if(!activeGSM) return list;
+  const g = GSM_GROUPS.find(g => g.key === activeGSM);
+  return g ? list.filter(p => { const v=parseInt(p.weight); return !isNaN(v)&&g.test(v); }) : list;
+}
+function _applyMaterial(list){
+  if(!activeMaterial) return list;
+  return list.filter(p => (MAT_LABEL[p.material||'']||p.material||'') === activeMaterial);
+}
+
+// ──────────────────────────────────────────────
+// Dynamic quick-filter pills — called from renderProducts
+// Facets computed from baseList with OTHER active filters applied
+// ──────────────────────────────────────────────
+function updateQuickFilters(baseList){
+  const panel = document.getElementById('quickFilters');
+  if(!panel) return;
+
+  // Hide panel if nothing to filter (≤ 3 products in base)
+  if(baseList.length <= 3){
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+
+  // ── Colour facet: from baseList filtered by GSM + Material ──
+  const colourBase = _applyMaterial(_applyGSM(baseList));
+  const availColours = _qfColours(colourBase);
+  // If active colour no longer available, clear it
+  if(activeColour && !availColours.includes(activeColour)) activeColour = null;
+
+  // ── GSM facet: from baseList filtered by Colour + Material ──
+  const gsmBase = _applyMaterial(_applyColour(baseList));
+  const availGSM = _qfGsmGroups(gsmBase);
+  if(activeGSM && !availGSM.find(g => g.key === activeGSM)) activeGSM = null;
+
+  // ── Material facet: from baseList filtered by Colour + GSM ──
+  const matBase = _applyGSM(_applyColour(baseList));
+  const availMats = _qfMaterials(matBase);
+  if(activeMaterial && !availMats.includes(activeMaterial)) activeMaterial = null;
+
+  // ── Render colour pills ──
+  const colourPills = document.getElementById('qfColourPills');
+  const colourRow   = document.getElementById('qfColourRow');
+  if(colourPills && colourRow){
+    if(availColours.length <= 1){ colourRow.style.display='none'; }
+    else {
+      colourRow.style.display='';
+      colourPills.innerHTML = availColours.map(col => {
+        const css = QF_COLOUR_CSS[col];
+        const isStripe = col.includes('Stripe') || col.includes('White/');
+        let dot = '';
+        if(isStripe){
+          dot = `<span class="${col.includes('Black')?'qf-dot stripe-bk':'qf-dot stripe'}"></span>`;
+        } else if(css){
+          dot = `<span class="qf-dot" style="background:${css};${col==='White'?'border:1px solid #ccc8be;':''}"></span>`;
+        }
+        const active = activeColour === col ? ' active' : '';
+        return `<button class="qf-pill${active}" onclick="setQFColour('${col}')" data-colour="${col}">${dot}${col}</button>`;
+      }).join('');
+    }
   }
 
-  // ── Material ──
-  const allMats = new Map(); // simplifiedLabel → original(s)
-  PRODUCTS.forEach(p => {
-    const raw = p.material || '';
-    const simple = MAT_LABEL[raw] || raw;
-    if(simple && !allMats.has(simple)) allMats.set(simple, raw);
-  });
-  const matPills = document.getElementById('qfMatPills');
-  if(matPills){
-    matPills.innerHTML = [...allMats.keys()].sort().map(label =>
-      `<button class="qf-pill" onclick="setQFMat('${label}')" data-mat="${label}">${label}</button>`
-    ).join('');
+  // ── Render GSM pills ──
+  const gsmPills = document.getElementById('qfGsmPills');
+  const gsmRow   = document.getElementById('qfGsmRow');
+  if(gsmPills && gsmRow){
+    if(availGSM.length <= 1){ gsmRow.style.display='none'; }
+    else {
+      gsmRow.style.display='';
+      gsmPills.innerHTML = availGSM.map(g => {
+        const active = activeGSM === g.key ? ' active' : '';
+        return `<button class="qf-pill${active}" onclick="setQFGsm('${g.key}')" data-gsm="${g.key}">${g.label}</button>`;
+      }).join('');
+    }
   }
+
+  // ── Render Material pills ──
+  const matPills = document.getElementById('qfMatPills');
+  const matRow   = document.getElementById('qfMatRow');
+  if(matPills && matRow){
+    if(availMats.length <= 1){ matRow.style.display='none'; }
+    else {
+      matRow.style.display='';
+      matPills.innerHTML = availMats.map(label => {
+        const active = activeMaterial === label ? ' active' : '';
+        return `<button class="qf-pill${active}" onclick="setQFMat('${label}')" data-mat="${label}">${label}</button>`;
+      }).join('');
+    }
+  }
+
+  // ── Show/hide Clear button ──
+  const btn = document.getElementById('qfClearAll');
+  if(btn) btn.style.display = (activeColour || activeGSM || activeMaterial) ? '' : 'none';
+
+  // ── Hide entire panel if all rows hidden ──
+  const anyVisible = [colourRow, gsmRow, matRow].some(r => r && r.style.display !== 'none');
+  if(panel) panel.style.display = anyVisible ? '' : 'none';
 }
 
 function setQFColour(col){
   activeColour = activeColour === col ? null : col;
-  document.querySelectorAll('#qfColourPills .qf-pill').forEach(b =>
-    b.classList.toggle('active', b.dataset.colour === activeColour)
-  );
-  updateQFClearBtn();
   renderProducts();
 }
-
 function setQFGsm(key){
   activeGSM = activeGSM === key ? null : key;
-  document.querySelectorAll('#qfGsmPills .qf-pill').forEach(b =>
-    b.classList.toggle('active', b.dataset.gsm === activeGSM)
-  );
-  updateQFClearBtn();
   renderProducts();
 }
-
 function setQFMat(label){
   activeMaterial = activeMaterial === label ? null : label;
-  document.querySelectorAll('#qfMatPills .qf-pill').forEach(b =>
-    b.classList.toggle('active', b.dataset.mat === activeMaterial)
-  );
-  updateQFClearBtn();
   renderProducts();
 }
-
 function clearAllQF(){
   activeColour = null; activeGSM = null; activeMaterial = null;
-  document.querySelectorAll('.qf-pill').forEach(b => b.classList.remove('active'));
-  updateQFClearBtn();
   renderProducts();
-}
-
-function updateQFClearBtn(){
-  const btn = document.getElementById('qfClearAll');
-  if(btn) btn.style.display = (activeColour || activeGSM || activeMaterial) ? '' : 'none';
 }
 
 // ──────────────────────────────────────────────
@@ -909,62 +962,46 @@ function updateFilterBar(label, isComing){
 // ──────────────────────────────────────────────
 function renderProducts(){
   const grid = document.getElementById('productGrid');
-  let list = activeSubcat
+
+  // ── Step 1: Base list — category + search only ─
+  let baseList = activeSubcat
     ? PRODUCTS.filter(p => p.subcat === activeSubcat)
     : PRODUCTS;
 
-  // ── Search filter ─────────────────────────────
   const q = (document.getElementById('collectionSearch')?.value || '').trim().toLowerCase();
   if(q){
-    list = list.filter(p => {
-      return (p.name && p.name.toLowerCase().includes(q))
-          || (p.colours && p.colours.some(c => c.displayName.toLowerCase().includes(q)))
-          || (p.colour && p.colour.toLowerCase().includes(q))
-          || (p.material && p.material.toLowerCase().includes(q))
-          || (p.weight && p.weight.toLowerCase().includes(q));
-    });
+    baseList = baseList.filter(p =>
+      (p.name && p.name.toLowerCase().includes(q))
+      || (p.colours && p.colours.some(c => c.displayName.toLowerCase().includes(q)))
+      || (p.colour && p.colour.toLowerCase().includes(q))
+      || (p.material && p.material.toLowerCase().includes(q))
+      || (p.weight && p.weight.toLowerCase().includes(q))
+    );
   }
 
-  // ── Colour filter ──────────────────────────────
-  if(activeColour){
-    list = list.filter(p => {
-      if(p.isRange) return p.colours && p.colours.some(c => c.displayName === activeColour);
-      return p.colour === activeColour;
-    });
-  }
+  // ── Step 2: Update filter pills from base list ─
+  updateQuickFilters(baseList);
 
-  // ── GSM filter ─────────────────────────────────
-  if(activeGSM){
-    const group = GSM_GROUPS.find(g => g.key === activeGSM);
-    if(group){
-      list = list.filter(p => {
-        const v = parseInt(p.weight);
-        return !isNaN(v) && group.test(v);
-      });
-    }
-  }
-
-  // ── Material filter ────────────────────────────
-  if(activeMaterial){
-    list = list.filter(p => {
-      const raw = p.material || '';
-      const simple = MAT_LABEL[raw] || raw;
-      return simple === activeMaterial;
-    });
-  }
+  // ── Step 3: Apply quick filters on top ─────────
+  let list = _applyMaterial(_applyGSM(_applyColour(baseList)));
 
   if(list.length===0){
-    grid.innerHTML = `<p style="color:var(--muted);font-size:14px;padding:40px 0;">${q ? 'No products match "'+q+'".' : 'No products found.'}</p>`;
-    // Update count in showing text
+    const activeQF = [activeColour, activeGSM ? GSM_GROUPS.find(g=>g.key===activeGSM)?.label : null, activeMaterial].filter(Boolean);
+    const qfMsg = activeQF.length ? ` with ${activeQF.join(', ')}` : '';
+    grid.innerHTML = `<p style="color:var(--muted);font-size:14px;padding:40px 0;">No products found${q ? ' for "'+q+'"' : ''}${qfMsg}. <button onclick="clearAllQF()" style="color:var(--gold2);background:none;border:none;cursor:pointer;text-decoration:underline;font-size:14px;">Clear filters</button></p>`;
     const showEl = document.getElementById('showingText');
     if(showEl) showEl.textContent = '0 products';
     return;
   }
 
-  // Update showing count when searching
-  if(q){
-    const showEl = document.getElementById('showingText');
-    if(showEl) showEl.textContent = list.length + ' product' + (list.length!==1?'s':'') + ' for "' + q + '"';
+  // Update showing count
+  const showEl = document.getElementById('showingText');
+  if(showEl && !activeSubcat){
+    if(q || activeColour || activeGSM || activeMaterial){
+      showEl.textContent = list.length + ' product' + (list.length!==1?'s':'') + ' found';
+    }
+  } else if(showEl && activeSubcat){
+    showEl.textContent = list.length + ' product' + (list.length!==1?'s':'');
   }
 
   // ── Sort ──────────────────────────────────────
@@ -1116,7 +1153,6 @@ function checkUrlParam(){
 // ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   buildSidebar();
-  buildQuickFilters();
   checkUrlParam();
 
   // ── Search input wiring ──────────────────────
