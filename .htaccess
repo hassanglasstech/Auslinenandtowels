@@ -22,6 +22,30 @@
 
   # Force HTTPS for 1 year (only enable after SSL is confirmed working)
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # ── CONTENT SECURITY POLICY ─────────────────────────────────
+  # default-src: only own domain unless explicitly overridden below
+  # script-src:  self + GA4 (googletagmanager) + Clarity; unsafe-inline
+  #              needed for JSON-LD schema blocks in HTML pages
+  # style-src:   self + unsafe-inline (partials.js injects inline styles)
+  # img-src:     self + data URIs (base64 swatches) + https (product images)
+  # font-src:    self + data URIs (any base64 font fallbacks)
+  # connect-src: GA4 collection endpoints + Clarity telemetry
+  # frame-ancestors: blocks this site being embedded in iframes anywhere
+  # form-action: forms only post to own domain (mail.php)
+  # object-src:  no Flash / plugins ever
+  # base-uri:    prevents base tag injection attacks
+  Header always set Content-Security-Policy "\
+default-src 'self'; \
+script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms; \
+style-src 'self' 'unsafe-inline'; \
+img-src 'self' data: https:; \
+font-src 'self' data:; \
+connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.clarity.ms https://dc.services.visualstudio.com https://c.bing.com; \
+frame-ancestors 'none'; \
+form-action 'self'; \
+object-src 'none'; \
+base-uri 'self';"
 </IfModule>
 
 # ── FORCE HTTPS ─────────────────────────────────────────────
