@@ -287,6 +287,43 @@
 }
 .ind-cta .btn:hover { background: #fff; }
 
+.ind-related {
+  background: #fff;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 38px 24px;
+  text-align: center;
+}
+.ind-related .wrap { max-width: 1100px; margin: 0 auto; }
+.ind-related .eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+  display: block;
+}
+.related-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.related-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  transition: all 0.2s;
+  border-radius: 1px;
+}
+.related-links a:hover { border-color: var(--gold); color: var(--gold); }
+
 @media (max-width: 768px) {
   .ind-hero { padding: 50px 20px 44px; }
   .ind-stats .wrap { grid-template-columns: repeat(2, 1fr); padding: 28px 20px; gap: 22px; }

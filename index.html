@@ -30,10 +30,24 @@
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",
+    "streetAddress": "Griffith NSW",
     "addressLocality": "Griffith",
     "addressRegion": "NSW",
+    "postalCode": "2680",
     "addressCountry": "AU"
   },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -34.2885,
+    "longitude": 146.0597
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "17:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "13:00" }
+  ],
+  "sameAs": [
+    "https://auslinenandtowels.com.au"
+  ],
   "areaServed": {
     "@type": "Country",
     "name": "Australia"
@@ -1265,6 +1279,75 @@
   }
   a:hover>.eyebrow{color:var(--navy)}
 </style>
+
+<!-- ========== NEWSLETTER / EMAIL CAPTURE ========== -->
+<section class="nl-section">
+  <div class="wrap" style="max-width:1100px;margin:0 auto;padding:0 24px">
+    <div class="nl-inner">
+      <div class="nl-copy">
+        <div class="eyebrow" style="font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Trade Insights</div>
+        <h2 style="font-family:var(--f-serif);font-size:clamp(26px,3.5vw,38px);font-weight:400;line-height:1.15;color:#fff;margin-bottom:12px">New stock alerts, bulk pricing tips, and <em style="font-style:italic;color:var(--gold)">linen buying guides</em> — direct to your inbox.</h2>
+        <p style="color:rgba(255,255,255,0.65);font-size:14.5px;line-height:1.6">Join hospitality operators who get our trade updates. No spam, unsubscribe anytime.</p>
+      </div>
+      <form class="nl-form" id="nlForm" novalidate>
+        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off" value="">
+        <div class="nl-fields" id="nlFields">
+          <input type="text" name="name" placeholder="Your name" required autocomplete="name">
+          <input type="email" name="email" placeholder="Work email address" required autocomplete="email">
+          <button type="submit" id="nlBtn">Subscribe →</button>
+        </div>
+        <div class="nl-msg" id="nlMsg" hidden></div>
+      </form>
+    </div>
+  </div>
+</section>
+<style>
+  .nl-section { background: #0f1535; padding: 72px 0; border-top: 1px solid rgba(255,255,255,0.07); }
+  .nl-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .nl-fields { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+  .nl-fields input { flex: 1 1 180px; padding: 13px 16px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: #fff; font-size: 14px; outline: none; border-radius: 1px; }
+  .nl-fields input::placeholder { color: rgba(255,255,255,0.4); }
+  .nl-fields input:focus { border-color: var(--gold); }
+  .nl-fields button { padding: 13px 28px; background: var(--gold); color: #0f1535; font-family: var(--f-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; border: none; cursor: pointer; border-radius: 1px; white-space: nowrap; }
+  .nl-fields button:hover { background: #fff; }
+  .nl-fields button:disabled { opacity: .6; cursor: not-allowed; }
+  .nl-msg { margin-top: 16px; font-size: 14px; color: var(--gold); font-family: var(--f-mono); }
+  .nl-msg.error { color: #f87272; }
+  @media(max-width:860px) { .nl-inner { grid-template-columns: 1fr; gap: 28px; } }
+</style>
+<script>
+  document.getElementById('nlForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    fd.set('message', 'Newsletter signup — requesting trade updates and buying guides.');
+    fd.set('enquiry', 'newsletter');
+    var btn = document.getElementById('nlBtn');
+    var msg = document.getElementById('nlMsg');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    msg.hidden = true;
+    msg.className = 'nl-msg';
+    try {
+      var res = await fetch('mail.php', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json().catch(function() { return {}; });
+      if (data.ok) {
+        document.getElementById('nlFields').hidden = true;
+        msg.textContent = 'You\'re on the list. We\'ll be in touch with trade updates.';
+        msg.hidden = false;
+        if (typeof gtag !== 'undefined') gtag('event', 'newsletter_signup', { event_category: 'Engagement', event_label: 'Homepage Newsletter' });
+      } else {
+        throw new Error(data.error || 'Error');
+      }
+    } catch(err) {
+      msg.textContent = 'Something went wrong — please email info@auslinenandtowels.com.au directly.';
+      msg.className = 'nl-msg error';
+      msg.hidden = false;
+      btn.textContent = 'Subscribe →';
+      btn.disabled = false;
+    }
+  });
+</script>
 
 <!-- ========== WHOLESALE QUOTE CTA ========== -->
 <section class="quote-cta">
