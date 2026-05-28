@@ -91,7 +91,7 @@ ErrorDocument 404 /404.html
 </IfModule>
 
 # ── BLOCK DIRECT ACCESS TO SENSITIVE FILES ──────────────────
-<FilesMatch "(^\.htaccess|mail\.php|db-config\.php|setup-db\.sql)$">
+<FilesMatch "(^\.htaccess|^\.htpasswd|mail\.php|db-config\.php|setup-db\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -100,3 +100,16 @@ ErrorDocument 404 /404.html
     Deny from all
   </IfModule>
 </FilesMatch>
+
+# ── PASSWORD-PROTECT ADMIN DASHBOARD (HTTP Basic Auth) ──────
+# Replaces the old client-side JS redirect "lock" (bypassable).
+# IMPORTANT: AuthUserFile must be the ABSOLUTE server path to .htpasswd.
+# Verify in Hostinger File Manager — the path below is the standard
+# Hostinger layout. If admin.html returns a 500 error, this path is wrong:
+# open File Manager, right-click .htpasswd → Copy Path, and paste it here.
+<Files "admin.html">
+  AuthType Basic
+  AuthName "Restricted — Merchant Dashboard"
+  AuthUserFile "/home/u472439801/domains/auslinenandtowels.com.au/public_html/.htpasswd"
+  Require valid-user
+</Files>

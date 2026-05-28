@@ -157,21 +157,43 @@
       if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
     });
 
+    var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     document.getElementById('altLMForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      var email = document.getElementById('altLMEmail').value.trim();
-      if (!email || email.indexOf('@') === -1) {
-        document.getElementById('altLMEmail').style.borderColor = '#c0392b';
+      var input = document.getElementById('altLMEmail');
+      var email = input.value.trim();
+      if (!EMAIL_RE.test(email)) {
+        input.style.borderColor = '#c0392b';
         return;
       }
-      var subject = ctx.cta + ' — ' + email;
-      var body    = 'Lead capture request.\n\nEmail: ' + email + '\nPage: ' + window.location.href + '\nRequest: ' + ctx.cta + '\nTime: ' + new Date().toLocaleString('en-AU');
-      window.location.href = 'mailto:info@auslinenandtowels.com.au?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      var form = document.getElementById('altLMForm');
-      form.innerHTML = '<div style="padding:14px 0;text-align:center;font-family:\'JetBrains Mono\',monospace;' +
-        'font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#b8933a;">' +
-        '&#10003;&nbsp; Request sent — we\'ll be in touch shortly.</div>';
-      setTimeout(close, 3000);
+
+      var form   = document.getElementById('altLMForm');
+      var btn    = form.querySelector('.lm-btn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+      var message = 'Lead capture request.\n\nPage: ' + window.location.href +
+                    '\nRequest: ' + ctx.cta +
+                    '\nTime: ' + new Date().toLocaleString('en-AU');
+
+      var data = new FormData();
+      data.append('name', 'Website Lead');
+      data.append('email', email);
+      data.append('message', message);
+      data.append('enquiry', 'lead-capture');
+
+      function done (ok) {
+        form.innerHTML = '<div style="padding:14px 0;text-align:center;font-family:\'JetBrains Mono\',monospace;' +
+          'font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:' + (ok ? '#b8933a' : '#c0392b') + ';">' +
+          (ok ? '&#10003;&nbsp; Request sent — we\'ll be in touch shortly.'
+              : 'Something went wrong — please email info@auslinenandtowels.com.au') + '</div>';
+        setTimeout(close, ok ? 3000 : 4500);
+      }
+
+      fetch('mail.php', { method: 'POST', body: data })
+        .then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
+        .then(function (res) { done(!!(res && res.ok)); })
+        .catch(function () { done(false); });
     });
   }
 

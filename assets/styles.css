@@ -291,7 +291,7 @@ img { display: block; max-width: 100%; }
   font-size: 13px;
   outline: none;
 }
-.newsletter input::placeholder { color: #7174884; }
+.newsletter input::placeholder { color: #717488; }
 .newsletter-row { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #3a3e6b; }
 .newsletter-row button {
   background: none; border: none; color: var(--gold-soft); font-family: var(--f-serif); font-size: 20px;
