@@ -628,6 +628,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const initialSku = new URLSearchParams(window.location.search).get('sku');
+    if (!initialSku) { window.location.replace('collection.html'); return; }
     renderProductPage(initialSku);
     // Track recently viewed (used by upgrades.js banner on home/collection)
     const prod = initialSku && window.ALT_PRODUCTS && window.ALT_PRODUCTS.find(p => p.sku === initialSku);

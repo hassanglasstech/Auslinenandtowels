@@ -212,7 +212,9 @@
 
   // Auto-fill message from product enquiry redirect
   (function(){
-    const enquiry = sessionStorage.getItem('alt_enquiry') || new URLSearchParams(window.location.search).get('enquiry');
+    // Bucket enquiry takes priority over single-product enquiry
+    const enquiry = sessionStorage.getItem('alt_enquiry_bucket') || sessionStorage.getItem('alt_enquiry') || new URLSearchParams(window.location.search).get('enquiry');
+    sessionStorage.removeItem('alt_enquiry_bucket');
     sessionStorage.removeItem('alt_enquiry');
     if(enquiry){
       const ta = document.querySelector('textarea[name="message"]');
@@ -240,6 +242,7 @@
         headers: { 'Accept': 'application/json' }
       });
 
+      if (!response.ok) throw new Error('HTTP ' + response.status);
       const result = await response.json().catch(() => ({}));
       if (result.ok) {
         if (typeof gtag !== "undefined") gtag("event", "generate_lead", {event_category:"Contact",event_label:"Contact Form"});

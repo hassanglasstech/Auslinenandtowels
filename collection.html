@@ -849,11 +849,13 @@ const _derivedCache = {};
 function _derivedFor(p){
   const key = p.parentSku || p.sku;
   if(_derivedCache[key]) return _derivedCache[key];
+  const allProds = window.ALT_PRODUCTS || [];
   const raws = p.isRange
-    ? window.ALT_PRODUCTS.filter(r => r.parentSku === p.parentSku)
-    : window.ALT_PRODUCTS.filter(r => r.sku === p.sku);
+    ? allProds.filter(r => r.parentSku === p.parentSku)
+    : allProds.filter(r => r.sku === p.sku);
   const merged = { weave: null, treatment: [] };
   raws.forEach(r => {
+    if (!window.ALT_HELPERS || !window.ALT_HELPERS.getDerivedSpecs) return;
     const d = window.ALT_HELPERS.getDerivedSpecs(r);
     if(d.weave && !merged.weave) merged.weave = d.weave;
     (d.treatment || []).forEach(t => { if(!merged.treatment.includes(t)) merged.treatment.push(t); });

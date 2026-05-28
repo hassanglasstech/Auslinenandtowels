@@ -245,7 +245,7 @@
     var msg = "Hi,\n\nI'd like a wholesale quote for the following items in my Quote Bucket:\n\n" +
               lines.join('\n') +
               "\n\nPlease provide trade pricing, minimum order quantities, and lead times. Happy to discuss volumes.\n\nThanks.";
-    sessionStorage.setItem('alt_enquiry', msg);
+    sessionStorage.setItem('alt_enquiry_bucket', msg);
     window.location.href = 'contact.html';
   }
 
