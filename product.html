@@ -469,6 +469,46 @@
       }
     }
 
+    // Surface specs buried in the description prose as scannable spec rows
+    const _desc = ((currentProduct.description || '') + ' ' + (currentProduct.material || '')).toLowerCase();
+    const _mat = (currentProduct.material || '').toLowerCase();
+    const _specHits = [];
+    const _addSpec = (label, value) => _specHits.push(`<div class="k">${label}</div><div class="v">${value}</div>`);
+
+    // Cotton grade — skip if the Material field already states it (avoids duplicate rows)
+    if (_desc.includes('combed cotton') && !_mat.includes('combed'))               _addSpec('Cotton Grade', 'Combed cotton');
+    else if ((_desc.includes('zero-twist') || _desc.includes('zero twist')) && !_mat.includes('zero')) _addSpec('Cotton Grade', 'Zero-twist cotton');
+    else if ((_desc.includes('ring-spun') || _desc.includes('ring spun')) && !_mat.includes('ring'))   _addSpec('Cotton Grade', 'Ring-spun cotton');
+
+    if (_desc.includes('cellular weave'))    _addSpec('Weave', 'Cellular weave');
+    else if (_desc.includes('satin stripe')) _addSpec('Weave', 'Satin stripe woven');
+    else if (_desc.includes('dobby'))        _addSpec('Weave', 'Dobby border');
+    else if (_desc.includes('percale'))      _addSpec('Weave', 'Percale');
+    else if (_desc.includes('sateen'))       _addSpec('Weave', 'Sateen');
+    else if (_desc.includes('waffle'))       _addSpec('Weave', 'Waffle weave');
+
+    if (_desc.includes('double stitch') || _desc.includes('double-stitch')) _addSpec('Hem', 'Double-stitched');
+    else if (_desc.includes('twin overlock'))                              _addSpec('Hem', 'Twin overlocked');
+    else if (_desc.includes('overlock'))                                   _addSpec('Hem', 'Overlocked');
+
+    const _treat = [];
+    if (_desc.includes('fire retardant') || _desc.includes('flame retardant') || _desc.includes('fire-retardant')) _treat.push('Fire retardant treated');
+    if (_desc.includes('waterproof')) _treat.push('Waterproof');
+    if (_treat.length) _addSpec('Treatment', _treat.join(' · '));
+
+    const extraSpecRows = _specHits.join('');
+
+    // Tag badge (Sale / Waterproof / Out of Stock)
+    const _tag = (currentProduct.tag || '').trim();
+    let tagBadgeHtml = '';
+    if (_tag) {
+      const _t = _tag.toLowerCase();
+      const _style = _t.includes('out of stock') ? 'background:#9a3b3b;color:#fff'
+                   : _t.includes('sale')         ? 'background:#b8893a;color:#fff'
+                   :                                'background:#1a3a6b;color:#fff';
+      tagBadgeHtml = `<span class="pd-tag" style="display:inline-block;margin-left:10px;padding:3px 10px;border-radius:3px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;vertical-align:middle;${_style}">${_tag}</span>`;
+    }
+
     // Build the main product details container innerHTML
     document.getElementById('pdMain').innerHTML = `
       <div class="pd-gallery">
@@ -481,7 +521,7 @@
       <div class="pd-info">
         <div class="category">${cat ? cat.name : ''}${currentProduct.parentSku ? ' · ' + (window.ALT_PARENTS[currentProduct.parentSku]?.name || '') : ''}</div>
         <h1>${currentProduct.name.replace(/Classical|Deluxe/, m => `<em>${m}</em>`)}</h1>
-        <div class="subtitle">${currentProduct.colour} · ${currentProduct.sku}</div>
+        <div class="subtitle">${currentProduct.colour} · ${currentProduct.sku}${tagBadgeHtml}</div>
 
         <div class="price-block">
           <div class="price" style="font-size:20px;letter-spacing:.08em;text-transform:uppercase;font-family:var(--f-mono);">Request Quote</div>
@@ -495,6 +535,7 @@
           <div class="k">Size</div><div class="v">${currentProduct.size}</div>
           <div class="k">Weight</div><div class="v">${currentProduct.weight || 'Enquire with supplier'}</div>
           <div class="k">Material</div><div class="v">${currentProduct.material}</div>
+          ${extraSpecRows}
           <div class="k">Colour</div><div class="v">${currentProduct.colour}</div>
           <div class="k">SKU</div><div class="v" style="font-family: var(--f-mono); font-size: 13px;">${currentProduct.sku}</div>
           <div class="k">Dispatch</div><div class="v">2–5 business days from Griffith NSW</div>
