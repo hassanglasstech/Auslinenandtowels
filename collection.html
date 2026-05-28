@@ -592,12 +592,22 @@ const PRODUCTS = (function() {
         }
       });
 
-      // Sizes / Types from s.variantName
+      // Sizes / Types from s.variantName — strip colour prefix so
+      // "Camel Single" → "Single", "Navy King" → "King", deduped.
+      // Pure colour variants (variantName === colour) → empty label → skip.
       const types = [];
+      const seenTypes = new Set();
       siblings.forEach(s => {
-        const typeName = s.variantName || s.name;
-        if (typeName && !types.includes(typeName)) {
-          types.push(typeName);
+        const vn = (s.variantName || s.name || '').trim();
+        const col = (s.colour || '').trim();
+        // Strip leading colour word (case-insensitive) + optional space
+        let label = vn;
+        if (col && vn.toLowerCase().startsWith(col.toLowerCase())) {
+          label = vn.slice(col.length).trim();
+        }
+        if (label && !seenTypes.has(label)) {
+          seenTypes.add(label);
+          types.push(label);
         }
       });
 
