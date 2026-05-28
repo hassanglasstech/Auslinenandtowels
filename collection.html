@@ -187,46 +187,77 @@
   .search-clear.visible{display:block}
   .search-clear:hover{color:var(--navy)}
 
-  /* filter rows — appear below input, separated by a hairline */
+  /* ── filter toggles — collapsed by default ── */
   .quick-filters{
     display:none;
     border-top:1px solid var(--border);
-    padding:10px 14px 8px;
+    padding:8px 14px;
+    display:none;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
   }
-  .qf-row{
-    display:flex;align-items:center;gap:8px;
-    padding:4px 0;
+  .quick-filters.visible{display:flex}
+
+  /* each filter: a toggle button + a dropdown panel */
+  .qf-group{position:relative}
+
+  /* the toggle button — shows label or active value */
+  .qf-toggle{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 11px;border-radius:20px;cursor:pointer;
+    font-size:11.5px;font-family:var(--f-sans),sans-serif;
+    border:1px solid var(--border);background:#faf9f6;color:var(--navy);
+    transition:all .12s;white-space:nowrap;line-height:1.3;
   }
-  .qf-row + .qf-row{border-top:1px solid #f0ece4}
-  .qf-label{
-    font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--muted);white-space:nowrap;
-    min-width:56px;flex-shrink:0;
+  .qf-toggle:hover{border-color:var(--gold2);background:#fdf8ef}
+  .qf-toggle.has-value{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .qf-toggle.has-value:hover{background:#253e7a}
+  .qf-toggle .chev{
+    width:10px;height:10px;flex-shrink:0;opacity:.6;
+    transition:transform .2s;
   }
+  .qf-toggle.open .chev{transform:rotate(180deg)}
+  .qf-toggle .clear-val{
+    margin-left:2px;opacity:.7;font-size:14px;line-height:1;
+  }
+  .qf-toggle .clear-val:hover{opacity:1}
+
+  /* dropdown panel */
+  .qf-dropdown{
+    display:none;
+    position:absolute;top:calc(100% + 6px);left:0;z-index:100;
+    background:#fff;border:1px solid var(--border);border-radius:4px;
+    box-shadow:0 8px 24px rgba(0,0,0,.1);
+    padding:10px 12px;min-width:200px;max-width:320px;
+  }
+  .qf-dropdown.open{display:block}
   .qf-pills{
-    display:flex;gap:5px;flex-wrap:wrap;align-items:center;
+    display:flex;gap:6px;flex-wrap:wrap;
   }
   .qf-pill{
     display:inline-flex;align-items:center;gap:4px;
-    padding:3px 9px;border-radius:20px;cursor:pointer;
-    font-size:11px;font-family:var(--f-sans),sans-serif;
+    padding:4px 10px;border-radius:16px;cursor:pointer;
+    font-size:11.5px;font-family:var(--f-sans),sans-serif;
     border:1px solid var(--border);background:#faf9f6;color:var(--navy);
     transition:all .12s;white-space:nowrap;line-height:1.3;
   }
   .qf-pill:hover{border-color:var(--gold2);background:#fdf8ef}
   .qf-pill.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .qf-pill.active:hover{background:#253e7a}
   .qf-dot{
     width:10px;height:10px;border-radius:50%;flex-shrink:0;
     border:1px solid rgba(0,0,0,.15);
   }
   .qf-dot.stripe{background:linear-gradient(135deg,#fff 50%,#3b82f6 50%)}
   .qf-dot.stripe-bk{background:linear-gradient(135deg,#fff 50%,#1a1a1a 50%)}
+
+  /* "clear all filters" link */
   .qf-clear-all{
     font-size:11px;color:var(--gold2);border:none;background:none;
-    cursor:pointer;padding:0;text-decoration:underline;white-space:nowrap;
-    margin-left:6px;flex-shrink:0;
+    cursor:pointer;padding:2px 0;text-decoration:underline;white-space:nowrap;
+    flex-shrink:0;display:none;
   }
+  .qf-clear-all.visible{display:inline}
   .qf-clear-all:hover{color:var(--navy)}
 
   /* active filter breadcrumb */
@@ -408,21 +439,39 @@
         <div class="search-hint" id="searchHint"><span class="hint-active"></span></div>
         <button class="search-clear" id="searchClear" aria-label="Clear search">×</button>
       </div>
-      <!-- Filter rows — shown when results have multiple options -->
+      <!-- Filter toggles — collapsed by default, appear when user searches -->
       <div class="quick-filters" id="quickFilters">
-        <div class="qf-row" id="qfColourRow" style="display:none">
-          <span class="qf-label">Colour</span>
-          <div class="qf-pills" id="qfColourPills"></div>
+        <!-- Colour toggle -->
+        <div class="qf-group" id="qfColourGroup" style="display:none">
+          <button class="qf-toggle" id="qfColourToggle" onclick="toggleQFDropdown('colour')">
+            <span id="qfColourLabel">Colour</span>
+            <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="qf-dropdown" id="qfColourDropdown">
+            <div class="qf-pills" id="qfColourPills"></div>
+          </div>
         </div>
-        <div class="qf-row" id="qfGsmRow" style="display:none">
-          <span class="qf-label">GSM</span>
-          <div class="qf-pills" id="qfGsmPills"></div>
+        <!-- GSM toggle -->
+        <div class="qf-group" id="qfGsmGroup" style="display:none">
+          <button class="qf-toggle" id="qfGsmToggle" onclick="toggleQFDropdown('gsm')">
+            <span id="qfGsmLabel">GSM</span>
+            <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="qf-dropdown" id="qfGsmDropdown">
+            <div class="qf-pills" id="qfGsmPills"></div>
+          </div>
         </div>
-        <div class="qf-row" id="qfMatRow" style="display:none">
-          <span class="qf-label">Material</span>
-          <div class="qf-pills" id="qfMatPills"></div>
-          <button class="qf-clear-all" id="qfClearAll" style="display:none" onclick="clearAllQF()">Clear all</button>
+        <!-- Material toggle -->
+        <div class="qf-group" id="qfMatGroup" style="display:none">
+          <button class="qf-toggle" id="qfMatToggle" onclick="toggleQFDropdown('mat')">
+            <span id="qfMatLabel">Material</span>
+            <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="qf-dropdown" id="qfMatDropdown">
+            <div class="qf-pills" id="qfMatPills"></div>
+          </div>
         </div>
+        <button class="qf-clear-all" id="qfClearAll" onclick="clearAllQF()">Clear filters</button>
       </div>
     </div>
 
@@ -744,30 +793,22 @@ function _applyMaterial(list){
 }
 
 // ──────────────────────────────────────────────
-// Dynamic quick-filter pills — called from renderProducts
-// Shows INSIDE the search panel, below the input
-// Only visible when user has typed OR selected a category
-// Facets computed from baseList with OTHER active filters applied
+// Dynamic quick-filter toggles — only shown when user types in search
+// Filters are COLLAPSED by default — click toggle to open dropdown
 // ──────────────────────────────────────────────
 function updateQuickFilters(baseList){
-  const panel   = document.getElementById('quickFilters');
-  const colourRow = document.getElementById('qfColourRow');
-  const gsmRow    = document.getElementById('qfGsmRow');
-  const matRow    = document.getElementById('qfMatRow');
-  const colourPills = document.getElementById('qfColourPills');
-  const gsmPills    = document.getElementById('qfGsmPills');
-  const matPills    = document.getElementById('qfMatPills');
+  const panel = document.getElementById('quickFilters');
   if(!panel) return;
 
-  // Only show filter panel when user has narrowed down (search or category)
+  // ONLY show filter panel when user has typed something (search-only trigger)
+  // Category sidebar is independent — it does NOT trigger filter panel
   const q = (document.getElementById('collectionSearch')?.value || '').trim();
-  const isNarrowed = q.length > 0 || activeSubcat !== null;
-  if(!isNarrowed || baseList.length === 0){
-    panel.style.display = 'none';
+  if(!q || baseList.length === 0){
+    panel.classList.remove('visible');
     return;
   }
 
-  // ── Compute facets (each from baseList with other 2 filters applied) ──
+  // ── Compute facets ──
   const colourBase = _applyMaterial(_applyGSM(baseList));
   const availColours = _qfColours(colourBase);
   if(activeColour && !availColours.includes(activeColour)) activeColour = null;
@@ -780,67 +821,130 @@ function updateQuickFilters(baseList){
   const availMats = _qfMaterials(matBase);
   if(activeMaterial && !availMats.includes(activeMaterial)) activeMaterial = null;
 
-  // ── Colour row ──
-  if(availColours.length <= 1){
-    colourRow.style.display = 'none';
-  } else {
-    colourRow.style.display = '';
-    colourPills.innerHTML = availColours.map(col => {
+  let anyGroup = false;
+
+  // ── Colour group ──
+  const cGroup = document.getElementById('qfColourGroup');
+  const cToggle = document.getElementById('qfColourToggle');
+  const cLabel  = document.getElementById('qfColourLabel');
+  const cPills  = document.getElementById('qfColourPills');
+  if(availColours.length > 1 && cGroup){
+    cGroup.style.display = '';
+    anyGroup = true;
+    cPills.innerHTML = availColours.map(col => {
       const css = QF_COLOUR_CSS[col];
       const isStripe = col.includes('Stripe') || col.includes('White/');
-      let dot = '';
-      if(isStripe){
-        dot = `<span class="${col.includes('Black')?'qf-dot stripe-bk':'qf-dot stripe'}"></span>`;
-      } else if(css){
-        dot = `<span class="qf-dot" style="background:${css};${col==='White'?'border:1px solid #ccc8be;':''}"></span>`;
-      }
-      return `<button class="qf-pill${activeColour===col?' active':''}" onclick="setQFColour('${col}')" data-colour="${col}">${dot}${col}</button>`;
+      let dot = isStripe
+        ? `<span class="${col.includes('Black')?'qf-dot stripe-bk':'qf-dot stripe'}"></span>`
+        : css ? `<span class="qf-dot" style="background:${css};${col==='White'?'border:1px solid #ccc8be;':''}"></span>` : '';
+      return `<button class="qf-pill${activeColour===col?' active':''}" onclick="setQFColour('${col}')">${dot}${col}</button>`;
     }).join('');
-  }
+    // Update toggle label
+    if(activeColour){
+      cLabel.textContent = 'Colour: ' + activeColour;
+      cToggle.classList.add('has-value');
+    } else {
+      cLabel.textContent = 'Colour';
+      cToggle.classList.remove('has-value');
+    }
+  } else if(cGroup){ cGroup.style.display = 'none'; }
 
-  // ── GSM row ──
-  if(availGSM.length <= 1){
-    gsmRow.style.display = 'none';
-  } else {
-    gsmRow.style.display = '';
-    gsmPills.innerHTML = availGSM.map(g =>
-      `<button class="qf-pill${activeGSM===g.key?' active':''}" onclick="setQFGsm('${g.key}')" data-gsm="${g.key}">${g.label}</button>`
+  // ── GSM group ──
+  const gGroup = document.getElementById('qfGsmGroup');
+  const gToggle = document.getElementById('qfGsmToggle');
+  const gLabel  = document.getElementById('qfGsmLabel');
+  const gPills  = document.getElementById('qfGsmPills');
+  if(availGSM.length > 1 && gGroup){
+    gGroup.style.display = '';
+    anyGroup = true;
+    gPills.innerHTML = availGSM.map(g =>
+      `<button class="qf-pill${activeGSM===g.key?' active':''}" onclick="setQFGsm('${g.key}')">${g.label}</button>`
     ).join('');
-  }
+    if(activeGSM){
+      const activeG = GSM_GROUPS.find(g => g.key === activeGSM);
+      gLabel.textContent = activeG ? activeG.label : 'GSM';
+      gToggle.classList.add('has-value');
+    } else {
+      gLabel.textContent = 'GSM';
+      gToggle.classList.remove('has-value');
+    }
+  } else if(gGroup){ gGroup.style.display = 'none'; }
 
-  // ── Material row ──
-  if(availMats.length <= 1){
-    matRow.style.display = 'none';
-  } else {
-    matRow.style.display = '';
-    matPills.innerHTML = availMats.map(label =>
-      `<button class="qf-pill${activeMaterial===label?' active':''}" onclick="setQFMat('${label}')" data-mat="${label}">${label}</button>`
+  // ── Material group ──
+  const mGroup = document.getElementById('qfMatGroup');
+  const mToggle = document.getElementById('qfMatToggle');
+  const mLabel  = document.getElementById('qfMatLabel');
+  const mPills  = document.getElementById('qfMatPills');
+  if(availMats.length > 1 && mGroup){
+    mGroup.style.display = '';
+    anyGroup = true;
+    mPills.innerHTML = availMats.map(label =>
+      `<button class="qf-pill${activeMaterial===label?' active':''}" onclick="setQFMat('${label}')">${label}</button>`
     ).join('');
-  }
+    if(activeMaterial){
+      mLabel.textContent = 'Material: ' + activeMaterial;
+      mToggle.classList.add('has-value');
+    } else {
+      mLabel.textContent = 'Material';
+      mToggle.classList.remove('has-value');
+    }
+  } else if(mGroup){ mGroup.style.display = 'none'; }
 
-  // ── Clear button ──
-  const btn = document.getElementById('qfClearAll');
-  if(btn) btn.style.display = (activeColour || activeGSM || activeMaterial) ? 'inline' : 'none';
+  // ── Clear all button ──
+  const clearBtn = document.getElementById('qfClearAll');
+  if(clearBtn) clearBtn.classList.toggle('visible', !!(activeColour || activeGSM || activeMaterial));
 
-  // ── Show/hide the filter section ──
-  const anyRow = [colourRow, gsmRow, matRow].some(r => r.style.display !== 'none');
-  panel.style.display = anyRow ? 'block' : 'none';
+  panel.classList.toggle('visible', anyGroup);
 }
+
+// Open/close a filter dropdown (close others)
+function toggleQFDropdown(which){
+  const map = { colour:'qfColourToggle', gsm:'qfGsmToggle', mat:'qfMatToggle' };
+  const dmap = { colour:'qfColourDropdown', gsm:'qfGsmDropdown', mat:'qfMatDropdown' };
+  Object.keys(map).forEach(k => {
+    const t = document.getElementById(map[k]);
+    const d = document.getElementById(dmap[k]);
+    if(k === which){
+      const isOpen = d.classList.contains('open');
+      d.classList.toggle('open', !isOpen);
+      t.classList.toggle('open', !isOpen);
+    } else {
+      document.getElementById(dmap[k])?.classList.remove('open');
+      document.getElementById(map[k])?.classList.remove('open');
+    }
+  });
+}
+
+// Close all dropdowns when clicking outside
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.qf-group')){
+    document.querySelectorAll('.qf-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.qf-toggle.open').forEach(t => t.classList.remove('open'));
+  }
+});
 
 function setQFColour(col){
   activeColour = activeColour === col ? null : col;
+  document.getElementById('qfColourDropdown')?.classList.remove('open');
+  document.getElementById('qfColourToggle')?.classList.remove('open');
   renderProducts();
 }
 function setQFGsm(key){
   activeGSM = activeGSM === key ? null : key;
+  document.getElementById('qfGsmDropdown')?.classList.remove('open');
+  document.getElementById('qfGsmToggle')?.classList.remove('open');
   renderProducts();
 }
 function setQFMat(label){
   activeMaterial = activeMaterial === label ? null : label;
+  document.getElementById('qfMatDropdown')?.classList.remove('open');
+  document.getElementById('qfMatToggle')?.classList.remove('open');
   renderProducts();
 }
 function clearAllQF(){
   activeColour = null; activeGSM = null; activeMaterial = null;
+  document.querySelectorAll('.qf-dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.qf-toggle').forEach(t => t.classList.remove('open','has-value'));
   renderProducts();
 }
 
