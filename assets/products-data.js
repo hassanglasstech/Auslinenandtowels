@@ -23,7 +23,6 @@ window.ALT_PARENTS = {
   'ALU-QL': { name: 'Quilts', category: 'quilts-micro' },
   'ALU-BK': { name: 'Blankets', category: 'blankets-cotton' },
   'ALU-MP': { name: 'Mattress Protectors', category: 'mp-protectors' },
-  'ALU-MT': { name: 'Mattress Toppers', category: 'mp-toppers' },
   'ALU-PP': { name: 'Pillow Protectors', category: 'mp-pillow' },
   'ALU-PIL': { name: 'Microfibre Pillows', category: 'pillows' },
 };
@@ -42,16 +41,15 @@ window.ALT_CATEGORIES = [
   { id: 'sheets-flat', name: 'Flat Sheets', parent: 'Sheets', slug: 'flat-sheets', image: 'images/white-towel-stack-3.webp' },
   { id: 'sheets-fitted', name: 'Fitted Sheets', parent: 'Sheets', slug: 'fitted-sheets', image: 'images/white-towel-stack-5.webp' },
   { id: 'sheets-pillow', name: 'Pillowcases', parent: 'Sheets', slug: 'pillowcases', image: 'images/white-pillowcase-pair.webp' },
-  { id: 'sheets-satin', name: 'Satin Stripe', parent: 'Sheets', slug: 'satin-stripe-sheets', image: 'images/placeholder-product.svg' },
-  { id: 'quilt-covers', name: 'Quilt Covers', parent: 'Quilt Covers', slug: 'quilt-covers', image: 'images/placeholder-product.svg' },
-  { id: 'quilts-micro', name: 'Microfibre Quilts', parent: 'Quilts', slug: 'microfibre-quilts', image: 'images/placeholder-product.svg' },
-  { id: 'quilts-navy', name: 'Navy Reversible Quilts', parent: 'Quilts', slug: 'navy-quilts', image: 'images/placeholder-product.svg' },
-  { id: 'blankets-cotton', name: 'Cellular Cotton Blankets', parent: 'Blankets', slug: 'cellular-blankets', image: 'images/placeholder-product.svg' },
-  { id: 'blankets-fleece', name: 'Faux Wool Blankets', parent: 'Blankets', slug: 'faux-wool-blankets', image: 'images/placeholder-product.svg' },
-  { id: 'mp-protectors', name: 'Mattress Protectors', parent: 'Mattress Protection', slug: 'mattress-protectors', image: 'images/placeholder-product.svg' },
-  { id: 'mp-toppers', name: 'Mattress Toppers', parent: 'Mattress Protection', slug: 'mattress-toppers', image: 'images/placeholder-product.svg' },
-  { id: 'mp-pillow', name: 'Pillow Protectors', parent: 'Mattress Protection', slug: 'pillow-protectors', image: 'images/placeholder-product.svg' },
-  { id: 'pillows', name: 'Microfibre Pillows', parent: 'Pillows', slug: 'microfibre-pillows', image: 'images/placeholder-product.svg' },
+  { id: 'sheets-satin', name: 'Satin Stripe', parent: 'Sheets', slug: 'satin-stripe-sheets', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/04/DSCF6384-1.jpg' },
+  { id: 'quilt-covers', name: 'Quilt Covers', parent: 'Quilt Covers', slug: 'quilt-covers', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/04/DSCF6322.jpg' },
+  { id: 'quilts-micro', name: 'Microfibre Quilts', parent: 'Quilts', slug: 'microfibre-quilts', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/05/pin-Quilt-S.jpg' },
+  { id: 'quilts-navy', name: 'Navy Reversible Quilts', parent: 'Quilts', slug: 'navy-quilts', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/03/Navy-Quilt-packaged.jpg' },
+  { id: 'blankets-cotton', name: 'Cellular Cotton Blankets', parent: 'Blankets', slug: 'cellular-blankets', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/11/cellular-cotton-blanket-white.jpg' },
+  { id: 'blankets-fleece', name: 'Faux Wool Blankets', parent: 'Blankets', slug: 'faux-wool-blankets', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/03/DSCF6269.jpg' },
+  { id: 'mp-protectors', name: 'Mattress Protectors', parent: 'Mattress Protection', slug: 'mattress-protectors', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2021/05/fitted-mattress-protector-2.jpg' },
+  { id: 'mp-pillow', name: 'Pillow Protectors', parent: 'Mattress Protection', slug: 'pillow-protectors', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2018/04/DSCF6331.jpg' },
+  { id: 'pillows', name: 'Microfibre Pillows', parent: 'Pillows', slug: 'microfibre-pillows', image: 'https://www.linenandtowels.com.au/wp-content/uploads/2019/02/soft-pillow.jpg' },
 ];
 
 window.ALT_PRODUCTS = [
