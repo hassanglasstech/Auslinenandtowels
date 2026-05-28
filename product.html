@@ -542,12 +542,18 @@
       document.getElementById('relatedSection').style.display = 'block';
       document.getElementById('relatedGrid').innerHTML = related.map(p => {
         const img = p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder-product.svg'"/>` : '';
+        // Build a meaningful subtitle — show size + colour + GSM (skip if empty/duplicate)
+        const parts = [];
+        if(p.size)   parts.push(p.size);
+        if(p.colour) parts.push(p.colour);
+        if(p.weight) parts.push(p.weight);
+        const subtitle = parts.join(' · ') || p.sku;
         return `
           <a href="product.html?sku=${p.sku}" class="r-card">
             <div class="img">${img}</div>
             <div class="body">
               <div class="title">${p.name}</div>
-              <div class="price">${p.colour} · ${p.sku}</div>
+              <div class="price">${subtitle}</div>
             </div>
           </a>
         `;
