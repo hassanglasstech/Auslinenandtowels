@@ -65,6 +65,28 @@ if (count($hits) >= $max_hits) {
 $hits[] = $now;
 file_put_contents($rate_file, json_encode($hits), LOCK_EX);
 
+// ── NEWSLETTER SUBSCRIBER — MYSQL SAVE ───────────────────────────────────────
+function alt_save_subscriber($name, $email, $source = 'website-newsletter') {
+    $cfg = __DIR__ . '/db-config.php';
+    if (!file_exists($cfg)) return false;
+    require_once $cfg;
+    try {
+        $pdo = new PDO(
+            'mysql:host=' . ALT_DB_HOST . ';dbname=' . ALT_DB_NAME . ';charset=utf8mb4',
+            ALT_DB_USER,
+            ALT_DB_PASS,
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 5]
+        );
+        $stmt = $pdo->prepare(
+            'INSERT IGNORE INTO subscribers (name, email, source) VALUES (:name, :email, :source)'
+        );
+        $stmt->execute(['name' => $name, 'email' => $email, 'source' => $source]);
+        return true;
+    } catch (Exception $e) {
+        return false; // fail silently — email notification still goes through
+    }
+}
+
 // ── INPUT SANITISATION ────────────────────────────────────────────────────────
 function alt_clean($v) {
     return str_replace(["\r", "\n", "%0a", "%0d"], '', strip_tags(trim((string)$v)));
@@ -82,6 +104,11 @@ if (!$name || !$email || !$message) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'Required fields missing']);
     exit;
+}
+
+// ── SAVE NEWSLETTER SUBSCRIBER TO DB ─────────────────────────────────────────
+if ($enquiry === 'newsletter') {
+    alt_save_subscriber($name, $email);
 }
 
 // ── BUILD & SEND EMAIL ────────────────────────────────────────────────────────

@@ -91,7 +91,7 @@ ErrorDocument 404 /404.html
 </IfModule>
 
 # ── BLOCK DIRECT ACCESS TO SENSITIVE FILES ──────────────────
-<FilesMatch "(^\.htaccess|mail\.php)$">
+<FilesMatch "(^\.htaccess|mail\.php|db-config\.php|setup-db\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
