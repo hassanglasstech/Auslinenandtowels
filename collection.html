@@ -475,6 +475,36 @@
             <div class="qf-pills" id="qfMatPills"></div>
           </div>
         </div>
+        <!-- Weave toggle -->
+        <div class="qf-group" id="qfWeaveGroup" style="display:none">
+          <button class="qf-toggle" id="qfWeaveToggle" onclick="toggleQFDropdown('weave')">
+            <span id="qfWeaveLabel">Weave</span>
+            <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="qf-dropdown" id="qfWeaveDropdown">
+            <div class="qf-pills" id="qfWeavePills"></div>
+          </div>
+        </div>
+        <!-- Treatment toggle -->
+        <div class="qf-group" id="qfTreatGroup" style="display:none">
+          <button class="qf-toggle" id="qfTreatToggle" onclick="toggleQFDropdown('treat')">
+            <span id="qfTreatLabel">Treatment</span>
+            <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="qf-dropdown" id="qfTreatDropdown">
+            <div class="qf-pills" id="qfTreatPills"></div>
+          </div>
+        </div>
+        <!-- Tag toggle -->
+        <div class="qf-group" id="qfTagGroup" style="display:none">
+          <button class="qf-toggle" id="qfTagToggle" onclick="toggleQFDropdown('tag')">
+            <span id="qfTagLabel">Tag</span>
+            <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="qf-dropdown" id="qfTagDropdown">
+            <div class="qf-pills" id="qfTagPills"></div>
+          </div>
+        </div>
         <button class="qf-clear-all" id="qfClearAll" onclick="clearAllQF()">Clear filters</button>
       </div>
     </div>
@@ -597,7 +627,8 @@ const PRODUCTS = (function() {
         parentSku: p.parentSku,
         colours: uniqueColours,
         sizes: types,
-        weight: primaryProduct.weight || ''
+        weight: primaryProduct.weight || '',
+        material: primaryProduct.material || ''
       });
     } else {
       const cat = (window.ALT_CATEGORIES || []).find(c => c.id === p.categoryId);
@@ -628,7 +659,8 @@ const PRODUCTS = (function() {
         img: p.image,
         tag: p.tag,
         isRange: false,
-        weight: p.weight || ''
+        weight: p.weight || '',
+        material: p.material || ''
       });
     }
   });
@@ -719,6 +751,9 @@ let activeSubcat  = null; // null = show all
 let activeColour  = null;
 let activeGSM     = null; // 'light' | '450-500' | '550-600' | 'heavy'
 let activeMaterial= null;
+let activeWeave   = null; // derived from description prose
+let activeTreatment = null; // 'Waterproof' | 'Fire retardant'
+let activeTag     = null; // 'Sale' | 'Waterproof' | 'Bestseller' | 'Bulk Pack'
 
 // ──────────────────────────────────────────────
 // Colour → CSS value map
@@ -795,6 +830,51 @@ function _applyMaterial(list){
   if(!activeMaterial) return list;
   return list.filter(p => (MAT_LABEL[p.material||'']||p.material||'') === activeMaterial);
 }
+// Collection cards are grouped ranges that drop description/material — so derive
+// specs from the underlying raw ALT_PRODUCTS (merging across colour/size siblings).
+const _derivedCache = {};
+function _derivedFor(p){
+  const key = p.parentSku || p.sku;
+  if(_derivedCache[key]) return _derivedCache[key];
+  const raws = p.isRange
+    ? window.ALT_PRODUCTS.filter(r => r.parentSku === p.parentSku)
+    : window.ALT_PRODUCTS.filter(r => r.sku === p.sku);
+  const merged = { weave: null, treatment: [] };
+  raws.forEach(r => {
+    const d = window.ALT_HELPERS.getDerivedSpecs(r);
+    if(d.weave && !merged.weave) merged.weave = d.weave;
+    (d.treatment || []).forEach(t => { if(!merged.treatment.includes(t)) merged.treatment.push(t); });
+  });
+  _derivedCache[key] = merged;
+  return merged;
+}
+function _qfWeaves(list){
+  const s = new Set();
+  list.forEach(p => { const w = _derivedFor(p).weave; if(w) s.add(w); });
+  return [...s].sort();
+}
+function _qfTreatments(list){
+  const s = new Set();
+  list.forEach(p => { _derivedFor(p).treatment.forEach(t => s.add(t)); });
+  return [...s].sort();
+}
+function _applyWeave(list){
+  if(!activeWeave) return list;
+  return list.filter(p => _derivedFor(p).weave === activeWeave);
+}
+function _applyTreatment(list){
+  if(!activeTreatment) return list;
+  return list.filter(p => _derivedFor(p).treatment.includes(activeTreatment));
+}
+function _qfTags(list){
+  const s = new Set();
+  list.forEach(p => { if(p.tag) s.add(p.tag); });
+  return [...s].sort();
+}
+function _applyTag(list){
+  if(!activeTag) return list;
+  return list.filter(p => p.tag === activeTag);
+}
 
 // ──────────────────────────────────────────────
 // Dynamic quick-filter toggles — only shown when user types in search
@@ -824,6 +904,17 @@ function updateQuickFilters(baseList){
   const matBase = _applyGSM(_applyColour(baseList));
   const availMats = _qfMaterials(matBase);
   if(activeMaterial && !availMats.includes(activeMaterial)) activeMaterial = null;
+
+  const weaveBase = _applyMaterial(_applyGSM(_applyColour(baseList)));
+  const availWeaves = _qfWeaves(weaveBase);
+  if(activeWeave && !availWeaves.includes(activeWeave)) activeWeave = null;
+
+  const treatBase = _applyMaterial(_applyGSM(_applyColour(baseList)));
+  const availTreats = _qfTreatments(treatBase);
+  if(activeTreatment && !availTreats.includes(activeTreatment)) activeTreatment = null;
+
+  const availTags = _qfTags(baseList);
+  if(activeTag && !availTags.includes(activeTag)) activeTag = null;
 
   let anyGroup = false;
 
@@ -894,17 +985,77 @@ function updateQuickFilters(baseList){
     }
   } else if(mGroup){ mGroup.style.display = 'none'; }
 
+  // ── Weave group ──
+  const wGroup = document.getElementById('qfWeaveGroup');
+  const wToggle = document.getElementById('qfWeaveToggle');
+  const wLabel  = document.getElementById('qfWeaveLabel');
+  const wPills  = document.getElementById('qfWeavePills');
+  if(availWeaves.length > 0 && wGroup){
+    wGroup.style.display = '';
+    anyGroup = true;
+    wPills.innerHTML = availWeaves.map(label =>
+      `<button class="qf-pill${activeWeave===label?' active':''}" onclick="setQFWeave('${label.replace(/'/g,"\\'")}')">${label}</button>`
+    ).join('');
+    if(activeWeave){
+      wLabel.textContent = 'Weave: ' + activeWeave;
+      wToggle.classList.add('has-value');
+    } else {
+      wLabel.textContent = 'Weave';
+      wToggle.classList.remove('has-value');
+    }
+  } else if(wGroup){ wGroup.style.display = 'none'; }
+
+  // ── Treatment group ──
+  const tGroup = document.getElementById('qfTreatGroup');
+  const tToggle = document.getElementById('qfTreatToggle');
+  const tLabel  = document.getElementById('qfTreatLabel');
+  const tPills  = document.getElementById('qfTreatPills');
+  if(availTreats.length > 0 && tGroup){
+    tGroup.style.display = '';
+    anyGroup = true;
+    tPills.innerHTML = availTreats.map(label =>
+      `<button class="qf-pill${activeTreatment===label?' active':''}" onclick="setQFTreatment('${label.replace(/'/g,"\\'")}')">${label}</button>`
+    ).join('');
+    if(activeTreatment){
+      tLabel.textContent = activeTreatment;
+      tToggle.classList.add('has-value');
+    } else {
+      tLabel.textContent = 'Treatment';
+      tToggle.classList.remove('has-value');
+    }
+  } else if(tGroup){ tGroup.style.display = 'none'; }
+
+  // ── Tag group ──
+  const tagGroup = document.getElementById('qfTagGroup');
+  const tagToggle = document.getElementById('qfTagToggle');
+  const tagLabel  = document.getElementById('qfTagLabel');
+  const tagPills  = document.getElementById('qfTagPills');
+  if(availTags.length > 0 && tagGroup){
+    tagGroup.style.display = '';
+    anyGroup = true;
+    tagPills.innerHTML = availTags.map(label =>
+      `<button class="qf-pill${activeTag===label?' active':''}" onclick="setQFTag('${label.replace(/'/g,"\\'")}')">${label}</button>`
+    ).join('');
+    if(activeTag){
+      tagLabel.textContent = activeTag;
+      tagToggle.classList.add('has-value');
+    } else {
+      tagLabel.textContent = 'Tag';
+      tagToggle.classList.remove('has-value');
+    }
+  } else if(tagGroup){ tagGroup.style.display = 'none'; }
+
   // ── Clear all button ──
   const clearBtn = document.getElementById('qfClearAll');
-  if(clearBtn) clearBtn.classList.toggle('visible', !!(activeColour || activeGSM || activeMaterial));
+  if(clearBtn) clearBtn.classList.toggle('visible', !!(activeColour || activeGSM || activeMaterial || activeWeave || activeTreatment || activeTag));
 
   panel.classList.toggle('visible', anyGroup);
 }
 
 // Open/close a filter dropdown (close others)
 function toggleQFDropdown(which){
-  const map = { colour:'qfColourToggle', gsm:'qfGsmToggle', mat:'qfMatToggle' };
-  const dmap = { colour:'qfColourDropdown', gsm:'qfGsmDropdown', mat:'qfMatDropdown' };
+  const map = { colour:'qfColourToggle', gsm:'qfGsmToggle', mat:'qfMatToggle', weave:'qfWeaveToggle', treat:'qfTreatToggle', tag:'qfTagToggle' };
+  const dmap = { colour:'qfColourDropdown', gsm:'qfGsmDropdown', mat:'qfMatDropdown', weave:'qfWeaveDropdown', treat:'qfTreatDropdown', tag:'qfTagDropdown' };
   Object.keys(map).forEach(k => {
     const t = document.getElementById(map[k]);
     const d = document.getElementById(dmap[k]);
@@ -945,8 +1096,26 @@ function setQFMat(label){
   document.getElementById('qfMatToggle')?.classList.remove('open');
   renderProducts();
 }
+function setQFWeave(label){
+  activeWeave = activeWeave === label ? null : label;
+  document.getElementById('qfWeaveDropdown')?.classList.remove('open');
+  document.getElementById('qfWeaveToggle')?.classList.remove('open');
+  renderProducts();
+}
+function setQFTreatment(label){
+  activeTreatment = activeTreatment === label ? null : label;
+  document.getElementById('qfTreatDropdown')?.classList.remove('open');
+  document.getElementById('qfTreatToggle')?.classList.remove('open');
+  renderProducts();
+}
+function setQFTag(label){
+  activeTag = activeTag === label ? null : label;
+  document.getElementById('qfTagDropdown')?.classList.remove('open');
+  document.getElementById('qfTagToggle')?.classList.remove('open');
+  renderProducts();
+}
 function clearAllQF(){
-  activeColour = null; activeGSM = null; activeMaterial = null;
+  activeColour = null; activeGSM = null; activeMaterial = null; activeWeave = null; activeTreatment = null; activeTag = null;
   document.querySelectorAll('.qf-dropdown').forEach(d => d.classList.remove('open'));
   document.querySelectorAll('.qf-toggle').forEach(t => t.classList.remove('open','has-value'));
   renderProducts();
@@ -1028,7 +1197,7 @@ function _clearSearch(){
   if(hint){ hint.classList.remove('hidden'); }
   if(clear){ clear.classList.remove('visible'); }
   // Reset quick filters too
-  activeColour = null; activeGSM = null; activeMaterial = null;
+  activeColour = null; activeGSM = null; activeMaterial = null; activeWeave = null; activeTreatment = null; activeTag = null;
   // Hide filter panel
   document.getElementById('quickFilters')?.classList.remove('visible');
   document.querySelectorAll('.qf-dropdown').forEach(d => d.classList.remove('open'));
@@ -1108,10 +1277,10 @@ function renderProducts(){
   updateQuickFilters(baseList);
 
   // ── Step 3: Apply quick filters on top ─────────
-  let list = _applyMaterial(_applyGSM(_applyColour(baseList)));
+  let list = _applyTag(_applyTreatment(_applyWeave(_applyMaterial(_applyGSM(_applyColour(baseList))))));
 
   if(list.length===0){
-    const activeQF = [activeColour, activeGSM ? GSM_GROUPS.find(g=>g.key===activeGSM)?.label : null, activeMaterial].filter(Boolean);
+    const activeQF = [activeColour, activeGSM ? GSM_GROUPS.find(g=>g.key===activeGSM)?.label : null, activeMaterial, activeWeave, activeTreatment, activeTag].filter(Boolean);
     const qfMsg = activeQF.length ? ` with ${activeQF.join(', ')}` : '';
     grid.innerHTML = `<p style="color:var(--muted);font-size:14px;padding:40px 0;">No products found${q ? ' for "'+q+'"' : ''}${qfMsg}. <button onclick="clearAllQF()" style="color:var(--gold2);background:none;border:none;cursor:pointer;text-decoration:underline;font-size:14px;">Clear filters</button></p>`;
     const showEl = document.getElementById('showingText');
@@ -1122,7 +1291,7 @@ function renderProducts(){
   // Update showing count
   const showEl = document.getElementById('showingText');
   if(showEl && !activeSubcat){
-    if(q || activeColour || activeGSM || activeMaterial){
+    if(q || activeColour || activeGSM || activeMaterial || activeWeave || activeTreatment || activeTag){
       showEl.textContent = list.length + ' product' + (list.length!==1?'s':'') + ' found';
     }
   } else if(showEl && activeSubcat){
