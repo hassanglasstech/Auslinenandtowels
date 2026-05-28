@@ -166,7 +166,19 @@
     font-family:var(--f-sans),sans-serif;font-size:13.5px;
     outline:none;
   }
-  #collectionSearch::placeholder{color:#b0a898}
+  #collectionSearch::placeholder{color:transparent} /* hidden — we use animated hint instead */
+  /* animated hint overlay */
+  .search-hint{
+    position:absolute;left:42px;right:44px;top:50%;transform:translateY(-50%);
+    pointer-events:none;
+  }
+  .search-hint span{
+    display:block;
+    font-size:13.5px;font-family:var(--f-sans),sans-serif;color:#b0a898;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .search-hint.hidden{display:none}
   .search-clear{
     position:absolute;right:10px;
     background:none;border:none;cursor:pointer;padding:4px;
@@ -392,7 +404,8 @@
     <div class="search-panel" id="searchPanel">
       <div class="search-input-row">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="collectionSearch" placeholder="Search products, colours, GSM…" autocomplete="off" aria-label="Search products"/>
+        <input type="search" id="collectionSearch" placeholder=" " autocomplete="off" aria-label="Search products"/>
+        <div class="search-hint" id="searchHint"><span class="hint-active"></span></div>
         <button class="search-clear" id="searchClear" aria-label="Clear search">×</button>
       </div>
       <!-- Filter rows — shown when results have multiple options -->
@@ -1152,6 +1165,64 @@ function checkUrlParam(){
 document.addEventListener('DOMContentLoaded', () => {
   buildSidebar();
   checkUrlParam();
+
+  // ── Rotating search hint ──────────────────────
+  (function(){
+    const hints = [
+      'Search Bath Towels…',
+      "Try '500 GSM'…",
+      'Search White Robes…',
+      "Try 'Charcoal'…",
+      'Search Gym Towels…',
+      "Try 'Microfibre'…",
+      'Search Bed Sheets…',
+      "Try 'Cotton'…",
+      'Search Pool Towels…',
+      "Try 'Camel'…",
+    ];
+    const hintBox = document.getElementById('searchHint');
+    const inp     = document.getElementById('collectionSearch');
+    if(!hintBox || !inp) return;
+
+    let idx = 0;
+    const span = hintBox.querySelector('span');
+    span.textContent = hints[0];
+    span.style.opacity = '1';
+    span.style.transform = 'translateY(0)';
+
+    function rotate(){
+      if(inp.value) return;
+      // fade + slide out
+      span.style.opacity = '0';
+      span.style.transform = 'translateY(-7px)';
+      setTimeout(() => {
+        idx = (idx + 1) % hints.length;
+        span.textContent = hints[idx];
+        span.style.transition = 'none';
+        span.style.transform = 'translateY(7px)';
+        // force reflow then fade in
+        span.offsetHeight;
+        span.style.transition = '';
+        span.style.opacity = '1';
+        span.style.transform = 'translateY(0)';
+      }, 320);
+    }
+
+    setInterval(rotate, 2800);
+
+    inp.addEventListener('input', () => {
+      hintBox.classList.toggle('hidden', inp.value.length > 0);
+    });
+    inp.addEventListener('focus', () => {
+      span.style.opacity = '.35';
+    });
+    inp.addEventListener('blur', () => {
+      if(!inp.value){
+        span.style.opacity = '1';
+        hintBox.classList.remove('hidden');
+      }
+    });
+  })();
 
   // ── Search input wiring ──────────────────────
   const searchInput = document.getElementById('collectionSearch');
