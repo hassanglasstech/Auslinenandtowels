@@ -316,6 +316,8 @@
         <label for="sortSelect">Sort:</label>
         <select id="sortSelect" onchange="renderProducts()">
           <option value="default">Default</option>
+          <option value="gsm-high">GSM: High → Low</option>
+          <option value="gsm-low">GSM: Low → High</option>
           <option value="name-az">Name: A → Z</option>
         </select>
       </div>
@@ -425,7 +427,8 @@ const PRODUCTS = (function() {
         isRange: true,
         parentSku: p.parentSku,
         colours: uniqueColours,
-        sizes: types
+        sizes: types,
+        weight: primaryProduct.weight || ''
       });
     } else {
       const cat = (window.ALT_CATEGORIES || []).find(c => c.id === p.categoryId);
@@ -455,7 +458,8 @@ const PRODUCTS = (function() {
         sizes: sizes,
         img: p.image,
         tag: p.tag,
-        isRange: false
+        isRange: false,
+        weight: p.weight || ''
       });
     }
   });
@@ -674,7 +678,11 @@ function renderProducts(){
 
   // ── Sort ──────────────────────────────────────
   const sortVal = document.getElementById('sortSelect')?.value || 'default';
-  if (sortVal === 'name-az') {
+  if (sortVal === 'gsm-high') {
+    list = [...list].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
+  } else if (sortVal === 'gsm-low') {
+    list = [...list].sort((a, b) => (parseInt(a.weight) || 9999) - (parseInt(b.weight) || 9999));
+  } else if (sortVal === 'name-az') {
     list = [...list].sort((a, b) => a.name.localeCompare(b.name));
   }
 
