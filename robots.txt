@@ -41,3 +41,6 @@ Disallow: /mail.php
 
 # Sitemap location
 Sitemap: https://auslinenandtowels.com.au/sitemap.xml
+
+# AI model context file (llms.txt standard)
+# https://auslinenandtowels.com.au/llms.txt
