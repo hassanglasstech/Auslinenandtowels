@@ -85,7 +85,7 @@
     transition:background .15s;
   }
   .cat-parent:hover{background:#f5f4f0}
-  .cat-parent.active{color:var(--gold2);font-weight:600}
+  .cat-parent.active{color:var(--gold2);font-weight:600;background:#f0ede6}
   .cat-parent .chevron{
     width:14px;height:14px;transition:transform .25s;flex-shrink:0;
     color:var(--muted);
@@ -104,7 +104,11 @@
     border:none;background:none;width:100%;text-align:left;
   }
   .sub-item:hover{color:var(--navy);background:#f0ede6}
-  .sub-item.active{color:var(--navy);font-weight:500}
+  .sub-item.active{
+    color:var(--navy);font-weight:600;
+    background:var(--navy);color:#fff;
+  }
+  .sub-item.active .count{background:rgba(255,255,255,.25);color:#fff}
   .sub-item .count{
     background:var(--navy);color:#fff;
     font-size:10px;padding:2px 7px;border-radius:20px;min-width:22px;text-align:center;
