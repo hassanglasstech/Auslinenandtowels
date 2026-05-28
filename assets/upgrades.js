@@ -310,6 +310,101 @@
   }
 
   // ══════════════════════════════════════════
+  // BACK TO TOP BUTTON (sitewide)
+  // ══════════════════════════════════════════
+  function loadBackToTop () {
+    if (document.getElementById('altBTT')) return;
+    var css = '#altBTT{position:fixed;bottom:90px;left:20px;z-index:9985;' +
+      'width:42px;height:42px;border-radius:50%;background:#0f1235;border:none;cursor:pointer;' +
+      'display:flex;align-items:center;justify-content:center;' +
+      'box-shadow:0 3px 14px rgba(0,0,0,.22);opacity:0;transform:translateY(10px);' +
+      'transition:opacity .25s,transform .25s;pointer-events:none;}' +
+      '#altBTT.visible{opacity:1;transform:translateY(0);pointer-events:auto;}' +
+      '#altBTT:hover{background:#b8933a;}' +
+      '#altBTT svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;}' +
+      '@media(max-width:768px){#altBTT{bottom:72px;left:14px;width:38px;height:38px;}' +
+      '#altBTT svg{width:16px;height:16px;}}';
+    var st = document.createElement('style');
+    st.textContent = css;
+    document.head.appendChild(st);
+
+    var btn = document.createElement('button');
+    btn.id = 'altBTT';
+    btn.setAttribute('aria-label', 'Back to top');
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>';
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 500) btn.classList.add('visible');
+      else btn.classList.remove('visible');
+    }, { passive: true });
+  }
+
+  // ══════════════════════════════════════════
+  // IMAGE LIGHTBOX on product page
+  // Full-screen click-to-zoom (replaces CSS hover-only zoom)
+  // ══════════════════════════════════════════
+  function loadLightbox () {
+    if (document.body.dataset.page !== 'product') return;
+    if (document.getElementById('altLBOv')) return;
+
+    var css = '#altLBOv{display:none;position:fixed;inset:0;z-index:10002;' +
+      'background:rgba(5,8,25,.92);backdrop-filter:blur(6px);' +
+      'align-items:center;justify-content:center;cursor:zoom-out;padding:20px;}' +
+      '#altLBOv.open{display:flex;animation:lbFd .2s ease;}' +
+      '@keyframes lbFd{from{opacity:0}to{opacity:1}}' +
+      '#altLBOv img{max-width:90vw;max-height:90vh;object-fit:contain;' +
+      'box-shadow:0 24px 80px rgba(0,0,0,.6);display:block;}' +
+      '#altLBClose{position:fixed;top:16px;right:20px;background:none;border:none;' +
+      'color:#fff;font-size:32px;cursor:pointer;line-height:1;padding:8px;' +
+      'opacity:.75;transition:opacity .15s;}' +
+      '#altLBClose:hover{opacity:1;}' +
+      '.main-img{cursor:zoom-in !important;}';
+    var st = document.createElement('style');
+    st.textContent = css;
+    document.head.appendChild(st);
+
+    var ov = document.createElement('div');
+    ov.id = 'altLBOv';
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-label', 'Product image fullscreen');
+    ov.innerHTML = '<button id="altLBClose" aria-label="Close">&times;</button><img id="altLBImg" src="" alt=""/>';
+    document.body.appendChild(ov);
+
+    var lbImg = document.getElementById('altLBImg');
+
+    function openLB (src, alt) {
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      ov.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLB () {
+      ov.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('altLBClose').addEventListener('click', closeLB);
+    ov.addEventListener('click', function (e) { if (e.target === ov || e.target === lbImg) closeLB(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLB(); });
+
+    // Watch for main image appearing (product renders dynamically)
+    var obs = new MutationObserver(function () {
+      var imgEl = document.querySelector('.main-img img');
+      if (imgEl && !imgEl.dataset.lbWired) {
+        imgEl.dataset.lbWired = '1';
+        imgEl.closest('.main-img').addEventListener('click', function () {
+          if (imgEl.src && imgEl.src.indexOf('placeholder') === -1) openLB(imgEl.src, imgEl.alt);
+        });
+      }
+    });
+    obs.observe(document.getElementById('pdMain') || document.body, { childList: true, subtree: true });
+  }
+
+  // ══════════════════════════════════════════
   // INIT
   // ══════════════════════════════════════════
   function init () {
@@ -317,6 +412,8 @@
     showRecentlyViewed();
     addProductShare();
     stickyHeaderPhone();
+    loadBackToTop();
+    loadLightbox();
   }
 
   if (document.readyState === 'loading') {

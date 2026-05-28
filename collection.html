@@ -60,10 +60,15 @@
 
   /* ── SIDEBAR ── */
   .sidebar{
-    position:sticky;top:20px;
+    position:sticky;top:78px;          /* offset below sticky header */
     background:#fff;border:1px solid var(--border);
     border-radius:4px;overflow:hidden;
+    max-height:calc(100vh - 90px);overflow-y:auto;
+    scrollbar-width:thin;scrollbar-color:#e5e0d2 transparent;
   }
+  .sidebar::-webkit-scrollbar{width:4px;}
+  .sidebar::-webkit-scrollbar-track{background:transparent;}
+  .sidebar::-webkit-scrollbar-thumb{background:#d6d0c0;border-radius:4px;}
   .sidebar-header{
     background:var(--navy);color:#fff;
     padding:16px 20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
@@ -149,6 +154,25 @@
     background:none;border:none;color:#fff;cursor:pointer;font-size:14px;line-height:1;
     padding:0 0 0 4px;
   }
+  /* Sort dropdown */
+  .sort-wrap{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .sort-wrap label{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  #sortSelect{border:1px solid var(--border);background:#fff;color:var(--navy);
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;padding:7px 10px;
+    border-radius:2px;cursor:pointer;outline:none;letter-spacing:.04em;}
+  #sortSelect:focus{border-color:var(--gold2);}
+  /* Skeleton loader */
+  .skeleton-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;}
+  .sk-card{background:#fff;border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+  .sk-img{aspect-ratio:1;background:linear-gradient(90deg,#f0ede8 25%,#e8e4de 50%,#f0ede8 75%);
+    background-size:200% 100%;animation:sk-shine 1.5s infinite;}
+  .sk-line{height:10px;border-radius:4px;margin:0 14px 8px;
+    background:linear-gradient(90deg,#f0ede8 25%,#e8e4de 50%,#f0ede8 75%);
+    background-size:200% 100%;animation:sk-shine 1.5s infinite;}
+  .sk-line.wide{height:14px;margin-top:14px;}
+  .sk-line.short{width:55%;}
+  @keyframes sk-shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
   /* COMING SOON panel */
   .coming-soon-panel{
@@ -289,6 +313,15 @@
   <main class="main-content">
     <div class="filter-bar" id="filterBar">
       <span class="showing" id="showingText">Showing all products</span>
+      <div class="sort-wrap">
+        <label for="sortSelect">Sort:</label>
+        <select id="sortSelect" onchange="renderProducts()">
+          <option value="default">Default</option>
+          <option value="gsm-high">GSM: High → Low</option>
+          <option value="gsm-low">GSM: Low → High</option>
+          <option value="name-az">Name: A → Z</option>
+        </select>
+      </div>
     </div>
 
     <!-- Enquiry Panel for unavailable categories -->
@@ -302,8 +335,20 @@
       </div>
     </div>
 
-    <!-- Product Grid -->
-    <div class="product-grid" id="productGrid"></div>
+    <!-- Product Grid (skeleton shown until JS renders real cards) -->
+    <div class="product-grid" id="productGrid">
+      <div class="skeleton-grid" id="skeletonGrid" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;">
+        <!-- 8 skeleton cards for loading state -->
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-line wide"></div><div class="sk-line"></div><div class="sk-line short"></div></div>
+      </div>
+    </div>
   </main>
 </div>
 
@@ -629,6 +674,28 @@ function renderProducts(){
     grid.innerHTML = '<p style="color:var(--muted);font-size:14px;">No products found.</p>';
     return;
   }
+
+  // ── Sort ──────────────────────────────────────
+  const sortVal = document.getElementById('sortSelect')?.value || 'default';
+  if (sortVal === 'gsm-high') {
+    list = [...list].sort((a, b) => {
+      const ga = parseInt(a.sizes && a.sizes[0]) || 0;
+      const gb = parseInt(b.sizes && b.sizes[0]) || 0;
+      return gb - ga;
+    });
+  } else if (sortVal === 'gsm-low') {
+    list = [...list].sort((a, b) => {
+      const ga = parseInt(a.sizes && a.sizes[0]) || 999;
+      const gb = parseInt(b.sizes && b.sizes[0]) || 999;
+      return ga - gb;
+    });
+  } else if (sortVal === 'name-az') {
+    list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  // Remove skeleton loader
+  const sk = document.getElementById('skeletonGrid');
+  if (sk) sk.remove();
 
   grid.innerHTML = list.map(p => {
     const isPh = window.ALT_HELPERS && window.ALT_HELPERS.isPlaceholderImage(p.img);
