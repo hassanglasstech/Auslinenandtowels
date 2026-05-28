@@ -1015,7 +1015,24 @@ function toggleCat(catId){
 // ──────────────────────────────────────────────
 // Select / filter
 // ──────────────────────────────────────────────
+// Clear search + quick filters (called when sidebar category is selected)
+function _clearSearch(){
+  const inp = document.getElementById('collectionSearch');
+  const hint = document.getElementById('searchHint');
+  const clear = document.getElementById('searchClear');
+  if(inp){ inp.value = ''; }
+  if(hint){ hint.classList.remove('hidden'); }
+  if(clear){ clear.classList.remove('visible'); }
+  // Reset quick filters too
+  activeColour = null; activeGSM = null; activeMaterial = null;
+  // Hide filter panel
+  document.getElementById('quickFilters')?.classList.remove('visible');
+  document.querySelectorAll('.qf-dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.qf-toggle').forEach(t => t.classList.remove('open','has-value'));
+}
+
 function selectAll(){
+  _clearSearch();
   activeSubcat = null;
   document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
   document.getElementById('btn-all')?.classList.add('active');
@@ -1025,6 +1042,7 @@ function selectAll(){
 }
 
 function selectSubcat(subcatId, label, isComing){
+  _clearSearch();
   activeSubcat = subcatId;
   // highlight
   document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
@@ -1336,6 +1354,16 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', () => {
       const hasVal = searchInput.value.length > 0;
       searchClear.classList.toggle('visible', hasVal);
+      // When user starts typing, deactivate sidebar category selection
+      if(hasVal && activeSubcat){
+        activeSubcat = null;
+        document.querySelectorAll('.sub-item,.cat-parent').forEach(el => el.classList.remove('active'));
+        document.getElementById('btn-all')?.classList.add('active');
+        document.getElementById('filterInfo').innerHTML =
+          `<span class="showing" id="showingText">Showing all ${PRODUCTS.length} products</span>`;
+        document.getElementById('comingSoonPanel')?.classList.remove('visible');
+        document.getElementById('productGrid').style.display = '';
+      }
       renderProducts();
       // Reset showing text if search cleared
       if(!hasVal){
