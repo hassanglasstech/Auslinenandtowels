@@ -142,6 +142,10 @@
           <a href="room-package.html" class="${active==='room-package'?'active':''}">Bulk Quote</a>
           <a href="trade-account.html" class="${active==='trade-account'?'active':''}">Trade Account</a>
           <a href="contact.html" class="${active==='contact'?'active':''}">Contact</a>
+          <button class="alt-qb-nav" id="altQbNav" type="button" aria-label="Open Quote Bucket" onclick="window.ALT_WISHLIST && window.ALT_WISHLIST.open()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <span class="alt-qb-badge" id="altQbBadge"></span>
+          </button>
         </nav>
       </div>
     </header>
@@ -440,7 +444,7 @@
   function loadWishlist() {
     if (document.querySelector('script[data-alt-wishlist]')) return;
     var s = document.createElement('script');
-    s.src = 'assets/wishlist.js';
+    s.src = 'assets/wishlist.js?v=2';
     s.defer = true;
     s.setAttribute('data-alt-wishlist', '1');
     document.head.appendChild(s);
@@ -466,11 +470,22 @@
     document.head.appendChild(s);
   }
 
+  // Auto-load onboarding.js (buyer persona popup, shows once)
+  function loadOnboarding() {
+    if (document.querySelector('script[data-alt-onboarding]')) return;
+    var s = document.createElement('script');
+    s.src = 'assets/onboarding.js';
+    s.defer = true;
+    s.setAttribute('data-alt-onboarding', '1');
+    document.head.appendChild(s);
+  }
+
   function bootExtras() {
     addSkipLink();
     loadWishlist();
     loadUpgrades();
     loadLeadCapture();
+    loadOnboarding();
   }
 
   if (document.readyState === 'loading') {

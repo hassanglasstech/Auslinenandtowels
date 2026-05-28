@@ -376,7 +376,7 @@
     padding:4px 8px; border-radius:2px; z-index:2; pointer-events:none;
   }
   .product-tag{
-    position:absolute; top:10px; right:10px;
+    position:absolute; top:10px; left:10px;
     background:var(--accent-red); color:#fff;
     font-family:'JetBrains Mono', ui-monospace, monospace;
     font-size:9px; letter-spacing:.15em; text-transform:uppercase;
@@ -1545,6 +1545,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if(showEl && !activeSubcat) showEl.textContent = 'Showing all ' + PRODUCTS.length + ' products';
       searchInput.focus();
     });
+  }
+
+  // Apply onboarding preferences when user arrives via popup completion
+  if(new URLSearchParams(window.location.search).get('from') === 'onboarding'){
+    setTimeout(function(){
+      if(window.ALT_APPLY_ONBOARDING_PREFS) window.ALT_APPLY_ONBOARDING_PREFS();
+    }, 400);
   }
 });
 </script>
