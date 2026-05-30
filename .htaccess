@@ -59,6 +59,9 @@ base-uri 'self';"
   # Redirect www → non-www (canonical domain)
   RewriteCond %{HTTP_HOST} ^www\.auslinenandtowels\.com\.au [NC]
   RewriteRule ^(.*)$ https://auslinenandtowels.com.au/$1 [R=301,L]
+
+  # Redirect /index.html → / (fix duplicate canonical in Search Console)
+  RewriteRule ^index\.html$ https://auslinenandtowels.com.au/ [R=301,L]
 </IfModule>
 
 # ── CUSTOM 404 PAGE ─────────────────────────────────────────
