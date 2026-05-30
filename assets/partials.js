@@ -135,6 +135,7 @@
 
   window.ALT_HEADER = function (active) {
     return `
+    <a href="#main-content" class="alt-skip">Skip to content</a>
     <div class="utility-bar">
       <div class="wrap">
         <div class="left">
@@ -204,7 +205,8 @@
     <div class="mobile-call-bar">
       <a href="tel:0414533449" class="call">${icon('phone')} Call sales</a>
       <a href="mailto:info@auslinenandtowels.com.au" class="email">${icon('mail')} Email</a>
-    </div>`;
+    </div>
+    <span id="main-content" tabindex="-1"></span>`;
   };
 
   window.ALT_FOOTER = function () {

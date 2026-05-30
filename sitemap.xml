@@ -27,38 +27,10 @@
   <url><loc>https://auslinenandtowels.com.au/terms.html</loc><lastmod>2026-05-24</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://auslinenandtowels.com.au/privacy.html</loc><lastmod>2026-05-24</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 
-  <!-- Category landing pages -->
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-white</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-charcoal</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-camel</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-black</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=towels-navy</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-aqua</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-cherry</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-coffee</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-fuchsia</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-garnet</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-lime</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-mirage</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-pink</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-purple</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=coloured-royal</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=pool-stripe</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=gym-white</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=salon-white</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=teatowels-blue</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=bathrobe-terry</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=sheets-white</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=sheets-stripe</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=sheets-coloured</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilt-covers-white</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilt-covers-stripe</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilts-microfibre</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=quilts-navy-cover</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=blankets-cellular</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=blankets-fauxwool</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=mattress-protectors</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=pillow-protector</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://auslinenandtowels.com.au/collection.html?cat=pillows-microfibre</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- NOTE: collection.html?cat=… are client-side filter states of a single
+       page (same HTML shell + same canonical), not distinct indexable pages.
+       Listing them caused "Discovered – not indexed" noise in Search Console,
+       so they are intentionally excluded. Add real per-category landing pages
+       (server-rendered, unique content) here only if/when they exist. -->
 
 </urlset>
