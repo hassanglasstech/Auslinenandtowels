@@ -65,10 +65,12 @@ if (count($hits) >= $max_hits) {
 $hits[] = $now;
 file_put_contents($rate_file, json_encode($hits), LOCK_EX);
 
-// ── NEWSLETTER SUBSCRIBER — MYSQL SAVE ───────────────────────────────────────
-function alt_save_subscriber($name, $email, $source = 'website-newsletter') {
+// ── DATABASE — shared connection helper ──────────────────────────────────────
+function alt_db() {
+    static $pdo = null;
+    if ($pdo !== null) return $pdo;
     $cfg = __DIR__ . '/db-config.php';
-    if (!file_exists($cfg)) return false;
+    if (!file_exists($cfg)) return null;
     require_once $cfg;
     try {
         $pdo = new PDO(
@@ -77,13 +79,46 @@ function alt_save_subscriber($name, $email, $source = 'website-newsletter') {
             ALT_DB_PASS,
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 5]
         );
+        return $pdo;
+    } catch (Exception $e) {
+        return null;
+    }
+}
+
+// ── NEWSLETTER SUBSCRIBER — MYSQL SAVE (with unsubscribe token) ──────────────
+function alt_save_subscriber($name, $email, $source = 'website-newsletter') {
+    $pdo = alt_db();
+    if (!$pdo) return false;
+    try {
+        $token = bin2hex(random_bytes(16)); // 32-char unsubscribe token
         $stmt = $pdo->prepare(
-            'INSERT IGNORE INTO subscribers (name, email, source) VALUES (:name, :email, :source)'
+            'INSERT INTO subscribers (name, email, source, unsubscribe_token)
+             VALUES (:name, :email, :source, :token)
+             ON DUPLICATE KEY UPDATE status = \'active\''
         );
-        $stmt->execute(['name' => $name, 'email' => $email, 'source' => $source]);
+        $stmt->execute(['name' => $name, 'email' => $email, 'source' => $source, 'token' => $token]);
         return true;
     } catch (Exception $e) {
         return false; // fail silently — email notification still goes through
+    }
+}
+
+// ── ENQUIRY — MYSQL SAVE (so leads survive even if email fails) ──────────────
+function alt_save_enquiry($name, $email, $phone, $company, $enquiry, $message, $ip) {
+    $pdo = alt_db();
+    if (!$pdo) return false;
+    try {
+        $stmt = $pdo->prepare(
+            'INSERT INTO enquiries (name, email, phone, company, enquiry_type, message, source_ip)
+             VALUES (:name, :email, :phone, :company, :type, :message, :ip)'
+        );
+        $stmt->execute([
+            'name' => $name, 'email' => $email, 'phone' => $phone,
+            'company' => $company, 'type' => $enquiry, 'message' => $message, 'ip' => $ip,
+        ]);
+        return (int)$pdo->lastInsertId();
+    } catch (Exception $e) {
+        return false;
     }
 }
 
@@ -106,9 +141,14 @@ if (!$name || !$email || !$message) {
     exit;
 }
 
-// ── SAVE NEWSLETTER SUBSCRIBER TO DB ─────────────────────────────────────────
+// ── SAVE TO DB ───────────────────────────────────────────────────────────────
+// Newsletter → subscribers table. Everything else → enquiries table so a lead
+// is never lost even if the email notification below fails.
+$enquiry_id = false;
 if ($enquiry === 'newsletter') {
     alt_save_subscriber($name, $email);
+} else {
+    $enquiry_id = alt_save_enquiry($name, $email, $phone, $company, $enquiry, $message, $ip);
 }
 
 // ── BUILD & SEND EMAIL ────────────────────────────────────────────────────────
@@ -135,7 +175,19 @@ $headers .= "X-Mailer: ALT-Website\r\n";
 
 $sent = mail($to, $subject, $body, $headers);
 
-if ($sent) {
+// Flag the stored enquiry as notified (best-effort).
+if ($enquiry_id && $sent) {
+    try {
+        $pdo = alt_db();
+        if ($pdo) {
+            $pdo->prepare('UPDATE enquiries SET email_sent = 1 WHERE id = :id')
+                ->execute(['id' => $enquiry_id]);
+        }
+    } catch (Exception $e) { /* non-fatal */ }
+}
+
+// Success if the email went out OR the lead is safely stored in the DB.
+if ($sent || $enquiry_id) {
     echo json_encode(['ok' => true]);
 } else {
     http_response_code(500);

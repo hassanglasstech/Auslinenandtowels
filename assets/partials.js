@@ -11,24 +11,44 @@
   }
 
   // ═══════════════════════════════════════════════════════
-  // GOOGLE ANALYTICS 4 — only after consent (or implicit anonymous mode)
+  // CONSENT MODE v2 — default DENIED before any tag loads
+  // GA4 + Microsoft Clarity load ONLY after explicit "Accept".
   // ═══════════════════════════════════════════════════════
-  function loadGA() {
-    if (window.__altGALoaded) return;
-    if (getConsent() === 'declined') return;
-    window.__altGALoaded = true;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    wait_for_update: 500
+  });
+
+  function loadAnalytics() {
+    if (window.__altTagsLoaded) return;
+    if (getConsent() !== 'granted') return;   // opt-in only — no implicit load
+    window.__altTagsLoaded = true;
+
+    gtag('consent', 'update', { analytics_storage: 'granted' });
+
+    // Google Analytics 4
     var gaId = 'G-BXCSDXJWFJ';
     var s = document.createElement('script');
     s.async = true;
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
     document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    window.gtag = gtag;
     gtag('js', new Date());
     gtag('config', gaId, { anonymize_ip: true });
+
+    // Microsoft Clarity
+    (function(c,l,a,r,i){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      var t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      var y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wy816of55t");
   }
-  loadGA();
+  loadAnalytics();   // runs only if a prior "granted" choice is stored
 
   // ═══════════════════════════════════════════════════════
   // COOKIE CONSENT BANNER (Australian Privacy Act compliant)
@@ -75,7 +95,7 @@
     document.head.appendChild(style);
     document.body.appendChild(banner);
     banner.querySelector('.alt-cc-accept').addEventListener('click', function(){
-      setConsent('granted'); banner.remove(); loadGA();
+      setConsent('granted'); banner.remove(); loadAnalytics();
     });
     banner.querySelector('.alt-cc-decline').addEventListener('click', function(){
       setConsent('declined'); banner.remove();
@@ -87,17 +107,7 @@
     setTimeout(showCookieBanner, 800);
   }
 
-  // ═══════════════════════════════════════════════════════
-  // MICROSOFT CLARITY — set clarityId once provisioned
-  // ═══════════════════════════════════════════════════════
-  (function loadClarity() {
-    var clarityId = 'wy816of55t';
-    (function(c,l,a,r,i,t,y){
-      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-      var y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", clarityId);
-  })();
+  // Microsoft Clarity now loads inside loadAnalytics() — gated by consent.
 
   function icon(name) {
     const p = {
