@@ -120,6 +120,45 @@
   }
   window.ALT_ESC = altEsc;
 
+  // ── Accessibility: keep keyboard focus inside any open modal/drawer ──
+  // One global Tab handler — no per-modal wiring needed. Cycles focus within
+  // the topmost visible overlay so keyboard users can't tab into the page behind.
+  (function modalFocusTrap() {
+    var SELECTORS = [
+      '#altLMOv',                 // lead-capture modal
+      '#altSearchOverlay.open',   // product search
+      '.alt-wl-drawer.is-open',   // quote bucket drawer
+      '#altOb',                   // onboarding modal
+      '.mobile-drawer.open'       // mobile nav drawer
+    ];
+    // NOTE: overlays are position:fixed, so offsetParent is null even when
+    // visible — use getClientRects() to detect actual rendering instead.
+    function visible(el) { return !!el && el.getClientRects().length > 0; }
+    function openModal() {
+      for (var i = 0; i < SELECTORS.length; i++) {
+        var el = document.querySelector(SELECTORS[i]);
+        if (visible(el)) return el;
+      }
+      return null;
+    }
+    function focusable(c) {
+      var sel = 'a[href],button:not([disabled]),input:not([disabled]),' +
+                'select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+      return Array.prototype.slice.call(c.querySelectorAll(sel)).filter(visible);
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var modal = openModal();
+      if (!modal) return;
+      var f = focusable(modal);
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (!modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); return; }
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }, true);
+  })();
+
   function icon(name) {
     const p = {
       search: '<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" class="ln"/><path d="M20 20l-3.5-3.5" class="ln"/></svg>',
