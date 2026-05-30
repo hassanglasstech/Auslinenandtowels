@@ -69,7 +69,7 @@
 </style>
 </head>
 <body data-page="room-package">
-<div data-header></div>
+<!--@include src/partials/header.html-->
 
 <section class="rp-hero">
   <div class="wrap">
@@ -132,7 +132,7 @@
   </div>
 </main>
 
-<div data-footer></div>
+<!--@include src/partials/footer.html-->
 
 <script src="assets/products-data.js?v=4.0"></script>
 <script src="assets/partials.js?v=4.0"></script>
@@ -240,7 +240,7 @@
         html += '<div class="rp-line"><span>' + l.name + '</span><span class="n">' + l.n + '</span><span class="u">' + l.u + '</span></div>';
       }
     });
-    html += '<button type="button" class="rp-cta" onclick="rpEnquire()">Request Bulk Quote for This Package →</button>';
+    html += '<button type="button" class="rp-cta" data-action="rp-enquire">Request Bulk Quote for This Package →</button>';
     html += '<div class="rp-foot">No obligation · Quote within 1 business day · Free Australia-wide delivery over AU$100</div>';
     document.getElementById('rpResult').innerHTML = html;
   }
@@ -287,6 +287,10 @@
   });
   ['bedSingle','bedDouble','bedQueen','bedKing','guestsPerRoom'].forEach(function(id){
     document.getElementById(id).addEventListener('input', render);
+  });
+  // rp-enquire CTA — replaces inline onclick="rpEnquire()"
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('[data-action="rp-enquire"]')) window.rpEnquire();
   });
   render();
 })();

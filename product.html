@@ -233,7 +233,7 @@
 </style>
 </head>
 <body data-page="product">
-<div data-header></div>
+<!--@include src/partials/header.html-->
 <main>
 
 <div class="pd-wrap">
@@ -260,7 +260,7 @@
 </section>
 
 </main>
-<div data-footer></div>
+<!--@include src/partials/footer.html-->
 
 <script src="assets/products-data.js?v=4.0"></script>
 <script src="assets/partials.js?v=4.0"></script>
@@ -531,8 +531,8 @@
         </div>
 
         <div class="pd-actions">
-          <a href="contact.html" class="btn-primary" onclick="triggerQuoteRequest(false)">Request Quote</a>
-          <a href="contact.html" class="btn-gold" onclick="triggerQuoteRequest(true)">Bulk Quote</a>
+          <a href="contact.html" class="btn-primary" data-action="quote-request" data-bulk="false">Request Quote</a>
+          <a href="contact.html" class="btn-gold" data-action="quote-request" data-bulk="true">Bulk Quote</a>
         </div>
 
         <div class="pd-features">
@@ -644,6 +644,13 @@
     const stateSku = event.state && event.state.sku;
     const currentSku = stateSku || new URLSearchParams(window.location.search).get('sku');
     renderProductPage(currentSku);
+  });
+
+  // Quote CTA delegation — replaces inline onclick="triggerQuoteRequest(...)"
+  document.querySelector('.pd-actions').addEventListener('click', (e) => {
+    const a = e.target.closest('[data-action="quote-request"]');
+    if (!a) return;
+    window.triggerQuoteRequest(a.dataset.bulk === 'true');
   });
 </script>
 

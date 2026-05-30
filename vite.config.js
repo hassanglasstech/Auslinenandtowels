@@ -1,6 +1,24 @@
-import { defineConfig } from 'vite';
-import { resolve }      from 'path';
-import { readdirSync, copyFileSync, mkdirSync, existsSync } from 'fs';
+import { defineConfig }                                      from 'vite';
+import { resolve }                                           from 'path';
+import { readdirSync, copyFileSync, mkdirSync, existsSync, readFileSync } from 'fs';
+
+// ── Build-time HTML partials ──────────────────────────────────────────────────
+// Replaces <!--@include src/partials/foo.html--> directives before Vite processes
+// each page — header.html and footer.html are static files, not JS template strings.
+function htmlIncludes() {
+  return {
+    name: 'html-includes',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html) {
+        return html.replace(/<!--\s*@include\s+([^\s]+)\s*-->/g, (_, inc) => {
+          const abs = resolve(__dirname, inc);
+          return existsSync(abs) ? readFileSync(abs, 'utf-8') : `<!-- missing: ${inc} -->`;
+        });
+      },
+    },
+  };
+}
 
 // ── Multi-Page App: every HTML at root is an entry point ─────────────────────
 // Excludes utility/google-verification files and the generated contrast preview.
@@ -49,7 +67,7 @@ function copyServerFiles() {
 export default defineConfig({
   root: '.',
   base: '/',
-  plugins: [copyServerFiles()],
+  plugins: [htmlIncludes(), copyServerFiles()],
 
   build: {
     outDir: 'dist',

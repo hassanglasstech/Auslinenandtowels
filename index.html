@@ -681,7 +681,7 @@
 </style>
 </head>
 <body data-page="home">
-<div data-header></div>
+<!--@include src/partials/header.html-->
 <main>
 
 <!-- ========== HERO CAROUSEL ========== -->
@@ -1403,20 +1403,25 @@
 </section>
 
 </main>
-<div data-footer></div>
+<!--@include src/partials/footer.html-->
 
 <script src="assets/products-data.js?v=4.0"></script>
 <script src="assets/partials.js?v=4.0"></script>
 <script>
-  window.altQuoteEnquire = function(e, sku) {
-    e.preventDefault();
-    e.stopPropagation();
+  // altQuoteEnquire — now called via data-action="alt-enquire" event delegation
+  function altQuoteEnquire(sku) {
     const p = (window.ALT_PRODUCTS || []).find(x => x.sku === sku);
     if (!p) return;
     const msg = `Hi,\n\nI would like to request a wholesale quote for the following product:\n\nProduct: ${p.name}\nColour: ${p.colour}\nSize: ${p.size}${p.weight ? '\nWeight: ' + p.weight + ' gsm' : ''}\n\nCould you please provide pricing, minimum order quantities, and availability?\n\nThank you.`;
     sessionStorage.setItem('alt_enquiry', msg);
     window.location.href = 'contact.html';
-  };
+  }
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-action="alt-enquire"]');
+    if (!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    altQuoteEnquire(btn.dataset.sku);
+  });
 
   function renderFeatured(filter = 'all') {
     const grid = document.getElementById('featuredGrid');
@@ -1452,7 +1457,7 @@
             <div class="title">${p.name}</div>
             <div class="spec">${p.size}</div>
             <div class="price-row">
-              <button class="rq-btn" onclick="altQuoteEnquire(event,'${p.sku}')" style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);">Request Quote →</button>
+              <button class="rq-btn" data-action="alt-enquire" data-sku="${p.sku}" style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);">Request Quote →</button>
             </div>
           </div>
         </a>

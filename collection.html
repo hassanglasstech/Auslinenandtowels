@@ -412,7 +412,7 @@
 </head>
 <body data-page="collection">
 
-<div data-header></div>
+<!--@include src/partials/header.html-->
 
 <div class="page-hero">
   <span class="label">Our Range</span>
@@ -423,7 +423,7 @@
 
   <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar">
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
+    <button class="sidebar-toggle" data-action="sidebar-toggle">
       <span>Browse Categories</span>
       <svg id="sidebarChevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
     </button>
@@ -447,7 +447,7 @@
       <div class="quick-filters" id="quickFilters">
         <!-- Colour toggle -->
         <div class="qf-group" id="qfColourGroup" style="display:none">
-          <button class="qf-toggle" id="qfColourToggle" onclick="toggleQFDropdown('colour')">
+          <button class="qf-toggle" id="qfColourToggle" data-qf-toggle="colour">
             <span id="qfColourLabel">Colour</span>
             <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
           </button>
@@ -457,7 +457,7 @@
         </div>
         <!-- GSM toggle -->
         <div class="qf-group" id="qfGsmGroup" style="display:none">
-          <button class="qf-toggle" id="qfGsmToggle" onclick="toggleQFDropdown('gsm')">
+          <button class="qf-toggle" id="qfGsmToggle" data-qf-toggle="gsm">
             <span id="qfGsmLabel">GSM</span>
             <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
           </button>
@@ -467,7 +467,7 @@
         </div>
         <!-- Material toggle -->
         <div class="qf-group" id="qfMatGroup" style="display:none">
-          <button class="qf-toggle" id="qfMatToggle" onclick="toggleQFDropdown('mat')">
+          <button class="qf-toggle" id="qfMatToggle" data-qf-toggle="mat">
             <span id="qfMatLabel">Material</span>
             <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
           </button>
@@ -477,7 +477,7 @@
         </div>
         <!-- Weave toggle -->
         <div class="qf-group" id="qfWeaveGroup" style="display:none">
-          <button class="qf-toggle" id="qfWeaveToggle" onclick="toggleQFDropdown('weave')">
+          <button class="qf-toggle" id="qfWeaveToggle" data-qf-toggle="weave">
             <span id="qfWeaveLabel">Weave</span>
             <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
           </button>
@@ -487,7 +487,7 @@
         </div>
         <!-- Treatment toggle -->
         <div class="qf-group" id="qfTreatGroup" style="display:none">
-          <button class="qf-toggle" id="qfTreatToggle" onclick="toggleQFDropdown('treat')">
+          <button class="qf-toggle" id="qfTreatToggle" data-qf-treat-toggle="treat">
             <span id="qfTreatLabel">Treatment</span>
             <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
           </button>
@@ -497,7 +497,7 @@
         </div>
         <!-- Tag toggle -->
         <div class="qf-group" id="qfTagGroup" style="display:none">
-          <button class="qf-toggle" id="qfTagToggle" onclick="toggleQFDropdown('tag')">
+          <button class="qf-toggle" id="qfTagToggle" data-qf-toggle="tag">
             <span id="qfTagLabel">Tag</span>
             <svg class="chev" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
           </button>
@@ -505,7 +505,7 @@
             <div class="qf-pills" id="qfTagPills"></div>
           </div>
         </div>
-        <button class="qf-clear-all" id="qfClearAll" onclick="clearAllQF()">Clear filters</button>
+        <button class="qf-clear-all" id="qfClearAll">Clear filters</button>
       </div>
     </div>
 
@@ -513,7 +513,7 @@
       <span id="filterInfo"><span class="showing" id="showingText">Showing all products</span></span>
       <div class="sort-wrap">
         <label for="sortSelect">Sort:</label>
-        <select id="sortSelect" onchange="renderProducts()">
+        <select id="sortSelect">
           <option value="default">Default</option>
           <option value="gsm-high">GSM: High → Low</option>
           <option value="gsm-low">GSM: Low → High</option>
@@ -587,7 +587,7 @@
   </div>
 </section>
 
-<div data-footer></div>
+<!--@include src/partials/footer.html-->
 
 <script src="assets/products-data.js?v=4.0"></script>
 <script>
@@ -983,7 +983,7 @@ function updateQuickFilters(baseList){
       let dot = isStripe
         ? `<span class="${col.includes('Black')?'qf-dot stripe-bk':'qf-dot stripe'}"></span>`
         : css ? `<span class="qf-dot" style="background:${css};${col==='White'?'border:1px solid #ccc8be;':''}"></span>` : '';
-      return `<button class="qf-pill${activeColour===col?' active':''}" onclick="setQFColour('${col}')">${dot}${col}</button>`;
+      return `<button class="qf-pill${activeColour===col?' active':''}" data-qf-colour="${col}">${dot}${col}</button>`;
     }).join('');
     // Update toggle label
     if(activeColour){
@@ -1004,7 +1004,7 @@ function updateQuickFilters(baseList){
     gGroup.style.display = '';
     anyGroup = true;
     gPills.innerHTML = availGSM.map(g =>
-      `<button class="qf-pill${activeGSM===g.key?' active':''}" onclick="setQFGsm('${g.key}')">${g.label}</button>`
+      `<button class="qf-pill${activeGSM===g.key?' active':''}" data-qf-gsm="${g.key}">${g.label}</button>`
     ).join('');
     if(activeGSM){
       const activeG = GSM_GROUPS.find(g => g.key === activeGSM);
@@ -1025,7 +1025,7 @@ function updateQuickFilters(baseList){
     mGroup.style.display = '';
     anyGroup = true;
     mPills.innerHTML = availMats.map(label =>
-      `<button class="qf-pill${activeMaterial===label?' active':''}" onclick="setQFMat('${label}')">${label}</button>`
+      `<button class="qf-pill${activeMaterial===label?' active':''}" data-qf-mat="${label}">${label}</button>`
     ).join('');
     if(activeMaterial){
       mLabel.textContent = 'Material: ' + activeMaterial;
@@ -1045,7 +1045,7 @@ function updateQuickFilters(baseList){
     wGroup.style.display = '';
     anyGroup = true;
     wPills.innerHTML = availWeaves.map(label =>
-      `<button class="qf-pill${activeWeave===label?' active':''}" onclick="setQFWeave('${label.replace(/'/g,"\\'")}')">${label}</button>`
+      `<button class="qf-pill${activeWeave===label?' active':''}" data-qf-weave="${label.replace(/"/g,'&quot;')}">${label}</button>`
     ).join('');
     if(activeWeave){
       wLabel.textContent = 'Weave: ' + activeWeave;
@@ -1065,7 +1065,7 @@ function updateQuickFilters(baseList){
     tGroup.style.display = '';
     anyGroup = true;
     tPills.innerHTML = availTreats.map(label =>
-      `<button class="qf-pill${activeTreatment===label?' active':''}" onclick="setQFTreatment('${label.replace(/'/g,"\\'")}')">${label}</button>`
+      `<button class="qf-pill${activeTreatment===label?' active':''}" data-qf-treat="${label.replace(/"/g,'&quot;')}">${label}</button>`
     ).join('');
     if(activeTreatment){
       tLabel.textContent = activeTreatment;
@@ -1085,7 +1085,7 @@ function updateQuickFilters(baseList){
     tagGroup.style.display = '';
     anyGroup = true;
     tagPills.innerHTML = availTags.map(label =>
-      `<button class="qf-pill${activeTag===label?' active':''}" onclick="setQFTag('${label.replace(/'/g,"\\'")}')">${label}</button>`
+      `<button class="qf-pill${activeTag===label?' active':''}" data-qf-tag="${label.replace(/"/g,'&quot;')}">${label}</button>`
     ).join('');
     if(activeTag){
       tagLabel.textContent = activeTag;
@@ -1182,7 +1182,7 @@ function buildSidebar(){
   // "All Products" button
   const allBtn = document.createElement('div');
   allBtn.className = 'cat-group';
-  allBtn.innerHTML = `<button class="cat-parent" id="btn-all" onclick="selectAll()">All Products</button>`;
+  allBtn.innerHTML = `<button class="cat-parent" id="btn-all" data-action="cat-select-all">All Products</button>`;
   tree.appendChild(allBtn);
 
   CATEGORIES.forEach(cat => {
@@ -1194,7 +1194,7 @@ function buildSidebar(){
     const activeCount = cat.subs.reduce((sum, s) => sum + countForSubcat(s.id), 0);
 
     group.innerHTML = `
-      <button class="cat-parent" id="parent-${cat.id}" onclick="toggleCat('${cat.id}')">
+      <button class="cat-parent" id="parent-${cat.id}" data-cat-toggle="${cat.id}">
         <span>${cat.label}</span>
         <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
           ${activeCount > 0 ? `<span class="count">${activeCount}</span>` : ''}
@@ -1205,7 +1205,7 @@ function buildSidebar(){
         ${cat.subs.map(s => {
           const count = countForSubcat(s.id);
           const isComing = count === 0;
-          return `<button class="sub-item${isComing?' coming':''}" id="sub-${s.id}" onclick="selectSubcat('${s.id}','${s.label}',${isComing})">
+          return `<button class="sub-item${isComing?' coming':''}" id="sub-${s.id}" data-subcat-id="${s.id}" data-subcat-label="${s.label}" data-subcat-coming="${isComing}">
             ${s.label}
             ${isComing
               ? `<span class="cs-badge" style="font-size:9px;color:#c9a84c;letter-spacing:.06em;text-transform:uppercase;">Enquire</span>`
@@ -1381,7 +1381,7 @@ function renderProducts(){
   if(list.length===0){
     const activeQF = [activeColour, activeGSM ? GSM_GROUPS.find(g=>g.key===activeGSM)?.label : null, activeMaterial, activeWeave, activeTreatment, activeTag].filter(Boolean);
     const qfMsg = activeQF.length ? ` with ${activeQF.join(', ')}` : '';
-    grid.innerHTML = `<p style="color:var(--muted);font-size:14px;padding:40px 0;">No products found${q ? ' for "'+q+'"' : ''}${qfMsg}. <button onclick="clearAllQF()" style="color:var(--gold2);background:none;border:none;cursor:pointer;text-decoration:underline;font-size:14px;">Clear filters</button></p>`;
+    grid.innerHTML = `<p style="color:var(--muted);font-size:14px;padding:40px 0;">No products found${q ? ' for "'+q+'"' : ''}${qfMsg}. <button data-action="qf-clear" style="color:var(--gold2);background:none;border:none;cursor:pointer;text-decoration:underline;font-size:14px;">Clear filters</button></p>`;
     const showEl = document.getElementById('showingText');
     if(showEl) showEl.textContent = '0 products';
     return;
@@ -1441,7 +1441,7 @@ function renderProducts(){
           </div>
 
           ${p.sizes.length ? `<div class="product-sizes" style="gap:4px;">${p.sizes.map(s=>`<span class="sz" style="font-size:9.5px; padding:2px 6px;">${s}</span>`).join('')}</div>` : ''}
-          <button class="product-cta" onclick="event.stopPropagation();enquireRange('${p.sku}', '${p.name}')">Request Quote</button>
+          <button class="product-cta" data-action="enquire-range" data-sku="${p.sku}" data-name="${p.name}">Request Quote</button>
         </div>
       </div>
       `;
@@ -1461,7 +1461,7 @@ function renderProducts(){
           <div class="product-name">${p.name}</div>
           <div class="product-desc">${p.desc}</div>
           ${p.sizes.length ? `<div class="product-sizes">${p.sizes.map(s=>`<span class="sz">${s}</span>`).join('')}</div>` : ''}
-          <button class="product-cta" onclick="event.stopPropagation();enquire('${p.sku}')">Request Quote</button>
+          <button class="product-cta" data-action="enquire" data-sku="${p.sku}">Request Quote</button>
         </div>
       </div>
       `;
@@ -1654,6 +1654,41 @@ document.addEventListener('DOMContentLoaded', () => {
       if(window.ALT_APPLY_ONBOARDING_PREFS) window.ALT_APPLY_ONBOARDING_PREFS();
     }, 400);
   }
+
+  // ── Event delegation — replaces all inline onclick= handlers ─────────────
+  // sidebar toggle
+  document.querySelector('.sidebar-toggle') &&
+    document.querySelector('.sidebar-toggle').addEventListener('click', toggleSidebar);
+  // sort select
+  document.getElementById('sortSelect') &&
+    document.getElementById('sortSelect').addEventListener('change', renderProducts);
+  // clear-all filter button
+  document.getElementById('qfClearAll') &&
+    document.getElementById('qfClearAll').addEventListener('click', clearAllQF);
+
+  // Filter dropdowns, filter pills, category tree, product CTAs
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button, [data-action]');
+    if (!btn) return;
+    // Filter toggle headers
+    if (btn.dataset.qfToggle)    { toggleQFDropdown(btn.dataset.qfToggle); return; }
+    if (btn.dataset.qfTreatToggle) { toggleQFDropdown(btn.dataset.qfTreatToggle); return; }
+    // Filter pills
+    if (btn.dataset.qfColour)    { setQFColour(btn.dataset.qfColour); return; }
+    if (btn.dataset.qfGsm)       { setQFGsm(btn.dataset.qfGsm); return; }
+    if (btn.dataset.qfMat)       { setQFMat(btn.dataset.qfMat); return; }
+    if (btn.dataset.qfWeave)     { setQFWeave(btn.dataset.qfWeave); return; }
+    if (btn.dataset.qfTreat)     { setQFTreatment(btn.dataset.qfTreat); return; }
+    if (btn.dataset.qfTag)       { setQFTag(btn.dataset.qfTag); return; }
+    // Category tree
+    if (btn.dataset.action === 'cat-select-all') { selectAll(); return; }
+    if (btn.dataset.catToggle)   { toggleCat(btn.dataset.catToggle); return; }
+    if (btn.dataset.subcatId)    { selectSubcat(btn.dataset.subcatId, btn.dataset.subcatLabel, btn.dataset.subcatComing === 'true'); return; }
+    // Product CTAs
+    if (btn.dataset.action === 'enquire-range') { e.stopPropagation(); enquireRange(btn.dataset.sku, btn.dataset.name); return; }
+    if (btn.dataset.action === 'enquire')       { e.stopPropagation(); enquire(btn.dataset.sku); return; }
+    if (btn.dataset.action === 'qf-clear')      { clearAllQF(); return; }
+  });
 });
 </script>
 <script src="assets/partials.js?v=4.0"></script>
