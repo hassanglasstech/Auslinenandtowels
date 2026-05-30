@@ -37,7 +37,6 @@ PARENTS = {
     'ALU-BK': {'name': 'Blankets', 'category': 'blankets-cotton'},
     # Mattress Protection
     'ALU-MP': {'name': 'Mattress Protectors', 'category': 'mp-protectors'},
-    'ALU-MT': {'name': 'Mattress Toppers', 'category': 'mp-toppers'},
     'ALU-PP': {'name': 'Pillow Protectors', 'category': 'mp-pillow'},
     # Pillows
     'ALU-PIL': {'name': 'Microfibre Pillows', 'category': 'pillows'},
@@ -61,21 +60,20 @@ CATEGORIES = [
     {'id': 'sheets-flat',        'name': 'Flat Sheets',          'parent': 'Sheets',              'slug': 'flat-sheets',              'image': 'images/white-towel-stack-3.webp'},
     {'id': 'sheets-fitted',      'name': 'Fitted Sheets',        'parent': 'Sheets',              'slug': 'fitted-sheets',            'image': 'images/white-towel-stack-5.webp'},
     {'id': 'sheets-pillow',      'name': 'Pillowcases',          'parent': 'Sheets',              'slug': 'pillowcases',              'image': 'images/white-pillowcase-pair.webp'},
-    {'id': 'sheets-satin',       'name': 'Satin Stripe',         'parent': 'Sheets',              'slug': 'satin-stripe-sheets',      'image': PH},
+    {'id': 'sheets-satin',       'name': 'Satin Stripe',         'parent': 'Sheets',              'slug': 'satin-stripe-sheets',      'image': 'images/cat-satin-stripe.jpg'},
     # Quilt Covers
-    {'id': 'quilt-covers',       'name': 'Quilt Covers',         'parent': 'Quilt Covers',        'slug': 'quilt-covers',             'image': PH},
+    {'id': 'quilt-covers',       'name': 'Quilt Covers',         'parent': 'Quilt Covers',        'slug': 'quilt-covers',             'image': 'images/cat-quilt-covers.jpg'},
     # Quilts
-    {'id': 'quilts-micro',       'name': 'Microfibre Quilts',    'parent': 'Quilts',              'slug': 'microfibre-quilts',        'image': PH},
-    {'id': 'quilts-navy',        'name': 'Navy Reversible Quilts','parent': 'Quilts',             'slug': 'navy-quilts',              'image': PH},
+    {'id': 'quilts-micro',       'name': 'Microfibre Quilts',    'parent': 'Quilts',              'slug': 'microfibre-quilts',        'image': 'images/cat-microfibre-quilt.jpg'},
+    {'id': 'quilts-navy',        'name': 'Navy Reversible Quilts','parent': 'Quilts',             'slug': 'navy-quilts',              'image': 'images/cat-navy-quilt.jpg'},
     # Blankets
-    {'id': 'blankets-cotton',    'name': 'Cellular Cotton Blankets','parent': 'Blankets',         'slug': 'cellular-blankets',        'image': PH},
-    {'id': 'blankets-fleece',    'name': 'Faux Wool Blankets',   'parent': 'Blankets',            'slug': 'faux-wool-blankets',       'image': PH},
+    {'id': 'blankets-cotton',    'name': 'Cellular Cotton Blankets','parent': 'Blankets',         'slug': 'cellular-blankets',        'image': 'images/cat-cellular-blanket.jpg'},
+    {'id': 'blankets-fleece',    'name': 'Faux Wool Blankets',   'parent': 'Blankets',            'slug': 'faux-wool-blankets',       'image': 'images/cat-fauxwool-blanket.jpg'},
     # Mattress Protection
-    {'id': 'mp-protectors',      'name': 'Mattress Protectors',  'parent': 'Mattress Protection', 'slug': 'mattress-protectors',      'image': PH},
-    {'id': 'mp-toppers',         'name': 'Mattress Toppers',     'parent': 'Mattress Protection', 'slug': 'mattress-toppers',         'image': PH},
-    {'id': 'mp-pillow',          'name': 'Pillow Protectors',    'parent': 'Mattress Protection', 'slug': 'pillow-protectors',        'image': PH},
+    {'id': 'mp-protectors',      'name': 'Mattress Protectors',  'parent': 'Mattress Protection', 'slug': 'mattress-protectors',      'image': 'images/cat-mattress-protector.jpg'},
+    {'id': 'mp-pillow',          'name': 'Pillow Protectors',    'parent': 'Mattress Protection', 'slug': 'pillow-protectors',        'image': 'images/cat-pillow-protector.jpg'},
     # Pillows
-    {'id': 'pillows',            'name': 'Microfibre Pillows',   'parent': 'Pillows',             'slug': 'microfibre-pillows',       'image': PH},
+    {'id': 'pillows',            'name': 'Microfibre Pillows',   'parent': 'Pillows',             'slug': 'microfibre-pillows',       'image': 'images/cat-microfibre-pillow.jpg'},
 ]
 
 # ── PRODUCTS ──────────────────────────────────────────────────────────────────
