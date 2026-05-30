@@ -4,8 +4,9 @@
   "description": "Australian Linen & Towels — wholesale B2B linen supplier website",
   "private": true,
   "scripts": {
-    "dev":     "vite --port 7788 --open",
-    "build":   "vite build",
+    "sync":    "node scripts/sync-partials.js",
+    "dev":     "npm run sync && vite --port 7788 --open",
+    "build":   "npm run sync && vite build",
     "preview": "vite preview --port 7788",
     "lint":    "eslint assets/*.js api/*.js",
     "lint:fix": "eslint assets/*.js api/*.js --fix"
