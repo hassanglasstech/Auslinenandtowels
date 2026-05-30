@@ -17,13 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// ── REFERER CHECK ─────────────────────────────────────────────────────────────
-$referer = $_SERVER['HTTP_REFERER'] ?? '';
+// ── ORIGIN / REFERER CHECK ────────────────────────────────────────────────────
+// Pass if a trusted Origin header is present (exact match) OR the Referer starts
+// with a trusted origin. Anti-CSRF hygiene — the honeypot + rate limit below are
+// the real spam controls.
+$referer    = $_SERVER['HTTP_REFERER'] ?? '';
+$origin_ok  = $origin !== '' && in_array($origin, $allowed_origins, true);
 $referer_ok = false;
 foreach ($allowed_origins as $o) {
-    if (strpos($referer, $o) === 0) { $referer_ok = true; break; }
+    if ($referer !== '' && strpos($referer, $o . '/') === 0) { $referer_ok = true; break; }
 }
-if (!$referer_ok) {
+if (!$origin_ok && !$referer_ok) {
     http_response_code(403);
     echo json_encode(['ok' => false, 'error' => 'Forbidden']);
     exit;

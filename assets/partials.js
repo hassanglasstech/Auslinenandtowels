@@ -109,6 +109,17 @@
 
   // Microsoft Clarity now loads inside loadAnalytics() — gated by consent.
 
+  // HTML-escape any dynamic string before it goes into innerHTML.
+  function altEsc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  window.ALT_ESC = altEsc;
+
   function icon(name) {
     const p = {
       search: '<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" class="ln"/><path d="M20 20l-3.5-3.5" class="ln"/></svg>',
@@ -354,17 +365,17 @@
       ).slice(0, 8);
 
       if (!matches.length) {
-        results.innerHTML = '<div class="alt-search-empty">No products found for "' + this.value + '"</div>';
+        results.innerHTML = '<div class="alt-search-empty">No products found for "' + altEsc(this.value) + '"</div>';
         return;
       }
       results.innerHTML = matches.map(p => `
-        <div class="alt-sr-item" onclick="window.ALT_SEARCH_ENQUIRE(${p.sku ? "'"+p.sku+"'" : 'null'})">
-          <img class="alt-sr-img" src="${p.image||'images/placeholder-product.svg'}" alt="${p.name}" onerror="this.onerror=null;this.src='images/placeholder-product.svg'">
+        <div class="alt-sr-item" onclick="window.ALT_SEARCH_ENQUIRE(${p.sku ? "'"+altEsc(p.sku)+"'" : 'null'})">
+          <img class="alt-sr-img" src="${altEsc(p.image||'images/placeholder-product.svg')}" alt="${altEsc(p.name)}" onerror="this.onerror=null;this.src='images/placeholder-product.svg'">
           <div>
-            <div class="alt-sr-name">${p.name}</div>
-            <div class="alt-sr-meta">${p.colour||''} · ${p.material||''}</div>
+            <div class="alt-sr-name">${altEsc(p.name)}</div>
+            <div class="alt-sr-meta">${altEsc(p.colour||'')} · ${altEsc(p.material||'')}</div>
           </div>
-          ${p.tag ? `<span class="alt-sr-tag">${p.tag}</span>` : ''}
+          ${p.tag ? `<span class="alt-sr-tag">${altEsc(p.tag)}</span>` : ''}
         </div>
       `).join('');
     });

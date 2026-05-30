@@ -7,8 +7,13 @@
 
 require_once __DIR__ . '/db-config.php';
 
-// Token auth
-if (($_GET['token'] ?? '') !== ALT_EXPORT_TOKEN || ALT_EXPORT_TOKEN === 'CHANGE_THIS_TO_A_RANDOM_SECRET') {
+// Token auth — fail closed if unset/placeholder; constant-time comparison.
+$provided = (string)($_GET['token'] ?? '');
+if (!defined('ALT_EXPORT_TOKEN')
+    || ALT_EXPORT_TOKEN === ''
+    || ALT_EXPORT_TOKEN === 'CHANGE_THIS_TO_A_RANDOM_SECRET'
+    || strlen($provided) < 16
+    || !hash_equals(ALT_EXPORT_TOKEN, $provided)) {
     http_response_code(403);
     exit('Forbidden');
 }
