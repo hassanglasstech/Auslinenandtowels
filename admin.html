@@ -72,6 +72,43 @@
 
   .admin-note { background: #fff8e7; border: 1px solid #e8dab0; padding: 16px 20px; margin-bottom: 24px; font-size: 13px; color: #6b5a1d; line-height: 1.6; }
   .admin-note b { color: #4a3d0e; }
+  .admin-note.ok { background: #e8f5e9; border-color: #b6dcb9; color: #2e6b32; }
+  .admin-note.ok b { color: #1b5e20; }
+  .admin-note.warn { background: #fdecea; border-color: #f5c6c0; color: #8a2c1f; }
+  .admin-note.warn b { color: #6a1d12; }
+
+  /* Toolbar + buttons */
+  .prod-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .prod-toolbar .spacer { flex: 1; }
+  .prod-toolbar input[type=search] { flex: 0 1 280px; padding: 10px 14px; border: 1px solid var(--line); font-family: inherit; font-size: 13.5px; background: var(--paper); color: var(--ink); }
+  .btn-gold-sm, .btn-ghost-sm { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 11px 18px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+  .btn-gold-sm { background: var(--gold); color: #fff; }
+  .btn-gold-sm:hover { background: var(--gold-soft); }
+  .btn-gold-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-ghost-sm { background: transparent; color: var(--navy); border-color: var(--line); }
+  .btn-ghost-sm:hover { border-color: var(--navy); }
+  .prod-table .row-actions button { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-right: 12px; background: none; border: none; border-bottom: 1px solid var(--gold); padding: 0 0 2px; cursor: pointer; }
+  .prod-table .row-actions button.del { color: #b3261e; border-bottom-color: #e8a59f; }
+
+  /* Modal */
+  .pm-overlay { position: fixed; inset: 0; z-index: 10020; background: rgba(10,14,40,.6); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .pm-overlay[hidden] { display: none; }
+  .pm-box { background: var(--paper); max-width: 760px; width: 100%; box-shadow: 0 32px 80px rgba(0,0,0,.3); }
+  .pm-head { display: flex; justify-content: space-between; align-items: center; padding: 22px 28px; border-bottom: 1px solid var(--line); }
+  .pm-head h3 { font-family: var(--f-serif); font-size: 22px; font-weight: 400; color: var(--navy); margin: 0; }
+  .pm-close { background: none; border: none; font-size: 26px; color: var(--muted); cursor: pointer; line-height: 1; padding: 0 6px; }
+  .pm-close:hover { color: var(--navy); }
+  .pm-form { padding: 24px 28px 28px; }
+  .pm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .pm-form label { display: flex; flex-direction: column; font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); gap: 6px; }
+  .pm-form .req { color: var(--gold); }
+  .pm-form input, .pm-form select, .pm-form textarea { font-family: var(--f-sans, inherit); font-size: 14px; padding: 10px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); text-transform: none; letter-spacing: normal; }
+  .pm-form input:focus, .pm-form select:focus, .pm-form textarea:focus { outline: none; border-color: var(--navy); }
+  .pm-full { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .pm-actions { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
+  .pm-msg { flex: 1; font-size: 12.5px; color: #b3261e; }
+  .pm-msg.ok { color: #2e6b32; }
+  @media (max-width: 600px) { .pm-grid { grid-template-columns: 1fr; } }
 
   @media (max-width: 968px) {
     .admin-layout { grid-template-columns: 1fr; }
@@ -260,10 +297,17 @@
     <!-- PRODUCTS TAB -->
     <div class="admin-panel" id="panel-products">
       <h3>Product catalogue</h3>
-      <p class="sub">Read-only view of products live on storefront. Click any item to verify on the public site.</p>
+      <p class="sub">Add, edit, or remove products. Changes save to the database instantly. Click <b>Publish</b> to push them live to the storefront.</p>
 
-      <div class="admin-note">
-        <b>Note:</b> This dashboard is read-only. Product changes (new SKUs, image updates, specifications) are made by editing <code>assets/products-data.js</code> and re-uploading to your hosting. No prices are stored — buyers contact you directly for trade pricing.
+      <div class="admin-note" id="dbStatusNote">
+        <b>Checking database…</b>
+      </div>
+
+      <div class="prod-toolbar">
+        <input type="search" id="prodSearch" placeholder="Search SKU, name, colour…" />
+        <div class="spacer"></div>
+        <button class="btn-ghost-sm" id="btnPublish" title="Regenerate the storefront catalogue from the database">Publish to storefront</button>
+        <button class="btn-gold-sm" id="btnAddProduct">+ Add product</button>
       </div>
 
       <table class="prod-table">
@@ -279,6 +323,40 @@
         </thead>
         <tbody id="prodTbody"></tbody>
       </table>
+    </div>
+
+    <!-- PRODUCT EDIT MODAL -->
+    <div class="pm-overlay" id="pmOverlay" hidden>
+      <div class="pm-box" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+        <div class="pm-head">
+          <h3 id="pmTitle">Add product</h3>
+          <button class="pm-close" id="pmClose" aria-label="Close">&times;</button>
+        </div>
+        <form class="pm-form" id="pmForm">
+          <div class="pm-grid">
+            <label>SKU <span class="req">*</span><input name="sku" required placeholder="ALU-BT-001"/></label>
+            <label>Name <span class="req">*</span><input name="name" required placeholder="Classical Bath Towel"/></label>
+            <label>Colour<input name="colour" placeholder="White"/></label>
+            <label>Size<input name="size" placeholder="70×140 cm"/></label>
+            <label>Weight<input name="weight" placeholder="450 GSM"/></label>
+            <label>Material<input name="material" placeholder="100% Cotton"/></label>
+            <label>Category<select name="categoryId" id="pmCategory"></select></label>
+            <label>Price (0 = Request Quote)<input name="price" type="number" step="0.01" min="0" placeholder="0"/></label>
+            <label>Image path<input name="image" placeholder="images/..."/></label>
+            <label>Zoom image path<input name="zoomImage" placeholder="images/..."/></label>
+            <label>Colour group<input name="colorGroup" placeholder="ALU-BT-001"/></label>
+            <label>Parent SKU<input name="parentSku" placeholder="ALU-BT-001"/></label>
+            <label>Variant name<input name="variantName" placeholder="White"/></label>
+            <label>Tag<input name="tag" placeholder="PREMIUM / Bulk Pack / …"/></label>
+          </div>
+          <label class="pm-full">Description<textarea name="description" rows="4" placeholder="Product description…"></textarea></label>
+          <div class="pm-actions">
+            <span class="pm-msg" id="pmMsg"></span>
+            <button type="button" class="btn-ghost-sm" id="pmCancel">Cancel</button>
+            <button type="submit" class="btn-gold-sm" id="pmSave">Save product</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- CATEGORIES TAB -->
@@ -301,62 +379,254 @@
   </main>
 </div>
 
+<!-- Static catalogue loaded as a fallback for first paint / if the API/DB is unavailable -->
 <script src="assets/products-data.js?v=4.0"></script>
 <script>
-  // Stats
-  document.getElementById('statProducts').innerHTML = `<em>${window.ALT_PRODUCTS.length}</em>`;
-  document.getElementById('statCategories').innerHTML = `<em>${window.ALT_CATEGORIES.length}</em>`;
-  const towelCount = window.ALT_PRODUCTS.filter(p => p.categoryId.includes('towels')).length;
-  const sheetCount = window.ALT_PRODUCTS.filter(p => p.categoryId.includes('sheets')).length;
-  document.getElementById('statTowels').innerHTML = `<em>${towelCount}</em>`;
-  document.getElementById('statSheets').innerHTML = `<em>${sheetCount}</em>`;
+(function () {
+  'use strict';
+  var API = 'api/products.php';
 
-  // Products table
-  const tbody = document.getElementById('prodTbody');
-  tbody.innerHTML = window.ALT_PRODUCTS.map(p => {
-    const cat = window.ALT_HELPERS.getCategoryById(p.categoryId);
-    const img = p.image ? `<img src="${p.image}"/>` : '';
-    return `
-      <tr>
-        <td><div class="th-img">${img}</div></td>
-        <td>
-          <div style="font-weight: 500;">${p.name}</div>
-          <div class="sku">${p.sku} · ${p.colour}</div>
-        </td>
-        <td class="d-hide">${cat ? cat.name : '—'}</td>
-        <td class="d-hide">${p.weight ? p.weight + ' gsm' : '—'}</td>
-        <td><span class="status-badge">Live</span></td>
-        <td class="row-actions">
-          <a href="product.html?sku=${p.sku}" target="_blank">View on site ↗</a>
-        </td>
-      </tr>
-    `;
-  }).join('');
+  // ── State ──────────────────────────────────────────────
+  var state = { products: [], categories: [], parents: {}, source: 'static' };
 
-  // Categories grid
-  document.getElementById('catGrid').innerHTML = window.ALT_CATEGORIES.map(c => {
-    const count = window.ALT_HELPERS.getProductsByCategory(c.id).length;
-    return `
-      <div class="cat-item">
-        <div class="ci-img"><img src="${c.image}"/></div>
-        <div class="ci-info">
-          <h4>${c.name}</h4>
-          <div class="count">${count} products</div>
-        </div>
-      </div>
-    `;
-  }).join('');
+  // ── Helpers ────────────────────────────────────────────
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function catName(id) {
+    var c = state.categories.find(function(x){ return x.id === id; });
+    return c ? c.name : '—';
+  }
+  function getToken() {
+    var t = sessionStorage.getItem('alt_api_token') || '';
+    if (!t) {
+      t = (window.prompt('Enter the admin API token (ALT_EXPORT_TOKEN from db-config.php):') || '').trim();
+      if (t) sessionStorage.setItem('alt_api_token', t);
+    }
+    return t;
+  }
+  function clearToken() { sessionStorage.removeItem('alt_api_token'); }
 
-  // Tabs
-  document.querySelectorAll('.admin-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  function note(el, cls, html) {
+    el.className = 'admin-note' + (cls ? ' ' + cls : '');
+    el.innerHTML = html;
+  }
+
+  // ── API ────────────────────────────────────────────────
+  function apiGet() {
+    return fetch(API, { headers: { 'Accept': 'application/json' } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .catch(function(){ return null; });
+  }
+  function apiSend(method, body, query) {
+    var url = API + '?token=' + encodeURIComponent(getToken()) + (query || '');
+    return fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: body ? JSON.stringify(body) : null
+    }).then(function(r){ return r.json().catch(function(){ return { ok:false, error:'Bad response' }; }); });
+  }
+
+  // ── Render ─────────────────────────────────────────────
+  function renderStats() {
+    var P = state.products;
+    document.getElementById('statProducts').innerHTML = '<em>' + P.length + '</em>';
+    document.getElementById('statCategories').innerHTML = '<em>' + state.categories.length + '</em>';
+    document.getElementById('statTowels').innerHTML = '<em>' + P.filter(function(p){ return (p.categoryId||'').indexOf('towels') !== -1; }).length + '</em>';
+    document.getElementById('statSheets').innerHTML = '<em>' + P.filter(function(p){ return (p.categoryId||'').indexOf('sheets') !== -1; }).length + '</em>';
+  }
+
+  function renderTable(filter) {
+    var q = (filter || '').toLowerCase();
+    var rows = state.products.filter(function(p){
+      if (!q) return true;
+      return (p.sku + ' ' + p.name + ' ' + (p.colour||'')).toLowerCase().indexOf(q) !== -1;
+    });
+    var tbody = document.getElementById('prodTbody');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:40px;text-align:center;color:var(--muted);">No products' + (q ? ' match "' + esc(q) + '"' : ' yet — click “Add product”.') + '</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(function(p){
+      var img = p.image ? '<img src="' + esc(p.image) + '" alt=""/>' : '';
+      return '<tr>' +
+        '<td><div class="th-img">' + img + '</div></td>' +
+        '<td><div style="font-weight:500;">' + esc(p.name) + '</div>' +
+        '<div class="sku">' + esc(p.sku) + (p.colour ? ' · ' + esc(p.colour) : '') + '</div></td>' +
+        '<td class="d-hide">' + esc(catName(p.categoryId)) + '</td>' +
+        '<td class="d-hide">' + (p.weight ? esc(p.weight) : '—') + '</td>' +
+        '<td><span class="status-badge">Live</span></td>' +
+        '<td class="row-actions">' +
+          '<button data-edit="' + esc(p.sku) + '">Edit</button>' +
+          '<button class="del" data-del="' + esc(p.sku) + '">Delete</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function renderCategories() {
+    document.getElementById('catGrid').innerHTML = state.categories.map(function(c){
+      var count = state.products.filter(function(p){ return p.categoryId === c.id; }).length;
+      return '<div class="cat-item"><div class="ci-img"><img src="' + esc(c.image) + '" alt=""/></div>' +
+        '<div class="ci-info"><h4>' + esc(c.name) + '</h4>' +
+        '<div class="count">' + count + ' products</div></div></div>';
+    }).join('');
+  }
+
+  function fillCategorySelect() {
+    var sel = document.getElementById('pmCategory');
+    sel.innerHTML = '<option value="">— none —</option>' + state.categories.map(function(c){
+      return '<option value="' + esc(c.id) + '">' + esc(c.name) + '</option>';
+    }).join('');
+  }
+
+  function renderAll() { renderStats(); renderTable(document.getElementById('prodSearch').value); renderCategories(); fillCategorySelect(); }
+
+  // ── Load (API first, static fallback) ──────────────────
+  function load() {
+    var noteEl = document.getElementById('dbStatusNote');
+    apiGet().then(function(data){
+      if (data && data.ok && Array.isArray(data.products)) {
+        state.products = data.products;
+        state.categories = data.categories || [];
+        state.parents = data.parents || {};
+        state.source = 'db';
+        if (!state.products.length) {
+          note(noteEl, 'warn', '<b>Database connected but empty.</b> Seed it once with the products below — run: <code>POST ' + API + '?action=seed&token=YOUR_TOKEN</code>, or use the “Seed from file” button.' +
+            ' <button class="btn-ghost-sm" id="btnSeed" style="margin-left:10px;">Seed from file</button>');
+          var bs = document.getElementById('btnSeed');
+          if (bs) bs.addEventListener('click', doSeed);
+        } else {
+          note(noteEl, 'ok', '<b>Live database connected.</b> ' + state.products.length + ' products. Edits save instantly; click <b>Publish</b> to push changes to the storefront.');
+        }
+      } else {
+        // Fallback to static file
+        state.products = (window.ALT_PRODUCTS || []).slice();
+        state.categories = (window.ALT_CATEGORIES || []).slice();
+        state.parents = window.ALT_PARENTS || {};
+        state.source = 'static';
+        note(noteEl, 'warn', '<b>Database not reachable — showing the static catalogue (read-only).</b> ' +
+          'Editing needs <code>db-config.php</code> uploaded and the product tables created (run <code>setup-db.sql</code>).');
+      }
+      renderAll();
+    });
+  }
+
+  function doSeed() {
+    if (!confirm('Seed the database from assets/products-seed.json? This populates the empty product tables.')) return;
+    apiSend('POST', null, '&action=seed').then(function(res){
+      if (res.ok) { alert('Seeded ' + res.seeded.products + ' products, ' + res.seeded.categories + ' categories.'); load(); }
+      else { alert('Seed failed: ' + (res.error || 'unknown')); if ((res.error||'').indexOf('token') !== -1) clearToken(); }
+    });
+  }
+
+  // ── Modal ──────────────────────────────────────────────
+  var overlay = document.getElementById('pmOverlay');
+  var form = document.getElementById('pmForm');
+  var editingSku = null;
+
+  function openModal(product) {
+    editingSku = product ? product.sku : null;
+    document.getElementById('pmTitle').textContent = product ? 'Edit product' : 'Add product';
+    document.getElementById('pmMsg').textContent = '';
+    fillCategorySelect();
+    form.reset();
+    if (product) {
+      ['sku','name','colour','size','weight','material','categoryId','image','zoomImage','colorGroup','parentSku','variantName','tag','description'].forEach(function(k){
+        if (form.elements[k]) form.elements[k].value = product[k] == null ? '' : product[k];
+      });
+      form.elements.price.value = product.price || 0;
+      form.elements.sku.readOnly = true; // SKU is the key — don't change on edit
+    } else {
+      form.elements.sku.readOnly = false;
+    }
+    overlay.hidden = false;
+  }
+  function closeModal() { overlay.hidden = true; editingSku = null; }
+
+  document.getElementById('btnAddProduct').addEventListener('click', function(){
+    if (state.source !== 'db') { alert('Connect the database first (upload db-config.php and run setup-db.sql).'); return; }
+    openModal(null);
+  });
+  document.getElementById('pmClose').addEventListener('click', closeModal);
+  document.getElementById('pmCancel').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) closeModal(); });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var msg = document.getElementById('pmMsg');
+    msg.className = 'pm-msg';
+    var body = {};
+    ['sku','name','colour','size','weight','material','categoryId','image','zoomImage','colorGroup','parentSku','variantName','tag','description'].forEach(function(k){
+      body[k] = form.elements[k].value.trim();
+    });
+    body.price = parseFloat(form.elements.price.value) || 0;
+    if (!body.sku || !body.name) { msg.textContent = 'SKU and Name are required.'; return; }
+
+    var saveBtn = document.getElementById('pmSave');
+    saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+    var method = editingSku ? 'PUT' : 'POST';
+    apiSend(method, body).then(function(res){
+      saveBtn.disabled = false; saveBtn.textContent = 'Save product';
+      if (res.ok) {
+        msg.className = 'pm-msg ok'; msg.textContent = 'Saved.';
+        setTimeout(function(){ closeModal(); load(); }, 400);
+      } else {
+        msg.textContent = res.error || 'Save failed.';
+        if ((res.error||'').indexOf('token') !== -1) clearToken();
+      }
+    });
+  });
+
+  // ── Table actions (delegated) ──────────────────────────
+  document.getElementById('prodTbody').addEventListener('click', function(e){
+    var ed = e.target.getAttribute('data-edit');
+    var dl = e.target.getAttribute('data-del');
+    if (ed) {
+      var p = state.products.find(function(x){ return x.sku === ed; });
+      if (p) openModal(p);
+    } else if (dl) {
+      if (!confirm('Delete product ' + dl + '? This removes it from the database.')) return;
+      apiSend('DELETE', null, '&sku=' + encodeURIComponent(dl)).then(function(res){
+        if (res.ok) load();
+        else { alert('Delete failed: ' + (res.error||'unknown')); if ((res.error||'').indexOf('token') !== -1) clearToken(); }
+      });
+    }
+  });
+
+  // ── Publish ────────────────────────────────────────────
+  document.getElementById('btnPublish').addEventListener('click', function(){
+    if (state.source !== 'db') { alert('Nothing to publish — database not connected.'); return; }
+    if (!confirm('Regenerate the storefront catalogue (assets/products-data.js) from the database?')) return;
+    var btn = this; btn.disabled = true; btn.textContent = 'Publishing…';
+    apiSend('POST', null, '&action=publish').then(function(res){
+      btn.disabled = false; btn.textContent = 'Publish to storefront';
+      if (res.ok) alert('Published ✓ ' + res.products + ' products written to the storefront catalogue.');
+      else { alert('Publish failed: ' + (res.error||'unknown')); if ((res.error||'').indexOf('token') !== -1) clearToken(); }
+    });
+  });
+
+  // ── Search ─────────────────────────────────────────────
+  document.getElementById('prodSearch').addEventListener('input', function(){ renderTable(this.value); });
+
+  // ── Tabs ───────────────────────────────────────────────
+  document.querySelectorAll('.admin-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('active'); });
       tab.classList.add('active');
-      ['products','categories','inquiries'].forEach(id => {
+      ['products','categories','inquiries'].forEach(function(id){
         document.getElementById('panel-' + id).style.display = id === tab.dataset.tab ? 'block' : 'none';
       });
     });
   });
+
+  // ── Esc closes modal ───────────────────────────────────
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !overlay.hidden) closeModal(); });
+
+  load();
+})();
 </script>
 </body>
 </html>
