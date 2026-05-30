@@ -1,0 +1,17 @@
+{
+  "name": "auslinenandtowels",
+  "version": "4.0.0",
+  "description": "Australian Linen & Towels — wholesale B2B linen supplier website",
+  "private": true,
+  "scripts": {
+    "dev":     "vite --port 7788 --open",
+    "build":   "vite build",
+    "preview": "vite preview --port 7788",
+    "lint":    "eslint assets/*.js api/*.js",
+    "lint:fix": "eslint assets/*.js api/*.js --fix"
+  },
+  "devDependencies": {
+    "vite":    "^6.2.0",
+    "eslint":  "^9.0.0"
+  }
+}

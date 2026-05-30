@@ -1,0 +1,48 @@
+name: CI — Lint + Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      # ── Deploy to Hostinger via FTP ─────────────────────────────────
+      # Uncomment once FTP credentials are added as GitHub repository secrets:
+      #   Settings → Secrets and variables → Actions → New secret
+      #   FTP_SERVER   = files.000webhost.com  (get from Hostinger hPanel → FTP Accounts)
+      #   FTP_USERNAME = your FTP username
+      #   FTP_PASSWORD = your FTP password
+      # - name: Deploy to Hostinger
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      #   with:
+      #     server:   ${{ secrets.FTP_SERVER }}
+      #     username: ${{ secrets.FTP_USERNAME }}
+      #     password: ${{ secrets.FTP_PASSWORD }}
+      #     local-dir: dist/
+      #     server-dir: /public_html/
+      #     exclude: |
+      #       **/.git*
+      #       **/node_modules/**
+      #       db-config.php
