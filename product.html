@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css"/>
+<link rel="stylesheet" href="assets/styles.css?v=4.0"/>
 <style>
   .pd-wrap { background: var(--paper); padding: 40px 0 100px; }
   .pd-breadcrumb { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 32px; padding: 0 48px; max-width: 1440px; margin-left: auto; margin-right: auto; }
@@ -234,6 +234,7 @@
 </head>
 <body data-page="product">
 <div data-header></div>
+<main>
 
 <div class="pd-wrap">
   <div class="pd-breadcrumb" id="breadcrumb">
@@ -258,10 +259,11 @@
   </div>
 </section>
 
+</main>
 <div data-footer></div>
 
-<script src="assets/products-data.js"></script>
-<script src="assets/partials.js"></script>
+<script src="assets/products-data.js?v=4.0"></script>
+<script src="assets/partials.js?v=4.0"></script>
 <script>
   function renderProductPage(targetSku) {
     const currentProduct = window.ALT_HELPERS.getProductBySku(targetSku);
@@ -507,7 +509,7 @@
 
         <div class="price-block">
           <div class="price" style="font-size:20px;letter-spacing:.08em;text-transform:uppercase;font-family:var(--f-mono);">Request Quote</div>
-          <div class="price-note">Trade pricing · Contact us for wholesale rates</div>
+          <div class="price-note">Trade pricing · No minimum order · Volume discounts available</div>
         </div>
 
         <!-- Configurator blocks -->
@@ -633,6 +635,9 @@
     // Track recently viewed (used by upgrades.js banner on home/collection)
     const prod = initialSku && window.ALT_PRODUCTS && window.ALT_PRODUCTS.find(p => p.sku === initialSku);
     if (prod && window.ALT_SAVE_RECENT) window.ALT_SAVE_RECENT(prod);
+    if (prod && typeof gtag !== 'undefined') {
+      gtag('event', 'view_item', { event_category: 'Product', event_label: prod.sku, items: [{ item_id: prod.sku, item_name: prod.name }] });
+    }
   });
 
   window.addEventListener('popstate', (event) => {

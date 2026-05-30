@@ -183,6 +183,9 @@
       data.append('enquiry', 'lead-capture');
 
       function done (ok) {
+        if (ok && typeof gtag !== 'undefined') {
+          gtag('event', 'generate_lead', { event_category: 'Lead Capture', event_label: ctx.cta });
+        }
         form.innerHTML = '<div style="padding:14px 0;text-align:center;font-family:\'JetBrains Mono\',monospace;' +
           'font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:' + (ok ? '#b8933a' : '#c0392b') + ';">' +
           (ok ? '&#10003;&nbsp; Request sent — we\'ll be in touch shortly.'

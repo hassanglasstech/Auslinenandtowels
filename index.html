@@ -111,7 +111,7 @@
 <link rel="preload" as="image" href="images/hero-hotel.webp" fetchpriority="high">
 <link rel="preload" as="image" href="images/logo-header.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css"/>
+<link rel="stylesheet" href="assets/styles.css?v=4.0"/>
 <style>
   /* ========== FULL-SCREEN HERO CAROUSEL ========== */
   .hero {
@@ -682,6 +682,7 @@
 </head>
 <body data-page="home">
 <div data-header></div>
+<main>
 
 <!-- ========== HERO CAROUSEL ========== -->
 <section class="hero" aria-label="Hero">
@@ -1401,10 +1402,11 @@
   </div>
 </section>
 
+</main>
 <div data-footer></div>
 
-<script src="assets/products-data.js"></script>
-<script src="assets/partials.js"></script>
+<script src="assets/products-data.js?v=4.0"></script>
+<script src="assets/partials.js?v=4.0"></script>
 <script>
   window.altQuoteEnquire = function(e, sku) {
     e.preventDefault();

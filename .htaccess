@@ -104,6 +104,19 @@ ErrorDocument 404 /404.html
   </IfModule>
 </FilesMatch>
 
+# ── BLOCK BACKUP DIRECTORY FROM WEB ACCESS ──────────────────
+<IfModule mod_authz_core.c>
+  <Directory "_backups">
+    Require all denied
+  </Directory>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <Directory "_backups">
+    Order deny,allow
+    Deny from all
+  </Directory>
+</IfModule>
+
 # ── PASSWORD-PROTECT ADMIN DASHBOARD (HTTP Basic Auth) ──────
 # Replaces the old client-side JS redirect "lock" (bypassable).
 # IMPORTANT: AuthUserFile must be the ABSOLUTE server path to .htpasswd.

@@ -468,4 +468,17 @@
   .gsm-weight{ font-size: 18px; padding: 14px 8px; }
   .gsm-desc{ padding: 14px 16px; }
   .toolkit-cta{ padding: 30px 22px; }
+
+  /* ── TABLE REFLOW — trigger + compare tables scroll horizontally ── */
+  .trigger-table,
+  .compare-table{
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: none;
+  }
+  .trigger-table thead,
+  .trigger-table tbody,
+  .compare-table thead,
+  .compare-table tbody{ display: table; width: 100%; min-width: 520px; }
 }
