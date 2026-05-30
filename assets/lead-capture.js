@@ -77,51 +77,6 @@
     triggered = true;
     try { localStorage.setItem(LS_KEY, String(Date.now())); } catch (e) {}
 
-    var css = [
-      '#altLMOv{position:fixed;inset:0;z-index:10010;background:rgba(10,14,40,.75);',
-      'backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;',
-      'padding:16px;animation:lmFd .25s ease;}',
-      '@keyframes lmFd{from{opacity:0}to{opacity:1}}',
-      '#altLMBox{background:#fff;max-width:500px;width:100%;position:relative;',
-      'box-shadow:0 32px 80px rgba(0,0,0,.3);animation:lmUp .3s cubic-bezier(.4,0,.2,1);}',
-      '@keyframes lmUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}',
-      '#altLMBox .lm-hd{background:#0f1235;padding:32px 36px 26px;position:relative;}',
-      '#altLMBox .lm-eye{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.22em;',
-      'text-transform:uppercase;color:#b8933a;margin-bottom:10px;}',
-      '#altLMBox .lm-ttl{font-family:"Playfair Display",Georgia,serif;font-size:26px;font-weight:400;',
-      'color:#fff;line-height:1.2;margin-bottom:8px;}',
-      '#altLMBox .lm-ttl em{font-style:italic;color:#d4b568;}',
-      '#altLMBox .lm-sub{font-size:13px;color:#9b9dae;line-height:1.65;}',
-      '#altLMBox .lm-cls{position:absolute;top:12px;right:14px;background:none;border:none;',
-      'color:#6b6e85;cursor:pointer;font-size:22px;padding:6px 8px;transition:color .15s;line-height:1;}',
-      '#altLMBox .lm-cls:hover{color:#fff;}',
-      '#altLMBox .lm-bd{padding:24px 36px 32px;}',
-      '#altLMBox .lm-offer{background:#faf8f3;border-left:3px solid #b8933a;padding:10px 16px;',
-      'font-size:12.5px;color:#5a5e78;margin-bottom:20px;line-height:1.5;}',
-      '#altLMBox .lm-offer strong{color:#0f1235;}',
-      '#altLMBox .lm-form{display:flex;gap:0;border:1px solid #d6d0c0;}',
-      '#altLMBox .lm-inp{flex:1;border:none;padding:13px 16px;font-family:inherit;font-size:14px;',
-      'color:#0f1235;background:#faf8f3;outline:none;min-width:0;}',
-      '#altLMBox .lm-inp::placeholder{color:#b0b2c0;}',
-      '#altLMBox .lm-btn{background:#b8933a;color:#fff;border:none;padding:13px 20px;',
-      'font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;',
-      'cursor:pointer;white-space:nowrap;font-weight:500;transition:background .2s;}',
-      '#altLMBox .lm-btn:hover{background:#d4b568;}',
-      '#altLMBox .lm-skip{text-align:center;margin-top:14px;font-size:12px;color:#9b9dae;}',
-      '#altLMBox .lm-skip a{color:#6b6e85;border-bottom:1px solid #d6d0c0;cursor:pointer;}',
-      '@media(max-width:520px){',
-      '#altLMBox .lm-hd{padding:24px 22px 20px;}',
-      '#altLMBox .lm-ttl{font-size:21px;}',
-      '#altLMBox .lm-bd{padding:18px 22px 26px;}',
-      '#altLMBox .lm-form{flex-direction:column;border:none;gap:8px;}',
-      '#altLMBox .lm-inp{border:1px solid #d6d0c0;padding:12px 14px;}',
-      '#altLMBox .lm-btn{padding:13px;width:100%;}',
-      '}'
-    ].join('');
-    var st = document.createElement('style');
-    st.textContent = css;
-    document.head.appendChild(st);
-
     var overlay = document.createElement('div');
     overlay.id = 'altLMOv';
     overlay.innerHTML =
