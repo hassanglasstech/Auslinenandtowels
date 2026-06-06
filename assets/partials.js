@@ -27,12 +27,12 @@
 
   function loadAnalytics() {
     if (window.__altTagsLoaded) return;
-    if (getConsent() !== 'granted') return;   // opt-in only — no implicit load
     window.__altTagsLoaded = true;
 
-    gtag('consent', 'update', { analytics_storage: 'granted' });
-
-    // Google Analytics 4
+    // GA4 loads at startup — consent mode (above) controls what is sent.
+    // With analytics_storage: 'denied' GA4 sends cookieless pings (no cookies,
+    // no personal data) so pages views + click events are modelled even before
+    // the user accepts.  Consent update below upgrades to full tracking.
     var gaId = 'G-BXCSDXJWFJ';
     var s = document.createElement('script');
     s.async = true;
@@ -41,14 +41,24 @@
     gtag('js', new Date());
     gtag('config', gaId, { anonymize_ip: true });
 
-    // Microsoft Clarity
+    // If the visitor already accepted in a previous session, upgrade consent now.
+    if (getConsent() === 'granted') {
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+      loadClarity();
+    }
+  }
+
+  function loadClarity() {
+    if (window.__clarityLoaded) return;
+    window.__clarityLoaded = true;
     (function(c,l,a,r,i){
       c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
       var t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
       var y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "wy816of55t");
   }
-  loadAnalytics();   // runs only if a prior "granted" choice is stored
+
+  loadAnalytics();   // always — GA4 handles consent internally
 
   // ═══════════════════════════════════════════════════════
   // COOKIE CONSENT BANNER (Australian Privacy Act compliant)
@@ -95,7 +105,10 @@
     document.head.appendChild(style);
     document.body.appendChild(banner);
     banner.querySelector('.alt-cc-accept').addEventListener('click', function(){
-      setConsent('granted'); banner.remove(); loadAnalytics();
+      setConsent('granted');
+      banner.remove();
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+      loadClarity();
     });
     banner.querySelector('.alt-cc-decline').addEventListener('click', function(){
       setConsent('declined'); banner.remove();
