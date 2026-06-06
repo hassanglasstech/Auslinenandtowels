@@ -318,6 +318,16 @@
     }
   });
 
+  // GA4 — phone + email click events (delegated; works on dynamically-injected header/footer)
+  document.addEventListener('click', function(e) {
+    if (typeof gtag !== 'function') return;
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('tel:') === 0)    gtag('event', 'phone_click',  { link_url: href });
+    if (href.indexOf('mailto:') === 0) gtag('event', 'email_click',  { link_url: href });
+  });
+
   // Auto-load wishlist.js once on every page
   function loadWishlist() {
     if (document.querySelector('script[data-alt-wishlist]')) return;

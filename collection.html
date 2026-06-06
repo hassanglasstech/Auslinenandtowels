@@ -1521,7 +1521,48 @@ function hideSidebarMobile(){
 // ──────────────────────────────────────────────
 function checkUrlParam(){
   const params = new URLSearchParams(window.location.search);
-  const cat = params.get('cat');
+  let cat = params.get('cat');
+  // ── slug alias map: old/marketing slugs → real category IDs ──────────────
+  const CAT_ALIASES = {
+    // commercial towel group → type-based categories
+    'towels-commercial':  'towels-bath',
+    'towels-white':       'towels-bath',
+    'towels-black':       'towels-bath',
+    'towels-charcoal':    'towels-bath',
+    'towels-navy':        'towels-bath',
+    'towels-camel':       'towels-bath',
+    'towels-mocha':       'towels-bath',
+    // coloured / speciality group
+    'towels-coloured':    'towels-salon',
+    'coloured-all':       'towels-salon',
+    'coloured-aqua':      'towels-salon',
+    'salon-white':        'towels-salon',
+    'towels-speciality':  'towels-pool',
+    'pool-stripe':        'towels-pool',
+    'pool-all':           'towels-pool',
+    'gym-white':          'towels-gym',
+    'gym-all':            'towels-gym',
+    'bathrobe-terry':     'towels-robes',
+    'bathrobe-all':       'towels-robes',
+    'teatowels-all':      'tea-towels',
+    // sheets
+    'sheets-white':       'sheets-flat',
+    // quilt covers
+    'quilt-covers-white': 'quilt-covers',
+    'quilt-covers-all':   'quilt-covers',
+    // quilts
+    'quilts-microfibre':  'quilts-micro',
+    'quilts-all':         'quilts-micro',
+    // blankets
+    'blankets-cellular':  'blankets-cotton',
+    'blankets-all':       'blankets-cotton',
+    // mattress & pillows
+    'mattress-protectors':'mp-protectors',
+    'pillows-microfibre': 'pillows',
+    'pillows-all':        'pillows',
+    'pillowcases':        'sheets-pillow',
+  };
+  if (cat) cat = CAT_ALIASES[cat] || cat;
   if(cat){
     // find label
     let label = cat, isComing = false;
