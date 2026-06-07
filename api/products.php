@@ -296,5 +296,99 @@ function alt_publish_catalog($pdo) {
     if ($bytes === false) {
         return ['ok' => false, 'error' => 'Could not write assets/products-data.js (check file permissions).'];
     }
+    // Keep the crawlable catalogue fallback in collection.html in sync (non-fatal).
+    alt_update_collection_fallback($prodArr, $catsArr);
+
     return ['ok' => true, 'written' => $target, 'bytes' => $bytes, 'products' => count($prodArr), 'categories' => count($catsArr)];
+}
+
+
+// ============================================================
+// Keep collection.html's crawlable product fallback in sync.
+// Regenerates a <noscript> product list + ItemList JSON-LD between
+// marker comments, from the same data published to products-data.js.
+// Non-fatal: storefront (products-data.js) is already published.
+// ============================================================
+function alt_build_catalogue_fallback($prodArr, $catsArr) {
+    $byCat = [];
+    foreach ($prodArr as $p) {
+        $cat = $p['categoryId'] ?? '';
+        $pk  = !empty($p['parentSku']) ? $p['parentSku'] : $p['sku'];
+        if (!isset($byCat[$cat])) $byCat[$cat] = [];
+        if (!isset($byCat[$cat][$pk])) {
+            $byCat[$cat][$pk] = [
+                'name'     => trim($p['name'] ?? ''),
+                'colours'  => [], 'gsm' => [], 'sizes' => [],
+                'material' => trim($p['material'] ?? ''),
+                'desc'     => trim($p['description'] ?? ''),
+            ];
+        }
+        foreach ([['colour','colours'],['weight','gsm'],['size','sizes']] as $m) {
+            $v = trim((string)($p[$m[0]] ?? ''));
+            if ($v !== '' && !in_array($v, $byCat[$cat][$pk][$m[1]], true)) {
+                $byCat[$cat][$pk][$m[1]][] = $v;
+            }
+        }
+    }
+    $h = function($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
+    $parts = [
+        '<noscript>',
+        '<div class="catalogue-fallback">',
+        '<p>Browse our full commercial linen &amp; towel range below. <a href="contact.html">Request trade pricing</a> on any item &mdash; no minimum order, fast dispatch from Griffith, NSW.</p>',
+    ];
+    $itemList = []; $pos = 0;
+    foreach ($catsArr as $c) {
+        $cid = $c['id']; $cname = $c['name'];
+        if (empty($byCat[$cid])) continue;
+        $parts[] = '<section><h2>' . $h($cname) . '</h2><ul>';
+        foreach ($byCat[$cid] as $g) {
+            $specs = [];
+            if ($g['colours']) $specs[] = 'Colours: ' . implode(', ', $g['colours']);
+            if ($g['gsm'])     $specs[] = implode(' / ', $g['gsm']);
+            if ($g['sizes'])   $specs[] = 'Sizes: ' . implode(', ', $g['sizes']);
+            if ($g['material']) $specs[] = $g['material'];
+            $parts[] = '<li><strong>' . $h($g['name']) . '</strong> &mdash; ' . $h(implode(' · ', $specs)) . '. <a href="contact.html">Enquire for pricing</a></li>';
+            $pos++;
+            $item = ['@type'=>'ListItem','position'=>$pos,'item'=>['@type'=>'Product','name'=>$g['name'],'category'=>$cname,'brand'=>['@type'=>'Brand','name'=>'Australian Linen & Towels']]];
+            if ($g['material']) $item['item']['material'] = $g['material'];
+            if ($g['desc'])     $item['item']['description'] = $g['desc'];
+            $itemList[] = $item;
+        }
+        $parts[] = '</ul></section>';
+    }
+    $parts[] = '</div></noscript>';
+    $noscript = implode("\n", $parts);
+    $jsonld = [
+        '@context'=>'https://schema.org','@type'=>'ItemList',
+        'name'=>'Commercial Linen & Towels Collection',
+        'description'=>'Wholesale commercial towels, bed linen, quilts, blankets and protectors for Australian hospitality businesses.',
+        'numberOfItems'=>$pos,'itemListElement'=>$itemList,
+    ];
+    $jsonldBlock = '<script type="application/ld+json">' . "\n"
+        . json_encode($jsonld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+        . "\n" . '</script>';
+    return [$noscript, $jsonldBlock];
+}
+
+function alt_replace_between($html, $start, $end, $inner) {
+    $s = strpos($html, $start);
+    if ($s === false) return $html;
+    $e = strpos($html, $end, $s);
+    if ($e === false) return $html;
+    return substr($html, 0, $s + strlen($start)) . $inner . substr($html, $e);
+}
+
+function alt_update_collection_fallback($prodArr, $catsArr) {
+    try {
+        $file = __DIR__ . '/../collection.html';
+        if (!file_exists($file) || !is_writable($file)) return;
+        $html = file_get_contents($file);
+        if ($html === false) return;
+        list($noscript, $jsonld) = alt_build_catalogue_fallback($prodArr, $catsArr);
+        $html = alt_replace_between($html, '<!--ALT_FALLBACK_START-->', '<!--ALT_FALLBACK_END-->', $noscript);
+        $html = alt_replace_between($html, '<!--ALT_JSONLD_START-->', '<!--ALT_JSONLD_END-->', $jsonld);
+        file_put_contents($file, $html);
+    } catch (\Throwable $e) {
+        // non-fatal — products-data.js already published successfully
+    }
 }
