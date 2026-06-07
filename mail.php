@@ -167,7 +167,7 @@ if ($company) $body .= "Company:  {$company}\n";
 if ($enquiry) $body .= "Enquiry:  {$enquiry}\n";
 $body .= "\nMessage:\n{$message}\n";
 $body .= "\n" . str_repeat('-', 50) . "\n";
-$body .= "Sent: " . date('d M Y, h:i A') . " AEDT\n";
+$body .= "Sent: " . date('d M Y, h:i A') . " AEST\n";
 $body .= "IP:   {$ip}\n";
 
 $safe_name = preg_replace('/[^A-Za-z0-9 ._-]/', '', $name);

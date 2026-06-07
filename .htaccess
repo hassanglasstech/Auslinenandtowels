@@ -95,7 +95,7 @@ ErrorDocument 404 /404.html
 
 # ── BLOCK DIRECT ACCESS TO SENSITIVE FILES ──────────────────
 # db.php is include-only (defines functions, no output). products.php stays public.
-<FilesMatch "(^\.htaccess|^\.htpasswd|mail\.php|db-config\.php|setup-db\.sql|^db\.php$)$">
+<FilesMatch "(^\.htaccess|^\.htpasswd|db-config\.php|setup-db\.sql|^db\.php$)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
