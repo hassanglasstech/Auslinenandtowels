@@ -73,7 +73,7 @@ file_put_contents($rate_file, json_encode($hits), LOCK_EX);
 function alt_db() {
     static $pdo = null;
     if ($pdo !== null) return $pdo;
-    $cfg = __DIR__ . '/db-config.php';
+    $cfg = __DIR__ . '/db-config.php'; if (!file_exists($cfg)) $cfg = __DIR__ . '/../db-config.php';
     if (!file_exists($cfg)) return null;
     require_once $cfg;
     try {

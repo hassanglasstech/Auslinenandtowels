@@ -12,7 +12,7 @@ $done  = false;
 $error = '';
 
 function alt_db_conn() {
-    $cfg = __DIR__ . '/db-config.php';
+    $cfg = __DIR__ . '/db-config.php'; if (!file_exists($cfg)) $cfg = __DIR__ . '/../db-config.php';
     if (!file_exists($cfg)) return null;
     require_once $cfg;
     try {

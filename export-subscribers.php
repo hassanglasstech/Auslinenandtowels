@@ -5,7 +5,7 @@
 // Set ALT_EXPORT_TOKEN in db-config.php first
 // ============================================================
 
-require_once __DIR__ . '/db-config.php';
+$cfg = __DIR__ . '/db-config.php'; if (!file_exists($cfg)) $cfg = __DIR__ . '/../db-config.php'; require_once $cfg;
 
 // Token auth — fail closed if unset/placeholder; constant-time comparison.
 $provided = (string)($_GET['token'] ?? '');

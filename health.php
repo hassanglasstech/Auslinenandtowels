@@ -13,7 +13,7 @@ header('Cache-Control: no-store');
 $status = ['ok' => true, 'checks' => []];
 
 // ── DB check ─────────────────────────────────────────────────
-$cfg = __DIR__ . '/db-config.php';
+$cfg = __DIR__ . '/db-config.php'; if (!file_exists($cfg)) $cfg = __DIR__ . '/../db-config.php';
 if (file_exists($cfg)) {
     require_once $cfg;
     try {
